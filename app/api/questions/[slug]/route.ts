@@ -10,14 +10,22 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const filePath = path.join(process.cwd(), 'public', 'questions.json');
-    const fileData = fs.readFileSync(filePath, 'utf8');
-    const data = JSON.parse(fileData);
-
     const targetSlug = slug.toLowerCase();
 
-    // Find the matching question set by id, normalized title, or custom mapping
-    const set = data.sets.find((s: any) => {
+    // Read the manifest file to find the matching set ID
+    const manifestPath = path.join(process.cwd(), 'public', 'quiz-manifest.json');
+    if (!fs.existsSync(manifestPath)) {
+      return NextResponse.json(
+        { error: 'Hệ thống chưa được cấu hình manifest' },
+        { status: 500 }
+      );
+    }
+    
+    const manifestData = fs.readFileSync(manifestPath, 'utf8');
+    const manifest = JSON.parse(manifestData);
+
+    // Find the matching set metadata
+    const matchedMetadata = manifest.sets.find((s: any) => {
       const normalizedTitle = s.title
         .toLowerCase()
         .normalize('NFD')
@@ -29,18 +37,38 @@ export async function GET(
       return (
         s.id.toLowerCase() === targetSlug ||
         normalizedTitle === targetSlug ||
-        (targetSlug === 'design-pattern-react' && s.id === 'react-agent-day3')
+        (targetSlug === 'design-pattern-react' && s.id === 'react-loop-basics') ||
+        (targetSlug === 'react-agent-day3' && s.id === 'react-loop-basics') ||
+        (targetSlug === 'day1-basics' && s.id === 'react-loop-basics')
       );
     });
 
-    if (!set) {
+    if (!matchedMetadata) {
       return NextResponse.json(
         { error: 'Bộ đề không tồn tại trong hệ thống' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(set);
+    // Read the actual quiz set data containing the questions
+    const quizFilePath = path.join(
+      process.cwd(), 
+      'public', 
+      'quizzes', 
+      matchedMetadata.parent_id || '', 
+      `${matchedMetadata.id}.json`
+    );
+    if (!fs.existsSync(quizFilePath)) {
+      return NextResponse.json(
+        { error: 'Tập tin câu hỏi không tồn tại' },
+        { status: 404 }
+      );
+    }
+
+    const quizFileData = fs.readFileSync(quizFilePath, 'utf8');
+    const quizSet = JSON.parse(quizFileData);
+
+    return NextResponse.json(quizSet);
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json(
