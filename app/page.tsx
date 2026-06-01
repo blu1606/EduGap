@@ -19,7 +19,10 @@ import {
   Star,
   ChevronLeft,
   Mail,
-  Sparkles
+  Sparkles,
+  Share2,
+  Copy,
+  ExternalLink
 } from 'lucide-react';
 
 // Define the core types
@@ -171,6 +174,10 @@ export default function QuizApp() {
   const [showFinishScreen, setShowFinishScreen] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
+  // Session survey mapping ID
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
+
   // Survey states linked by activeSetId
   const [preQuizRatings, setPreQuizRatings] = useState<{ [setId: string]: number }>({});
   const [preQuizSubmitted, setPreQuizSubmitted] = useState<{ [setId: string]: boolean }>({});
@@ -198,12 +205,21 @@ export default function QuizApp() {
     setPreQuizSubmitted(prev => ({ ...prev, [activeSetId]: true }));
     
     try {
-      await supabase.from('surveys').insert({
-        type: 'pre_quiz',
-        set_id: activeSetId,
-        rating_pre: rating,
-        comment: comment
-      });
+      const { data, error } = await supabase
+        .from('surveys')
+        .insert({
+          set_id: activeSetId,
+          rating_pre: rating,
+          comment_pre: comment
+        })
+        .select('id')
+        .single();
+        
+      if (error) {
+        console.error('Failed to submit pre-quiz survey to Supabase:', error);
+      } else if (data) {
+        setSubmissionId(data.id);
+      }
     } catch (err) {
       console.error('Failed to submit pre-quiz survey to Supabase:', err);
     }
@@ -216,11 +232,33 @@ export default function QuizApp() {
     setWaitlistSubmitted(true);
     
     try {
-      await supabase.from('surveys').insert({
-        type: 'waitlist',
-        set_id: activeSetId,
-        email: waitlistEmail
-      });
+      if (submissionId) {
+        const { error } = await supabase
+          .from('surveys')
+          .update({
+            email: waitlistEmail
+          })
+          .eq('id', submissionId);
+          
+        if (error) {
+          console.error('Failed to update waitlist email in Supabase:', error);
+        }
+      } else {
+        const { data, error } = await supabase
+          .from('surveys')
+          .insert({
+            set_id: activeSetId,
+            email: waitlistEmail
+          })
+          .select('id')
+          .single();
+          
+        if (error) {
+          console.error('Failed to insert waitlist email to Supabase:', error);
+        } else if (data) {
+          setSubmissionId(data.id);
+        }
+      }
     } catch (err) {
       console.error('Failed to submit waitlist email to Supabase:', err);
     }
@@ -234,14 +272,39 @@ export default function QuizApp() {
     setPostQuizSubmitted(prev => ({ ...prev, [activeSetId]: true }));
     
     try {
-      await supabase.from('surveys').insert({
-        type: 'post_quiz',
-        set_id: activeSetId,
-        rating_understanding: ratings.understanding,
-        rating_utility: ratings.utility,
-        rating_personalized: ratings.personalized,
-        comment: comment
-      });
+      if (submissionId) {
+        const { error } = await supabase
+          .from('surveys')
+          .update({
+            rating_understanding: ratings.understanding,
+            rating_utility: ratings.utility,
+            rating_personalized: ratings.personalized,
+            comment_post: comment
+          })
+          .eq('id', submissionId);
+          
+        if (error) {
+          console.error('Failed to update post-quiz survey in Supabase:', error);
+        }
+      } else {
+        const { data, error } = await supabase
+          .from('surveys')
+          .insert({
+            set_id: activeSetId,
+            rating_understanding: ratings.understanding,
+            rating_utility: ratings.utility,
+            rating_personalized: ratings.personalized,
+            comment_post: comment
+          })
+          .select('id')
+          .single();
+          
+        if (error) {
+          console.error('Failed to insert post-quiz survey to Supabase:', error);
+        } else if (data) {
+          setSubmissionId(data.id);
+        }
+      }
     } catch (err) {
       console.error('Failed to submit post-quiz survey to Supabase:', err);
     }
@@ -256,7 +319,36 @@ export default function QuizApp() {
           const fetchedData = await response.json();
           if (fetchedData && fetchedData.sets && fetchedData.sets.length > 0) {
             setData(fetchedData);
-            setActiveSetId(fetchedData.sets[0].id);
+            
+            // Read "set" parameter from URL query string
+            const params = new URLSearchParams(window.location.search);
+            const querySet = params.get('set')?.toLowerCase();
+            
+            let targetSetId = fetchedData.sets[0].id;
+            
+            if (querySet) {
+              const found = fetchedData.sets.find((s: any) => {
+                const normalizedTitle = s.title
+                  .toLowerCase()
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+                  .replace(/[đĐ]/g, 'd')
+                  .replace(/[^a-z0-9]+/g, '-')
+                  .replace(/(^-|-$)+/g, '');
+                
+                return (
+                  s.id.toLowerCase() === querySet ||
+                  normalizedTitle === querySet ||
+                  (querySet === 'design-pattern-react' && s.id === 'react-agent-day3')
+                );
+              });
+              
+              if (found) {
+                targetSetId = found.id;
+              }
+            }
+            
+            setActiveSetId(targetSetId);
           }
         }
       } catch (err) {
@@ -305,6 +397,9 @@ export default function QuizApp() {
   const handleRestart = () => {
     setCurrentQuestionIdx(0);
     setShowFinishScreen(false);
+    setSubmissionId(null);
+    setWaitlistSubmitted(false);
+    setWaitlistEmail('');
     
     // Clear responses pertaining only to the current active set questions to avoid mixing data
     const updatedHistory = { ...answersHistory };
@@ -325,6 +420,14 @@ export default function QuizApp() {
     setCurrentQuestionIdx(0);
     setShowFinishScreen(false);
     setMobileMenuOpen(false);
+    setSubmissionId(null);
+    setWaitlistSubmitted(false);
+    setWaitlistEmail('');
+
+    // Update URL query param to make it shareable
+    const slug = setId === 'react-agent-day3' ? 'design-pattern-react' : setId;
+    const newUrl = `${window.location.pathname}?set=${slug}`;
+    window.history.pushState({ path: newUrl }, '', newUrl);
   };
 
   // Calculate score for the active set
@@ -345,6 +448,62 @@ export default function QuizApp() {
       return record && !record.isCorrect;
     });
   };
+
+  // Listen to keyboard shortcuts (1-4 for option selection, Enter for next, ArrowLeft for back)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in form inputs (like waitlist email or survey feedback)
+      if (
+        document.activeElement?.tagName === 'INPUT' ||
+        document.activeElement?.tagName === 'TEXTAREA'
+      ) {
+        return;
+      }
+
+      const isQuizActive = preQuizSubmitted[activeSetId] && !showFinishScreen;
+      if (!isQuizActive) return;
+
+      // 1, 2, 3, 4 -> Select options A, B, C, D
+      if (['1', '2', '3', '4'].includes(e.key)) {
+        if (!isSubmitted) {
+          const keyMap: { [key: string]: 'A' | 'B' | 'C' | 'D' } = {
+            '1': 'A',
+            '2': 'B',
+            '3': 'C',
+            '4': 'D'
+          };
+          handleSelectOption(keyMap[e.key]);
+        }
+      }
+
+      // Enter -> Next question (only when currently submitted)
+      if (e.key === 'Enter') {
+        if (isSubmitted) {
+          handleNextQuestion();
+        }
+      }
+
+      // ArrowLeft -> Back to previous question
+      if (e.key === 'ArrowLeft') {
+        if (currentQuestionIdx > 0) {
+          setCurrentQuestionIdx(prev => prev - 1);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [
+    activeSetId,
+    preQuizSubmitted,
+    showFinishScreen,
+    isSubmitted,
+    currentQuestionIdx,
+    handleSelectOption,
+    handleNextQuestion
+  ]);
 
   const scoreText = `Kết quả: ${getActiveSetCorrectCount()} / ${totalQuestions}`;
   const progressPercent = Math.min(100, Math.round(((currentQuestionIdx + (isSubmitted ? 1 : 0)) / totalQuestions) * 100));
@@ -372,6 +531,7 @@ export default function QuizApp() {
             <div className="space-y-1.5">
               {data.sets.map(set => {
                 const isActive = set.id === activeSetId;
+                const setSlug = set.id === 'react-agent-day3' ? 'design-pattern-react' : set.id;
                 return (
                   <button
                     key={set.id}
@@ -387,6 +547,12 @@ export default function QuizApp() {
                     <div className="text-[11px] text-stone-500 line-clamp-1 tracking-wide leading-relaxed">
                       {set.description}
                     </div>
+                    {isActive && (
+                      <div className="mt-2 pt-1.5 border-t border-amber-200/40 flex items-center justify-between gap-1 text-[9px] text-amber-800/80 font-mono">
+                        <span className="truncate">slug: {setSlug}</span>
+                        <span className="px-1 py-0.5 bg-amber-200/30 rounded font-semibold text-amber-900 shrink-0">Active</span>
+                      </div>
+                    )}
                   </button>
                 );
               })}
@@ -424,6 +590,51 @@ export default function QuizApp() {
               </div>
             </div>
           </div>
+
+          {/* Share Set Box */}
+          <div id="share-set-box" className="p-4 rounded-xl bg-white/80 backdrop-blur-md border border-amber-100/80 shadow-md shadow-amber-955/[0.02] space-y-3">
+            <h2 className="text-[11px] font-bold tracking-wider uppercase text-amber-900/60 flex items-center gap-1.5">
+              <Share2 className="w-3.5 h-3.5 text-amber-600" />
+              Chia Sẻ Bộ Đề
+            </h2>
+
+            <div className="space-y-2 text-xs">
+              <div className="text-[10px] text-stone-500">Đường dẫn học tập:</div>
+              <div className="flex items-center gap-1.5 bg-amber-50/50 p-2 rounded-lg border border-amber-150/40">
+                <code className="text-[10px] text-amber-900 font-mono select-all truncate flex-1">
+                  {typeof window !== 'undefined' 
+                    ? `${window.location.origin}${window.location.pathname}?set=${activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId}` 
+                    : `?set=${activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId}`
+                  }
+                </code>
+                <button
+                  onClick={() => {
+                    const slug = activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId;
+                    const url = `${window.location.origin}${window.location.pathname}?set=${slug}`;
+                    navigator.clipboard.writeText(url);
+                    setCopiedShareLink(true);
+                    setTimeout(() => setCopiedShareLink(false), 2000);
+                  }}
+                  className="text-[10px] text-amber-600 hover:text-amber-850 hover:underline font-semibold flex items-center gap-0.5 shrink-0 cursor-pointer"
+                >
+                  {copiedShareLink ? 'Đã copy' : 'Copy'}
+                </button>
+              </div>
+              
+              <div className="flex items-center justify-between pt-1 text-[10px] text-stone-500 border-t border-amber-100/30">
+                <span>API Endpoint:</span>
+                <a 
+                  href={`/api/questions/${activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-600 hover:text-amber-850 font-semibold flex items-center gap-0.5"
+                >
+                  Mở JSON
+                  <ExternalLink className="w-2.5 h-2.5" />
+                </a>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Main Workspace component */}
@@ -452,6 +663,11 @@ export default function QuizApp() {
                     }`}
                   >
                     <span className="line-clamp-1">{set.title}</span>
+                    {isActive && (
+                      <span className="text-[9px] text-amber-800/80 font-mono font-normal">
+                        API: /{set.id === 'react-agent-day3' ? 'design-pattern-react' : set.id}
+                      </span>
+                    )}
                   </button>
                 );
               })}
@@ -468,8 +684,24 @@ export default function QuizApp() {
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.2 }}
                   id="pre-quiz-survey-card"
-                  className="p-5 md:p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] space-y-6 text-center"
+                  className="p-5 md:p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] space-y-6 text-center relative"
                 >
+                  {/* Share button in top-right */}
+                  <button
+                    onClick={() => {
+                      const slug = activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId;
+                      const shareUrl = `${window.location.origin}${window.location.pathname}?set=${slug}`;
+                      navigator.clipboard.writeText(shareUrl);
+                      setCopiedShareLink(true);
+                      setTimeout(() => setCopiedShareLink(false), 2000);
+                    }}
+                    className="absolute top-4 right-4 p-2 rounded-lg border border-amber-250/50 hover:bg-amber-100/50 text-amber-800 transition-colors flex items-center gap-1.5 text-[11px] font-semibold cursor-pointer bg-white/80 shadow-sm"
+                    title="Chia sẻ bộ đề này"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>{copiedShareLink ? 'Đã copy' : 'Chia sẻ'}</span>
+                  </button>
+
                   <div className="w-12 h-12 rounded-full bg-amber-100/50 flex items-center justify-center mx-auto text-amber-600">
                     <Star className="w-6 h-6 fill-amber-500 text-amber-500" />
                   </div>
@@ -569,7 +801,7 @@ export default function QuizApp() {
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.2 }}
                   id="question-active-card"
-                  className="p-5 md:p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] space-y-5"
+                  className="p-5 md:p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] space-y-5 relative"
                 >
                   {/* Header question status info */}
                   <div className="flex justify-between items-center border-b border-amber-100/40 pb-3">
@@ -577,7 +809,8 @@ export default function QuizApp() {
                       Câu Hỏi Số {currentQuestionIdx + 1} / {totalQuestions}
                     </span>
                     
-                    {isSubmitted && (
+                    <div className="flex items-center gap-2">
+                      {isSubmitted && (
                       <span className={`flex items-center gap-1 text-xs font-mono px-3 py-1 rounded-full ${
                         answersHistory[currentQuestion.id]?.isCorrect 
                           ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20' 
@@ -596,7 +829,23 @@ export default function QuizApp() {
                         )}
                       </span>
                     )}
+
+                    <button
+                      onClick={() => {
+                        const slug = activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId;
+                        const shareUrl = `${window.location.origin}${window.location.pathname}?set=${slug}`;
+                        navigator.clipboard.writeText(shareUrl);
+                        setCopiedShareLink(true);
+                        setTimeout(() => setCopiedShareLink(false), 2000);
+                      }}
+                      className="p-1.5 rounded-lg border border-amber-250/40 hover:bg-amber-100/50 text-amber-800 transition-colors flex items-center gap-1.5 text-[11px] font-semibold cursor-pointer bg-white/80 shadow-sm"
+                      title="Chia sẻ bộ đề này"
+                    >
+                      <Share2 className="w-3.5 h-3.5" />
+                      <span>{copiedShareLink ? 'Đã copy' : 'Chia sẻ'}</span>
+                    </button>
                   </div>
+                </div>
 
                   {/* The actual question rendering body */}
                   <h3 className="text-md md:text-lg text-amber-950 font-bold leading-relaxed tracking-wide">
@@ -717,6 +966,26 @@ export default function QuizApp() {
                       )}
                     </div>
                   </div>
+
+                  {/* Keyboard Shortcuts Hint */}
+                  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[10px] text-stone-500 font-mono border-t border-amber-100/25 pt-3 mt-1.5">
+                    <span className="text-stone-400 font-medium">Phím tắt:</span>
+                    <span className="flex items-center gap-1">
+                      <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">1</kbd>
+                      <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">2</kbd>
+                      <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">3</kbd>
+                      <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">4</kbd>
+                      <span>Chọn A-D</span>
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">Enter</kbd>
+                      <span>Tiếp theo</span>
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">←</kbd>
+                      <span>Lùi lại</span>
+                    </span>
+                  </div>
                 </motion.div>
               )
             ) : (
@@ -726,8 +995,24 @@ export default function QuizApp() {
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 id="result-dashboard-card"
-                className="p-5 md:p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] space-y-6"
+                className="p-5 md:p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] space-y-6 relative"
               >
+                {/* Share button in top-right */}
+                <button
+                  onClick={() => {
+                    const slug = activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId;
+                    const shareUrl = `${window.location.origin}${window.location.pathname}?set=${slug}`;
+                    navigator.clipboard.writeText(shareUrl);
+                    setCopiedShareLink(true);
+                    setTimeout(() => setCopiedShareLink(false), 2000);
+                  }}
+                  className="absolute top-4 right-4 p-2 rounded-lg border border-amber-250/50 hover:bg-amber-100/50 text-amber-800 transition-colors flex items-center gap-1.5 text-[11px] font-semibold cursor-pointer bg-white/80 shadow-sm"
+                  title="Chia sẻ bộ đề này"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span>{copiedShareLink ? 'Đã copy' : 'Chia sẻ'}</span>
+                </button>
+
                 <div className="flex flex-col items-center text-center space-y-4 pt-4 pb-2">
                   <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
                     <Award className="w-8 h-8 text-white animate-pulse" />
