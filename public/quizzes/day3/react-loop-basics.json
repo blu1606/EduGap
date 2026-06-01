@@ -1,0 +1,130 @@
+{
+  "id": "react-loop-basics",
+  "parent_id": "day3",
+  "topic_title": "Day 3: Design Pattern ReAct",
+  "title": "Phần 1: Nền tảng vòng lặp ReAct",
+  "description": "Ôn kiến thức nền về Thought, Action, Observation và khi nào cần dùng Agent thay vì chatbot tĩnh.",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Một chatbot FAQ trả lời sai khi người dùng hỏi tồn kho hiện tại. Khi nào nên chuyển bài toán này sang ReAct Agent?",
+      "options": {
+        "A": "Khi câu trả lời cần đọc tồn kho mới nhất rồi quyết định phản hồi.",
+        "B": "Khi câu trả lời cần văn phong tự nhiên hơn và dài hơn bình thường.",
+        "C": "Khi câu trả lời chỉ lấy từ danh sách FAQ đã duyệt sẵn.",
+        "D": "Khi câu trả lời cần dịch sang nhiều ngôn ngữ khác nhau ngay."
+      },
+      "answer": "A",
+      "explanation": "ReAct Agent phù hợp khi câu trả lời phụ thuộc dữ liệu động từ công cụ, không chỉ kiến thức tĩnh trong prompt."
+    },
+    {
+      "id": 2,
+      "question": "Agent vừa nhận yêu cầu đặt vé nhưng thiếu ngày bay. Bước Thought tốt nhất nên dẫn tới hành động nào?",
+      "options": {
+        "A": "Tự chọn ngày gần nhất để công cụ đặt vé chạy được ngay.",
+        "B": "Hỏi lại người dùng ngày bay trước khi gọi công cụ đặt vé.",
+        "C": "Gọi công cụ tìm vé với trường ngày bay để trống.",
+        "D": "Bỏ qua ngày bay và chỉ trả về danh sách hãng bay."
+      },
+      "answer": "B",
+      "explanation": "Thought nên nhận ra thiếu dữ liệu bắt buộc và yêu cầu bổ sung, thay vì bịa input cho tool."
+    },
+    {
+      "id": 3,
+      "question": "Tool tìm chuyến bay yêu cầu mã IATA, nhưng user nhập “Hồ Chí Minh”. Thiết kế nào an toàn hơn?",
+      "options": {
+        "A": "Chuẩn hóa tên thành phố sang mã IATA rồi validate trước khi gọi tool.",
+        "B": "Gửi nguyên văn tên thành phố để API tự đoán mã phù hợp.",
+        "C": "Đổi sang model lớn hơn để model tự chọn mã chính xác.",
+        "D": "Bỏ qua trường thành phố nếu user không nhập đúng định dạng."
+      },
+      "answer": "A",
+      "explanation": "Chuẩn hóa và validate giúp giảm lỗi tham số trước khi request đi tới API bên ngoài."
+    },
+    {
+      "id": 4,
+      "question": "Observation trả về `[]` sau khi gọi tool tìm sản phẩm. Agent nên phản hồi hoặc xử lý thế nào?",
+      "options": {
+        "A": "Bịa một sản phẩm gần giống để cuộc hội thoại không bị ngắt.",
+        "B": "Ghi nhận không có kết quả và hỏi user đổi tiêu chí tìm kiếm.",
+        "C": "Gọi lại cùng tool mãi đến khi có dữ liệu trả về.",
+        "D": "Ẩn lỗi khỏi user và trả lời bằng kiến thức trong prompt."
+      },
+      "answer": "B",
+      "explanation": "Observation rỗng là thông tin thật; Agent nên minh bạch và đổi hướng thay vì tạo dữ liệu giả."
+    },
+    {
+      "id": 5,
+      "question": "Trong log, Agent gọi cùng một tool với cùng tham số 6 lần liên tiếp. Guard nào nên có trước tiên?",
+      "options": {
+        "A": "Tăng context window để Agent có thêm chỗ ghi nhớ lịch sử.",
+        "B": "Đặt max iterations và chặn duplicate tool call lặp lại.",
+        "C": "Tắt toàn bộ logging để giảm tải hệ thống khi lặp.",
+        "D": "Cho phép retry vô hạn để tăng cơ hội thành công."
+      },
+      "answer": "B",
+      "explanation": "Max iterations và phát hiện tool call trùng giúp ngăn infinite loop trước khi tốn tài nguyên."
+    },
+    {
+      "id": 6,
+      "question": "API thời tiết timeout một lần rồi hoạt động lại sau vài giây. Retry policy nào hợp lý nhất?",
+      "options": {
+        "A": "Retry có giới hạn với backoff rồi báo lỗi rõ nếu vẫn thất bại.",
+        "B": "Retry liên tục không giới hạn cho tới khi API phản hồi thành công.",
+        "C": "Bỏ qua lỗi timeout và tự tạo dữ liệu thời tiết dự đoán.",
+        "D": "Đổi tên tool trong request để tránh timeout ở lần gọi sau."
+      },
+      "answer": "A",
+      "explanation": "Retry có giới hạn và backoff xử lý lỗi tạm thời mà không làm quá tải API."
+    },
+    {
+      "id": 7,
+      "question": "Backend nhận tool call dạng text tự do nên thỉnh thoảng parse sai tên tham số. Cách giảm lỗi tốt nhất là gì?",
+      "options": {
+        "A": "Dùng native function calling với JSON schema bắt buộc cho tham số.",
+        "B": "Yêu cầu model viết tool call bằng văn phong rõ ràng hơn.",
+        "C": "Tăng nhiệt độ sinh để model thử nhiều định dạng khác nhau.",
+        "D": "Chấp nhận parse sai rồi sửa thủ công trong database."
+      },
+      "answer": "A",
+      "explanation": "Native function calling ép cấu trúc dữ liệu ổn định hơn so với parse văn bản tự do."
+    },
+    {
+      "id": 8,
+      "question": "Một Agent cần kiểm tra đơn hàng, gọi hoàn tiền, rồi gửi email xác nhận. Vì sao ReAct phù hợp hơn một prompt đơn lượt?",
+      "options": {
+        "A": "Vì mỗi bước phụ thuộc kết quả thật từ bước trước trong hệ thống.",
+        "B": "Vì prompt đơn lượt không thể tạo nội dung email đúng ngữ pháp.",
+        "C": "Vì ReAct luôn rẻ hơn chatbot trong mọi tình huống thực tế.",
+        "D": "Vì Agent không cần validate dữ liệu khi dùng nhiều tool ngoài."
+      },
+      "answer": "A",
+      "explanation": "ReAct phù hợp với quy trình nhiều bước, nơi Action sau phụ thuộc Observation trước đó."
+    },
+    {
+      "id": 9,
+      "question": "Trace cho thấy Thought đúng, Action đúng, nhưng Observation từ API chứa dữ liệu cũ. Nên điều tra lớp nào trước?",
+      "options": {
+        "A": "Điều tra tool hoặc nguồn dữ liệu vì lỗi xuất hiện trong Observation.",
+        "B": "Điều tra prompt hệ thống vì Thought luôn là nguyên nhân chính.",
+        "C": "Điều tra giao diện người dùng vì API đã trả dữ liệu rồi.",
+        "D": "Điều tra số token vì token cao làm dữ liệu bị cũ."
+      },
+      "answer": "A",
+      "explanation": "Nếu Thought và Action hợp lý nhưng Observation sai, nghi vấn đầu tiên là tool hoặc nguồn dữ liệu."
+    },
+    {
+      "id": 10,
+      "question": "Một tool xóa file yêu cầu `filePath`, nhưng Agent nhận path từ user. Thiết kế nào giảm rủi ro nhất?",
+      "options": {
+        "A": "Validate path trong vùng cho phép và yêu cầu xác nhận trước khi xóa.",
+        "B": "Cho Agent tự sửa path nếu file không tồn tại lần đầu.",
+        "C": "Ẩn preview hành động để user không bị rối khi xác nhận.",
+        "D": "Chỉ dựa vào prompt nhắc model tránh xóa nhầm file quan trọng."
+      },
+      "answer": "A",
+      "explanation": "Tool nguy hiểm cần validate tham số và human approval, không chỉ dựa vào lời nhắc trong prompt."
+    }
+  ]
+}

@@ -26,6 +26,8 @@ import {
 } from 'lucide-react';
 
 // Define the core types
+type QuizDifficulty = 'dễ' | 'bình thường' | 'khó';
+
 interface Question {
   id: number;
   question: string;
@@ -41,8 +43,11 @@ interface Question {
 
 interface QuestionSet {
   id: string;
+  parent_id?: string;
+  topic_title?: string;
   title: string;
   description: string;
+  difficulty?: QuizDifficulty;
   questions: Question[];
 }
 
@@ -54,129 +59,67 @@ interface QuestionsData {
 const FALLBACK_DATA: QuestionsData = {
   "sets": [
     {
-      "id": "react-agent-day3",
-      "title": "Thiết Kế ReAct Agent - Day 3",
-      "description": "Khảo sát kiến thức chuyên sâu về kiến trúc thiết kế Agent sử dụng mô hình suy nghĩ và hành động (Reasoning and Acting).",
+      "id": "day1-basics",
+      "parent_id": "day1",
+      "topic_title": "Day 1: AI & LLM Foundation",
+      "title": "Phần 1: Khái niệm cơ bản LLM",
+      "description": "Lý thuyết nền tảng về Transformer, Tokenization và mô hình ngôn ngữ lớn.",
+      "difficulty": "dễ",
       "questions": [
         {
           "id": 1,
-          "question": "Sự học hỏi và khác biệt cốt lõi giữa kỹ thuật thiết kế Reactive Agent và ReAct Agent là gì?",
+          "question": "Kiến trúc nền tảng đứng sau sự bùng nổ của các Đại mô hình ngôn ngữ (LLM) hiện nay là gì?",
           "options": {
-            "A": "Reactive Agent tự động cập nhật trọng số của mô hình lớn liên tục, trong khi ReAct Agent chỉ hoạt động dựa trên các tham số cấu hình tĩnh.",
-            "B": "Reactive Agent phản xạ tức thì từ tín hiệu đầu vào đến hành động mà không lưu lại tư duy trung gian, trong khi ReAct Agent kết hợp suy luận phân tích (Reasoning) và gọi công cụ (Acting).",
-            "C": "LLM Chatbot thông thường luôn chính xác và tối ưu về hiệu năng tốt hơn so với ReAct Agent trong mọi bài toán thực tế.",
-            "D": "Reactive Agent có khả năng làm việc trực tiếp với các API ngoài mà không cần đến sự hỗ trợ của các mô hình ngôn ngữ lớn làm nền tảng."
+            "A": "Kiến trúc mạng nơ-ron tích chập (CNN).",
+            "B": "Kiến trúc mạng nơ-ron hồi quy (RNN).",
+            "C": "Kiến trúc Transformer giới thiệu cơ chế Self-Attention.",
+            "D": "Kiến trúc mạng bộ nhớ dài-ngắn (LSTM)."
           },
-          "answer": "B",
-          "explanation": "Reactive Agent hoạt động dựa trên phản xạ hoặc quy tắc cố định ánh xạ đầu vào thành hành động mà không có bước lập kế hoạch. Ngược lại, ReAct Agent được dẫn dắt chặt chẽ bởi mô hình ngôn ngữ lớn (LLM) thông qua chu kỳ lặp lại: Suy nghĩ (Thought) để lập luận, Hành động (Action) để gọi công cụ phù hợp, và Quan sát (Observation) kết quả trả về trước khi suy nghĩ bước tiếp theo."
-        },
-        {
-          "id": 2,
-          "question": "Trong vòng lặp thực thi của ReAct (Thought -> Action -> Observation), kết quả của bước 'Observation' được lấy từ nguồn nào?",
-          "options": {
-            "A": "Từ kiến thức được ghi nhớ cố định bên trong các tham số trọng số lúc huấn luyện của mô hình lớn.",
-            "B": "Từ phản hồi thực tế của môi trường hoặc kết quả thực thi của các công cụ (Tools) được gọi.",
-            "C": "Từ System Prompt mặc định do người phát triển quy định ngay tại lúc khởi động chương trình.",
-            "D": "Từ các biến cấu hình cục bộ lưu giữ trạng thái nội bộ của phần mềm."
-          },
-          "answer": "B",
-          "explanation": "Sau khi mô hình lớn đưa ra quyết định sử dụng công cụ (Action), hệ thống sẽ thực thi công cụ đó ngoài môi trường (ví dụ như chạy mã Python, gọi API bên ngoài, hoặc tìm kiếm cơ sở dữ liệu) và trả lại kết quả thô về cho mô hình. Kết quả thực thi trực tiếp này chính là Observation giúp mô hình hiểu thêm bối cảnh để tiếp tục tư duy."
-        },
-        {
-          "id": 3,
-          "question": "Tình trạng 'Vòng lặp vô hạn' (Infinite Loop) trong ReAct Agent xảy ra chủ yếu do nguyên nhân nào?",
-          "options": {
-            "A": "Do người dùng nhập các từ khóa hoặc câu lệnh đầu vào quá ngắn, khiến hệ thống không thể so khớp.",
-            "B": "Do mô hình lớn liên tục đưa ra cùng một loại Thought và gọi một công cụ với tham số tương tự vì kết quả nhận về ở bước Observation không đổi và không có cơ chế chặn tháo thoát.",
-            "C": "Do phần cứng xử lý bị quá tải và kết nối mạng bị chậm trễ kéo dài trong quá trình truyền tải thông tin.",
-            "D": "Do tổng dung lượng Token của phiên làm việc vượt quá ngưỡng dự kiến ban đầu của dịch vụ đám mây."
-          },
-          "answer": "B",
-          "explanation": "Khi kết quả của công cụ trả về (Observation) không giúp ích được gì cho quá trình suy luận hoặc không làm thay đổi phương án hành động của LLM, mô hình có xu hướng lặp đi lặp lại một hành động duy nhất, tạo ra vòng lặp vô tận tiêu tốn tài nguyên hệ thống."
-        },
-        {
-          "id": 4,
-          "question": "Phương pháp nào sau đây giúp ngăn chặn hiệu quả nhất tình trạng vòng lặp vô hạn (Infinite Loop) của ReAct Agent?",
-          "options": {
-            "A": "Sử dụng ít công cụ nhất có thể để hạn chế tối đa các lựa chọn gọi hành động của mô hình.",
-            "B": "Thiết lập thuộc tính giới hạn số bước lặp tối đa (Max Iterations) và giám sát lịch sử hành động để tự động dừng khi phát hiện trùng lặp dữ liệu đầu ra.",
-            "C": "Thay đổi hoàn toàn sang một mô hình nhỏ và đơn giản hơn để rút ngắn thời gian xử lý phản hồi.",
-            "D": "Làm sạch toàn bộ lịch sử trò chuyện của người dùng sau mỗi lần nhận được một kết quả ngoài mong đợi."
-          },
-          "answer": "B",
-          "explanation": "Thiết lập bước giới hạn cứng Max Iterations (thường từ 5 đến 10 vòng) làm phao cứu sinh quan trọng nhất để ngắt tiến trình tự động. Ngoài ra, việc lưu giữ danh sách các hành động trước đó để so sánh và phát hiện trùng lặp tham số giúp Agent chuyển hướng tư duy kịp thời."
-        },
-        {
-          "id": 5,
-          "question": "Để ReAct Agent xử lý chuẩn xác kết quả phản hồi của các công cụ tìm kiếm, bước thiết kế System Prompt cần đặc biệt lưu ý điều gì?",
-          "options": {
-            "A": "Yêu cầu mô hình luôn đưa ra câu trả lời trực tiếp mà bỏ qua tất cả các lời giải thích trung gian.",
-            "B": "Định nghĩa rõ ràng cấu trúc định dạng chuẩn cho đầu ra (ví dụ: định dạng JSON hoặc thẻ cú pháp riêng biệt) kèm theo các mẫu hướng dẫn suy luận cụ thể (Few-shot prompting).",
-            "C": "Yêu cầu mô hình chỉ được phép viết mã nguồn HTML để kết xuất dữ liệu trực tiếp trên màn hình client.",
-            "D": "Hướng dẫn mô hình không được tham chiếu bất cứ thông tin bổ sung nào mà chỉ suy đoán từ cảm quan riêng."
-          },
-          "answer": "B",
-          "explanation": "System Prompt cần đặc tả cụ thể định dạng trả về để các bộ lọc dữ liệu (Parsers) có thể bóc tách tham số gọi công cụ một cách chính xác. Nếu không có định dạng chuẩn hoặc ví dụ làm mẫu, mô hình có thể trả về câu trả lời tự do khiến hệ thống không thể xử lý logic tự động."
-        }
-      ]
-    },
-    {
-      "id": "prompt-engineering-standard",
-      "title": "Nền Tảng Prompt Engineering",
-      "description": "Các kỹ thuật cơ bản và quy tắc thiết kế câu lệnh để tối ưu hiệu suất phản hồi của Đại Mô Hình Ngôn Ngữ.",
-      "questions": [
-        {
-          "id": 1,
-          "question": "Cơ chế hoạt động chính của kỹ thuật Chain of Thought (CoT) Prompting là gì?",
-          "options": {
-            "A": "Gia tăng tốc độ sinh từ của mô hình lớn bằng cách kích hoạt nhiều luồng xử lý song song trên máy chủ.",
-            "B": "Hướng dẫn mô hình ngôn ngữ chia nhỏ vấn đề phức tạp và trình bày các bước suy luận trung gian rõ ràng trước khi rút ra đáp án cuối cùng.",
-            "C": "Loại bỏ hoàn toàn các lỗi sai sót ngữ pháp trong câu văn phản hồi của cả hai bên giao tiếp.",
-            "D": "Ép buộc lập trình viên phải lập trình một chuỗi hàm bằng ngôn ngữ cấp thấp để thao tác dữ liệu trực tiếp."
-          },
-          "answer": "B",
-          "explanation": "Kỹ thuật Chain of Thought buộc LLM đi qua các bước suy luận logic từng bước một thay vì đưa ngay đáp án cuối. Việc suy nghĩ tường minh này giúp nâng cao đáng kể độ chính xác đối với các bài toán suy luận logic, toán học và lập kế hoạch."
-        },
-        {
-          "id": 2,
-          "question": "Sự khác biệt rõ ràng nhất giữa Zero-shot Prompting và Few-shot Prompting nằm ở khía cạnh nào?",
-          "options": {
-            "A": "Zero-shot không chạy được trên môi trường di động thông thường, trong khi Few-shot thì có hỗ trợ đầy đủ.",
-            "B": "Zero-shot trực tiếp giao nhiệm vụ mà không cung cấp dữ liệu mẫu, trong khi Few-shot đi kèm thêm một hoặc vài ví dụ cụ thể để mô hình học theo cấu trúc mong muốn.",
-            "C": "Few-shot chỉ được vận hành trong các nhiệm vụ sinh hình ảnh hoặc tối ưu hóa âm thanh đa phương tiện.",
-            "D": "Zero-shot luôn mang lại chất lượng và độ chính xác của phản hồi tốt hơn so với Few-shot vì giữ được tính nguyên bản."
-          },
-          "answer": "B",
-          "explanation": "Zero-shot prompting đưa thẳng yêu cầu để LLM trả lời mà không có dữ liệu dẫn dắt. Few-shot prompting giúp LLM hiểu nhanh cấu trúc, phong cách hoặc văn phong câu trả lời bằng cách cung cấp thêm một vài cặp mẫu đầu vào - đầu ra minh họa rõ nét."
-        },
-        {
-          "id": 3,
-          "question": "Kiến trúc RAG (Retrieval-Augmented Generation) thực chất biểu diễn quy trình xử lý nào?",
-          "options": {
-            "A": "Huấn luyện lại và tinh chỉnh các tham số gốc của mô hình lớn bằng dữ liệu mới của tổ chức.",
-            "B": "Tìm kiếm tài liệu liên quan từ nguồn tri thức bên ngoài và nhồi dữ liệu đó vào Prompt làm bối cảnh tham chiếu cho LLM trả lời câu hỏi.",
-            "C": "Nén nhỏ dung lượng hoạt động của mô hình để có thể phục vụ mượt mượt trên môi trường máy trạm cấu hình yếu.",
-            "D": "Tự động gửi thông tin báo lỗi về hệ thống quản trị trung tâm của nhà cung cấp dịch vụ máy chủ."
-          },
-          "answer": "B",
-          "explanation": "RAG kết nối mô hình ngôn ngữ với nguồn thông tin cập nhật bên ngoài. Quy trình gồm: Tìm kiếm thông tin liên quan (Retrieval) từ kho dữ liệu, Chèn thông tin đó vào Prompt (Augmented), và Chuyển giao cho LLM để tạo ra câu trả lời chuẩn xác (Generation)."
+          "answer": "C",
+          "explanation": "Kiến trúc Transformer giới thiệu cơ chế Self-Attention năm 2017 là nền móng cốt lõi cho các mô hình GPT, Claude, Gemini ngày nay nhờ khả năng xử lý song song và học ngữ cảnh vượt trội."
         }
       ]
     }
   ]
 };
 
+const TOPICS = [
+  { id: 'day1', title: 'Day 1: AI & LLM Foundation' },
+  { id: 'day2', title: 'Day 2: Xác định Bài toán cho AI' },
+  { id: 'day3', title: 'Day 3: Design Pattern ReAct' },
+  { id: 'day4', title: 'Day 4: Prompt Engineering & Tool Calling' }
+];
+
 export default function QuizApp() {
   const [data, setData] = useState<QuestionsData>(FALLBACK_DATA);
-  const [activeSetId, setActiveSetId] = useState<string>('react-agent-day3');
+  const [activeSetId, setActiveSetId] = useState<string>('day1-basics');
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState<number>(0);
-  const [answersHistory, setAnswersHistory] = useState<{ [qId: number]: { selected: string, isCorrect: boolean } }>({});
+  const [answersHistory, setAnswersHistory] = useState<{ [setId: string]: { [qId: number]: { selected: string, isCorrect: boolean } } }>({});
   const [showFinishScreen, setShowFinishScreen] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  // Loading state for quiz questions
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState<boolean>(true);
 
   // Session survey mapping ID
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
+
+  // Accordion expanded topics state
+  const [expandedTopics, setExpandedTopics] = useState<{ [topicId: string]: boolean }>({
+    'day1': true
+  });
+
+  // Automatically expand parent day/topic when activeSetId changes
+  useEffect(() => {
+    const currentSet = data.sets.find(s => s.id === activeSetId);
+    if (currentSet && currentSet.parent_id) {
+      setExpandedTopics(prev => ({
+        ...prev,
+        [currentSet.parent_id!]: true
+      }));
+    }
+  }, [activeSetId, data.sets]);
 
   // Survey states linked by activeSetId
   const [preQuizRatings, setPreQuizRatings] = useState<{ [setId: string]: number }>({});
@@ -310,15 +253,19 @@ export default function QuizApp() {
     }
   };
 
-  // Fetch the data from questions.json
+  // Fetch the data from quiz-manifest.json
   useEffect(() => {
-    async function loadQuestions() {
+    async function loadManifest() {
       try {
-        const response = await fetch('/questions.json');
+        const response = await fetch('/quiz-manifest.json');
         if (response.ok) {
           const fetchedData = await response.json();
           if (fetchedData && fetchedData.sets && fetchedData.sets.length > 0) {
-            setData(fetchedData);
+            const setsWithEmptyQuestions = fetchedData.sets.map((s: any) => ({
+              ...s,
+              questions: s.questions || []
+            }));
+            setData({ sets: setsWithEmptyQuestions });
             
             // Read "set" parameter from URL query string
             const params = new URLSearchParams(window.location.search);
@@ -327,6 +274,7 @@ export default function QuizApp() {
             let targetSetId = fetchedData.sets[0].id;
             
             if (querySet) {
+              const searchSlug = querySet === 'day1-basics' ? 'react-loop-basics' : querySet;
               const found = fetchedData.sets.find((s: any) => {
                 const normalizedTitle = s.title
                   .toLowerCase()
@@ -337,9 +285,10 @@ export default function QuizApp() {
                   .replace(/(^-|-$)+/g, '');
                 
                 return (
-                  s.id.toLowerCase() === querySet ||
-                  normalizedTitle === querySet ||
-                  (querySet === 'design-pattern-react' && s.id === 'react-agent-day3')
+                  s.id.toLowerCase() === searchSlug ||
+                  normalizedTitle === searchSlug ||
+                  (searchSlug === 'design-pattern-react' && s.id === 'react-loop-basics') ||
+                  (searchSlug === 'react-agent-day3' && s.id === 'react-loop-basics')
                 );
               });
               
@@ -352,19 +301,71 @@ export default function QuizApp() {
           }
         }
       } catch (err) {
-        console.warn('Yeu cau tai questions.json khong co ket qua, dang xai du lieu du phong.', err);
+        console.warn('Yeu cau tai quiz-manifest.json khong co ket qua, dang xai du lieu du phong.', err);
       }
     }
-    loadQuestions();
+    loadManifest();
   }, []);
 
+  // Load questions for the active set dynamically based on parent directory
+  useEffect(() => {
+    if (!activeSetId || !data.sets || data.sets.length === 0) return;
+
+    const currentSet = data.sets.find(s => s.id === activeSetId);
+    if (currentSet && currentSet.questions && currentSet.questions.length > 0) {
+      setIsLoadingQuestions(false);
+      return;
+    }
+
+    let isMounted = true;
+    async function fetchQuestions() {
+      setIsLoadingQuestions(true);
+      try {
+        const parentId = currentSet?.parent_id || 'day1';
+        const response = await fetch(`/quizzes/${parentId}/${activeSetId}.json`);
+        if (response.ok && isMounted) {
+          const quizSet = await response.json();
+          setData(prev => ({
+            sets: prev.sets.map(s =>
+              s.id === activeSetId
+                ? { ...s, ...quizSet, questions: quizSet.questions }
+                : s
+            )
+          }));
+        }
+      } catch (err) {
+        console.error('Error fetching questions:', err);
+      } finally {
+        if (isMounted) {
+          setIsLoadingQuestions(false);
+        }
+      }
+    }
+
+    fetchQuestions();
+    return () => {
+      isMounted = false;
+    };
+  }, [activeSetId, data.sets]);
+
+  const renderDifficultyBadge = (difficulty?: QuizDifficulty) => {
+    if (!difficulty) return null;
+
+    return (
+      <span className="shrink-0 rounded-full border border-amber-200/70 bg-amber-50/80 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-amber-800">
+        {difficulty}
+      </span>
+    );
+  };
+
   const activeSet = data.sets.find(s => s.id === activeSetId) || data.sets[0];
-  const totalQuestions = activeSet.questions.length;
-  const currentQuestionIdxBounded = Math.min(currentQuestionIdx, totalQuestions - 1);
-  const currentQuestion = activeSet.questions[currentQuestionIdxBounded];
+  const questionsList = activeSet?.questions || [];
+  const totalQuestions = questionsList.length;
+  const currentQuestionIdxBounded = totalQuestions > 0 ? Math.min(currentQuestionIdx, totalQuestions - 1) : 0;
+  const currentQuestion = questionsList[currentQuestionIdxBounded];
 
   // Derive active question states on-the-fly based on answersHistory
-  const currentHistory = currentQuestion ? answersHistory[currentQuestion.id] : undefined;
+  const currentHistory = currentQuestion && activeSetId ? answersHistory[activeSetId]?.[currentQuestion.id] : undefined;
   const selectedOption = currentHistory ? currentHistory.selected : null;
   const isSubmitted = !!currentHistory;
   const showExplanation = isSubmitted;
@@ -377,9 +378,12 @@ export default function QuizApp() {
     
     setAnswersHistory(prev => ({
       ...prev,
-      [currentQuestion.id]: {
-        selected: optionKey,
-        isCorrect
+      [activeSetId]: {
+        ...(prev[activeSetId] || {}),
+        [currentQuestion.id]: {
+          selected: optionKey,
+          isCorrect
+        }
       }
     }));
   };
@@ -402,11 +406,11 @@ export default function QuizApp() {
     setWaitlistEmail('');
     
     // Clear responses pertaining only to the current active set questions to avoid mixing data
-    const updatedHistory = { ...answersHistory };
-    activeSet.questions.forEach(q => {
-      delete updatedHistory[q.id];
+    setAnswersHistory(prev => {
+      const copy = { ...prev };
+      delete copy[activeSetId];
+      return copy;
     });
-    setAnswersHistory(updatedHistory);
 
     // Clear post-quiz survey for this active set to allow re-submission
     const updatedPostQuiz = { ...postQuizSubmitted };
@@ -433,8 +437,9 @@ export default function QuizApp() {
   // Calculate score for the active set
   const getActiveSetCorrectCount = () => {
     let correct = 0;
+    const setHistory = answersHistory[activeSetId] || {};
     activeSet.questions.forEach(q => {
-      if (answersHistory[q.id]?.isCorrect) {
+      if (setHistory[q.id]?.isCorrect) {
         correct += 1;
       }
     });
@@ -443,8 +448,9 @@ export default function QuizApp() {
 
   // Find incorrectly answered questions
   const getIncorrectQuestions = () => {
+    const setHistory = answersHistory[activeSetId] || {};
     return activeSet.questions.filter(q => {
-      const record = answersHistory[q.id];
+      const record = setHistory[q.id];
       return record && !record.isCorrect;
     });
   };
@@ -506,7 +512,7 @@ export default function QuizApp() {
   ]);
 
   const scoreText = `Kết quả: ${getActiveSetCorrectCount()} / ${totalQuestions}`;
-  const progressPercent = Math.min(100, Math.round(((currentQuestionIdx + (isSubmitted ? 1 : 0)) / totalQuestions) * 100));
+  const progressPercent = totalQuestions > 0 ? Math.min(100, Math.round(((currentQuestionIdx + (isSubmitted ? 1 : 0)) / totalQuestions) * 100)) : 0;
 
   return (
     <div id="quiz-wrapper" className="min-h-screen bg-[#FDFBF7] text-stone-800 flex flex-col font-sans selection:bg-amber-500/20 selection:text-amber-900">
@@ -528,32 +534,82 @@ export default function QuizApp() {
               </h2>
             </div>
 
-            <div className="space-y-1.5">
-              {data.sets.map(set => {
-                const isActive = set.id === activeSetId;
-                const setSlug = set.id === 'react-agent-day3' ? 'design-pattern-react' : set.id;
+            <div className="space-y-3">
+              {TOPICS.map(topic => {
+                const topicSets = data.sets.filter(s => s.parent_id === topic.id);
+                const isExpanded = !!expandedTopics[topic.id];
+                const hasActiveSetInTopic = topicSets.some(s => s.id === activeSetId);
+
                 return (
-                  <button
-                    key={set.id}
-                    id={`btn-set-selector-${set.id}`}
-                    onClick={() => handleSetChange(set.id)}
-                    className={`w-full text-left p-3 rounded-lg border transition-all duration-200 cursor-pointer ${
-                      isActive 
-                        ? 'bg-amber-100/60 border-amber-400 text-amber-950 shadow-sm shadow-amber-900/5' 
-                        : 'bg-amber-55/20 border-amber-100/40 text-stone-600 hover:bg-amber-50/50 hover:border-amber-200/60'
-                    }`}
-                  >
-                    <div className="font-semibold text-xs mb-0.5 text-slate-850">{set.title}</div>
-                    <div className="text-[11px] text-stone-500 line-clamp-1 tracking-wide leading-relaxed">
-                      {set.description}
-                    </div>
-                    {isActive && (
-                      <div className="mt-2 pt-1.5 border-t border-amber-200/40 flex items-center justify-between gap-1 text-[9px] text-amber-800/80 font-mono">
-                        <span className="truncate">slug: {setSlug}</span>
-                        <span className="px-1 py-0.5 bg-amber-200/30 rounded font-semibold text-amber-900 shrink-0">Active</span>
-                      </div>
-                    )}
-                  </button>
+                  <div key={topic.id} className="space-y-1">
+                    {/* Topic Header Accordion Trigger */}
+                    <button
+                      onClick={() => setExpandedTopics(prev => ({ ...prev, [topic.id]: !prev[topic.id] }))}
+                      className={`w-full flex items-center justify-between p-2 rounded-lg text-left transition-all duration-150 cursor-pointer ${
+                        hasActiveSetInTopic 
+                          ? 'bg-amber-500/5 text-amber-950 font-bold border-l-2 border-amber-500 pl-1.5'
+                          : 'text-stone-700 font-semibold hover:bg-amber-50/50'
+                      }`}
+                    >
+                      <span className="text-[11px] uppercase tracking-wide truncate flex-1">
+                        {topic.title}
+                      </span>
+                      <ChevronDown 
+                        className={`w-3.5 h-3.5 text-stone-500 transition-transform duration-200 shrink-0 ${
+                          isExpanded ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+
+                    {/* Subsets (Collapsible Content) */}
+                    <AnimatePresence initial={false}>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="pl-2.5 border-l border-amber-100/40 ml-1.5 space-y-1.5 overflow-hidden pt-1 pb-1"
+                        >
+                          {topicSets.length > 0 ? (
+                            topicSets.map(set => {
+                              const isActive = set.id === activeSetId;
+                              const setSlug = set.id === 'react-loop-basics' ? 'design-pattern-react' : set.id;
+                              return (
+                                <button
+                                  key={set.id}
+                                  id={`btn-set-selector-${set.id}`}
+                                  onClick={() => handleSetChange(set.id)}
+                                  className={`w-full text-left p-2.5 rounded-lg border transition-all duration-150 cursor-pointer ${
+                                    isActive 
+                                      ? 'bg-amber-100/50 border-amber-400 text-amber-950 shadow-sm shadow-amber-900/5 font-semibold' 
+                                      : 'bg-white/40 border-transparent text-stone-600 hover:bg-amber-50/30 hover:border-amber-200/30'
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between gap-2 mb-0.5">
+                                    <span className="text-[11px] truncate">{set.title}</span>
+                                    {renderDifficultyBadge(set.difficulty)}
+                                  </div>
+                                  <div className="text-[9.5px] text-stone-500 line-clamp-1 leading-relaxed">
+                                    {set.description}
+                                  </div>
+                                  {isActive && (
+                                    <div className="mt-1.5 pt-1 border-t border-amber-200/30 flex items-center justify-between text-[8.5px] text-amber-800/80 font-mono">
+                                      <span className="truncate">slug: {setSlug}</span>
+                                      <span className="text-[8px] font-bold text-amber-900 shrink-0">Active</span>
+                                    </div>
+                                  )}
+                                </button>
+                              );
+                            })
+                          ) : (
+                            <div className="text-[10px] text-stone-400 pl-2 py-1 font-mono italic">
+                              Sắp ra mắt
+                            </div>
+                          )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 );
               })}
             </div>
@@ -584,9 +640,13 @@ export default function QuizApp() {
                 />
               </div>
 
-              <div id="set-metadata" className="pt-2 border-t border-amber-100/40 space-y-0.5">
+              <div id="set-metadata" className="pt-2 border-t border-amber-100/40 space-y-1">
                 <div className="text-[10px] text-stone-500">Bộ đề đang mở:</div>
-                <div className="text-xs font-semibold text-amber-950">{activeSet.title}</div>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="text-xs font-semibold text-amber-950 line-clamp-1">{activeSet.title}</div>
+                  {renderDifficultyBadge(activeSet.difficulty)}
+                </div>
+                <div className="text-[10px] text-stone-500 line-clamp-2 leading-relaxed">{activeSet.description}</div>
               </div>
             </div>
           </div>
@@ -603,13 +663,13 @@ export default function QuizApp() {
               <div className="flex items-center gap-1.5 bg-amber-50/50 p-2 rounded-lg border border-amber-150/40">
                 <code className="text-[10px] text-amber-900 font-mono select-all truncate flex-1">
                   {typeof window !== 'undefined' 
-                    ? `${window.location.origin}${window.location.pathname}?set=${activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId}` 
-                    : `?set=${activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId}`
+                    ? `${window.location.origin}${window.location.pathname}?set=${activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId}` 
+                    : `?set=${activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId}`
                   }
                 </code>
                 <button
                   onClick={() => {
-                    const slug = activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId;
+                    const slug = activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId;
                     const url = `${window.location.origin}${window.location.pathname}?set=${slug}`;
                     navigator.clipboard.writeText(url);
                     setCopiedShareLink(true);
@@ -624,7 +684,7 @@ export default function QuizApp() {
               <div className="flex items-center justify-between pt-1 text-[10px] text-stone-500 border-t border-amber-100/30">
                 <span>API Endpoint:</span>
                 <a 
-                  href={`/api/questions/${activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId}`}
+                  href={`/api/questions/${activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-amber-600 hover:text-amber-850 font-semibold flex items-center gap-0.5"
@@ -663,9 +723,14 @@ export default function QuizApp() {
                     }`}
                   >
                     <span className="line-clamp-1">{set.title}</span>
+                    {set.difficulty && (
+                      <span className="text-[9px] text-amber-800/80 font-medium">
+                        Độ khó: {set.difficulty}
+                      </span>
+                    )}
                     {isActive && (
                       <span className="text-[9px] text-amber-800/80 font-mono font-normal">
-                        API: /{set.id === 'react-agent-day3' ? 'design-pattern-react' : set.id}
+                        API: /{set.id === 'react-loop-basics' ? 'design-pattern-react' : set.id}
                       </span>
                     )}
                   </button>
@@ -675,7 +740,28 @@ export default function QuizApp() {
           </div>
 
           <AnimatePresence mode="wait">
-            {!showFinishScreen ? (
+            {isLoadingQuestions ? (
+              <motion.div
+                key="loading-questions"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                className="w-full p-8 md:p-12 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] flex flex-col items-center justify-center space-y-4 text-center min-h-[350px]"
+              >
+                <div className="relative w-16 h-16">
+                  {/* Outer spinning ring with gradient */}
+                  <div className="absolute inset-0 rounded-full border-4 border-amber-500/10 border-t-amber-500 animate-spin" />
+                  {/* Inner pulsing star icon */}
+                  <div className="absolute inset-2 bg-amber-50 rounded-full flex items-center justify-center shadow-inner-white">
+                    <Sparkles className="w-5 h-5 text-amber-500 animate-pulse" />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-sm font-bold text-amber-950">Đang tải câu hỏi...</h3>
+                  <p className="text-[11px] text-stone-500 font-mono">Hệ thống đang nạp dữ liệu đề học tập</p>
+                </div>
+              </motion.div>
+            ) : !showFinishScreen ? (
               !preQuizSubmitted[activeSetId] ? (
                 <motion.div
                   key={`pre-survey-${activeSetId}`}
@@ -689,7 +775,7 @@ export default function QuizApp() {
                   {/* Share button in top-right */}
                   <button
                     onClick={() => {
-                      const slug = activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId;
+                      const slug = activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId;
                       const shareUrl = `${window.location.origin}${window.location.pathname}?set=${slug}`;
                       navigator.clipboard.writeText(shareUrl);
                       setCopiedShareLink(true);
@@ -711,6 +797,19 @@ export default function QuizApp() {
                     </h2>
                     <p className="text-[11px] md:text-xs text-stone-550 leading-relaxed max-w-md mx-auto">
                       Để hệ thống tối ưu hóa lộ trình cá nhân, bạn hãy đánh giá độ hiểu bài hôm nay trên lớp nhé!
+                    </p>
+                  </div>
+
+                  <div className="max-w-lg mx-auto rounded-xl border border-amber-100/70 bg-amber-50/30 p-3 text-left space-y-1.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="text-xs font-bold text-amber-950 line-clamp-1">{activeSet.title}</h3>
+                      {renderDifficultyBadge(activeSet.difficulty)}
+                    </div>
+                    <p className="text-[11px] text-stone-600 leading-relaxed">
+                      {activeSet.description}
+                    </p>
+                    <p className="text-[10px] text-amber-800/80 font-mono">
+                      {totalQuestions} câu hỏi
                     </p>
                   </div>
 
@@ -793,7 +892,7 @@ export default function QuizApp() {
                     </button>
                   </div>
                 </motion.div>
-              ) : (
+              ) : currentQuestion ? (
                 <motion.div
                   key={`${activeSetId}-${currentQuestion.id}`}
                   initial={{ opacity: 0, y: 15 }}
@@ -812,11 +911,11 @@ export default function QuizApp() {
                     <div className="flex items-center gap-2">
                       {isSubmitted && (
                       <span className={`flex items-center gap-1 text-xs font-mono px-3 py-1 rounded-full ${
-                        answersHistory[currentQuestion.id]?.isCorrect 
+                        currentHistory?.isCorrect 
                           ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20' 
                           : 'bg-rose-500/10 text-rose-700 border border-rose-500/20'
                       }`}>
-                        {answersHistory[currentQuestion.id]?.isCorrect ? (
+                        {currentHistory?.isCorrect ? (
                           <>
                             <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
                             Chuẩn xác
@@ -832,7 +931,7 @@ export default function QuizApp() {
 
                     <button
                       onClick={() => {
-                        const slug = activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId;
+                        const slug = activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId;
                         const shareUrl = `${window.location.origin}${window.location.pathname}?set=${slug}`;
                         navigator.clipboard.writeText(shareUrl);
                         setCopiedShareLink(true);
@@ -987,6 +1086,10 @@ export default function QuizApp() {
                     </span>
                   </div>
                 </motion.div>
+              ) : (
+                <div className="p-8 rounded-2xl bg-white/90 border border-amber-100/80 shadow-md text-center text-stone-500 font-mono text-xs">
+                  Không tìm thấy câu hỏi cho bộ đề này.
+                </div>
               )
             ) : (
               // Results dashboard finish screen
@@ -1000,7 +1103,7 @@ export default function QuizApp() {
                 {/* Share button in top-right */}
                 <button
                   onClick={() => {
-                    const slug = activeSetId === 'react-agent-day3' ? 'design-pattern-react' : activeSetId;
+                    const slug = activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId;
                     const shareUrl = `${window.location.origin}${window.location.pathname}?set=${slug}`;
                     navigator.clipboard.writeText(shareUrl);
                     setCopiedShareLink(true);
@@ -1324,7 +1427,7 @@ export default function QuizApp() {
                   {getIncorrectQuestions().length > 0 ? (
                     <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                       {getIncorrectQuestions().map((q, idx) => {
-                        const wrongChoice = answersHistory[q.id]?.selected;
+                        const wrongChoice = answersHistory[activeSetId]?.[q.id]?.selected;
                         return (
                           <div 
                             key={q.id}
