@@ -1,0 +1,6 @@
+{
+  "name": "EduGap",
+  "description": "A premium glassmorphic dark-theme Vietnamese quiz web application designed with absolute zero emojis and en/em-dashes, featuring interactive question set loading, detailed explanation reviews, and incorrect answer tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

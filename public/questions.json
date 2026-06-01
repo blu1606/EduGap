@@ -1,0 +1,251 @@
+{
+  "sets": [
+    {
+      "id": "react-agent-day3",
+      "title": "Desing Pattern react",
+      "description": "Bộ 20 câu hỏi trắc nghiệm ôn tập về vòng lặp ReAct, công cụ gọi hàm, các lỗi phổ biến, guardrails và an ninh hệ thống.",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Sự khác biệt mấu chốt về luồng xử lý giữa Chatbot thông thường và ReAct Agent là gì?",
+          "options": {
+            "A": "Chatbot xử lý nhiều bước phức tạp hơn Agent.",
+            "B": "Chatbot chỉ nhận câu hỏi và sinh câu trả lời ngay, trong khi Agent chạy theo vòng lặp suy luận, hành động gọi công cụ và quan sát kết quả trước khi trả lời.",
+            "C": "Chatbot sử dụng cơ sở dữ liệu Vector để gọi API, còn Agent chỉ dùng mã nguồn tĩnh.",
+            "D": "Chatbot có khả năng tự động sửa sai trong quá trình lập luận tốt hơn Agent."
+          },
+          "answer": "B",
+          "explanation": "Chatbot thông thường chủ yếu thực hiện luồng tuyến tính một lượt (nhận câu hỏi -> trả lời). Agent hoạt động dựa trên vòng lặp tương tác với môi trường qua các bước Thought, Action và Observation."
+        },
+        {
+          "id": 2,
+          "question": "Trong vòng lặp ReAct, bước Thought thể hiện điều gì?",
+          "options": {
+            "A": "Hành động kích hoạt các API bên ngoài.",
+            "B": "Kết quả thực tế mà công cụ trả về cho mô hình.",
+            "C": "Mô hình ngôn ngữ tự suy luận xem đang thiếu thông tin gì và quyết định hành động tiếp theo.",
+            "D": "Câu trả lời cuối cùng hiển thị trực tiếp cho người dùng."
+          },
+          "answer": "C",
+          "explanation": "Thought là bước lập luận nội bộ của LLM, giúp mô hình phân tích trạng thái hiện tại, xác định khoảng trống thông tin và lên kế hoạch cho hành động tiếp theo."
+        },
+        {
+          "id": 3,
+          "question": "Trường hợp nào dưới đây cho thấy bài toán cần nâng cấp lên sử dụng ReAct Agent thay vì Chatbot tĩnh?",
+          "options": {
+            "A": "Khi hệ thống chỉ cần hiển thị các câu trả lời FAQ có sẵn.",
+            "B": "Khi bài toán yêu cầu viết một email chúc mừng sinh nhật dựa trên thông tin tĩnh.",
+            "C": "Khi bài toán yêu cầu thực hiện nhiều bước xử lý phụ thuộc lẫn nhau và kết quả bước sau phụ thuộc vào dữ liệu động thu được từ bước trước.",
+            "D": "Khi người dùng chỉ muốn dịch một đoạn văn bản ngắn sang ngôn ngữ khác."
+          },
+          "answer": "C",
+          "explanation": "Agent phù hợp cho các tác vụ cần tương tác với môi trường bên ngoài, gọi công cụ động, xử lý nhiều bước và tự điều chỉnh kế hoạch dựa trên kết quả quan sát."
+        },
+        {
+          "id": 4,
+          "question": "Bản chất của khái niệm Tool Call trong hệ thống AI Agent là gì?",
+          "options": {
+            "A": "Một chương trình tự động chạy code trên máy tính của người dùng.",
+            "B": "Một hợp đồng định dạng JSON do LLM tạo ra để mô tả tên công cụ muốn gọi và các tham số truyền vào.",
+            "C": "Một thuật toán nén dữ liệu giúp giảm kích thước prompt.",
+            "D": "Một dạng prompt chỉ chứa các câu lệnh if/else cố định."
+          },
+          "answer": "B",
+          "explanation": "Tool call hoạt động như một giao thức truyền thông điệp dạng JSON giữa mô hình ngôn ngữ và hệ thống backend để yêu cầu thực thi các hàm trong code."
+        },
+        {
+          "id": 5,
+          "question": "Việc ép mô hình sử dụng gọi hàm gốc (Native Function Calling) thay vì trả về định dạng văn bản tự do giúp giải quyết vấn đề gì?",
+          "options": {
+            "A": "Giảm thời gian phản hồi của mô hình xuống dưới 100ms.",
+            "B": "Tự động mã hóa dữ liệu nhạy cảm của người dùng.",
+            "C": "Giúp quá trình phân tích lệnh gọi công cụ ổn định hơn, tránh các lỗi sai định dạng, thiếu trường dữ liệu hoặc bịa đặt tên công cụ.",
+            "D": "Cho phép mô hình tự sửa lỗi code của backend mà không cần lập trình viên."
+          },
+          "answer": "C",
+          "explanation": "Native Function Calling ép mô hình tuân thủ cấu trúc JSON schema định sẵn, giảm thiểu tối đa hiện tượng sai lệch định dạng (format drift) khi phân tích cú pháp văn bản tự do."
+        },
+        {
+          "id": 6,
+          "question": "Lỗi 'hallucinate input' của Agent khi gọi công cụ xảy ra khi nào?",
+          "options": {
+            "A": "Khi công cụ trả về kết quả rỗng (null hoặc empty).",
+            "B": "Khi Agent tự ý bịa ra các tham số đầu vào quan trọng còn thiếu thay vì hỏi lại người dùng hoặc báo lỗi.",
+            "C": "Khi thời gian thực thi của công cụ vượt quá giới hạn timeout.",
+            "D": "Khi người dùng chèn mã độc vào ô nhập liệu."
+          },
+          "answer": "B",
+          "explanation": "Hallucinate input là việc mô hình tự điền các thông tin chưa có (ví dụ: tự đoán ngày bay khi khách hàng chưa cung cấp) dẫn đến thực thi công cụ sai thực tế."
+        },
+        {
+          "id": 7,
+          "question": "Khi Agent truyền sai định dạng tham số đầu vào (ví dụ truyền mã thành phố 'HCM' thay vì mã IATA 'SGN' cho công cụ tìm chuyến bay), giải pháp xử lý nào dưới đây là phù hợp nhất?",
+          "options": {
+            "A": "Bỏ qua lỗi và để API bên ngoài tự xử lý.",
+            "B": "Sử dụng schema rõ ràng, validate tham số trước khi thực hiện gọi tool hoặc thêm bước chuẩn hóa (normalize) dữ liệu đầu vào.",
+            "C": "Tăng giới hạn số vòng lặp tối đa của Agent lên vô hạn.",
+            "D": "Cấu hình để Agent tự động chuyển sang mô hình ngôn ngữ lớn hơn."
+          },
+          "answer": "B",
+          "explanation": "Sử dụng schema chặt chẽ để validate và thiết lập bước tiền xử lý chuẩn hóa dữ liệu giúp đảm bảo tham số truyền vào API bên ngoài luôn chính xác."
+        },
+        {
+          "id": 8,
+          "question": "Khi công cụ gọi API không trả về kết quả (null hoặc empty), cách xử lý nào là phù hợp nhất đối với Agent?",
+          "options": {
+            "A": "Tự bịa ra một kết quả giả định để tiếp tục vòng lặp.",
+            "B": "Trả về kết quả quan sát rõ ràng cho Agent biết không tìm thấy kết quả để mô hình quyết định đổi hướng hoặc báo thực tế với người dùng.",
+            "C": "Ngắt kết nối của Agent ngay lập tức mà không phản hồi người dùng.",
+            "D": "Thực hiện retry liên tục với cùng một tham số đầu vào."
+          },
+          "answer": "B",
+          "explanation": "Khi công cụ không có dữ liệu, Agent cần ghi nhận thông tin thực tế này làm Observation để đưa ra quyết định hợp lý thay vì tự tạo ra thông tin giả mạo."
+        },
+        {
+          "id": 9,
+          "question": "Khi gặp lỗi kết nối API tạm thời, logic retry của Agent nên được thiết kế như thế nào?",
+          "options": {
+            "A": "Thực hiện thử lại vô hạn lần cho đến khi API hoạt động bình thường.",
+            "B": "Thiết lập số lần retry có giới hạn, có thể tăng thời gian chờ (backoff) hoặc báo lỗi minh bạch với người dùng khi vượt giới hạn.",
+            "C": "Bỏ qua lỗi đó và tự động nhảy sang bước tiếp theo của quy trình.",
+            "D": "Tự động thay đổi tên công cụ muốn gọi."
+          },
+          "answer": "B",
+          "explanation": "Logic retry chuẩn cần giới hạn số lần thực hiện và áp dụng khoảng thời gian chờ tăng dần để tránh làm nghẽn tài nguyên hệ thống hoặc làm quá tải API đích."
+        },
+        {
+          "id": 10,
+          "question": "Để ngăn chặn tình trạng Agent lặp vô hạn (Infinite Loop) khi gọi liên tiếp một công cụ với cùng một tham số, giải pháp nào là cần thiết?",
+          "options": {
+            "A": "Loại bỏ hoàn toàn công cụ đó khỏi hệ thống.",
+            "B": "Giới hạn số lượt chạy tối đa (max iterations) và phát hiện hành động trùng lặp (duplicate tool call) để buộc dừng hoặc đổi chiến lược.",
+            "C": "Mã hóa toàn bộ lịch sử hội thoại sau mỗi vòng lặp.",
+            "D": "Tăng kích thước cửa sổ ngữ cảnh của mô hình lên tối đa."
+          },
+          "answer": "B",
+          "explanation": "Thiết lập max iterations và theo dõi các tool call trùng lặp giúp phát hiện sớm hiện tượng vòng lặp tư duy bế tắc, bảo vệ tài nguyên máy chủ."
+        },
+        {
+          "id": 11,
+          "question": "Tại sao rủi ro từ việc Agent hoạt động sai lệch lại nguy hiểm hơn nhiều so với một Chatbot thông thường?",
+          "options": {
+            "A": "Vì Agent sử dụng nhiều token hơn Chatbot.",
+            "B": "Vì Agent có khả năng thực hiện hành động tác động trực tiếp đến môi trường bên ngoài (như gọi API thanh toán, xóa tệp tin, gửi email).",
+            "C": "Vì Agent không thể hiển thị kết quả cho người dùng.",
+            "D": "Vì Agent hoạt động hoàn toàn độc lập mà không cần kết nối internet."
+          },
+          "answer": "B",
+          "explanation": "Chatbot chỉ đưa ra câu trả lời văn bản, trong khi Agent được trao quyền thực thi hành động. Sai lầm của Agent có thể dẫn đến hậu quả trực tiếp về dữ liệu hoặc tài chính."
+        },
+        {
+          "id": 12,
+          "question": "Hoạt động kiểm tra Prompt Injection và lọc dữ liệu cá nhân nhạy cảm (PII) trong yêu cầu của người dùng thuộc lớp phòng thủ nào?",
+          "options": {
+            "A": "Input Guardrails",
+            "B": "Tool Guardrails",
+            "C": "Output Guardrails",
+            "D": "Database Guardrails"
+          },
+          "answer": "A",
+          "explanation": "Input Guardrails kiểm soát và khử trùng dữ liệu đầu vào trực tiếp từ người dùng trước khi chuyển giao cho lõi lập luận của mô hình."
+        },
+        {
+          "id": 13,
+          "question": "Kiểm soát danh sách công cụ được phép gọi, kiểm tra rate limit và yêu cầu con người phê duyệt (Human Approval) thuộc lớp phòng thủ nào?",
+          "options": {
+            "A": "Input Guardrails",
+            "B": "Tool Guardrails",
+            "C": "Output Guardrails",
+            "D": "Model Guardrails"
+          },
+          "answer": "B",
+          "explanation": "Tool Guardrails kiểm soát chặt chẽ quá trình kích hoạt công cụ, đảm bảo tham số hợp lệ và ngăn chặn các hành động nằm ngoài quyền hạn của Agent."
+        },
+        {
+          "id": 14,
+          "question": "Việc kiểm tra xem câu trả lời cuối cùng của Agent có bịa đặt thông tin hoặc có mâuthuẫn với kết quả thực tế của công cụ (Observation) hay không thuộc về lớp phòng thủ nào?",
+          "options": {
+            "A": "Input Guardrails",
+            "B": "Tool Guardrails",
+            "C": "Output Guardrails",
+            "D": "System Guardrails"
+          },
+          "answer": "C",
+          "explanation": "Output Guardrails kiểm soát phản hồi cuối cùng của Agent trước khi gửi tới người dùng để phát hiện sự không đồng nhất dữ liệu hoặc rò rỉ thông tin nhạy cảm."
+        },
+        {
+          "id": 15,
+          "question": "Tấn công Prompt Injection đối với Agent xảy ra khi nào?",
+          "options": {
+            "A": "Khi máy chủ API của công cụ bị quá tải kết nối.",
+            "B": "Khi người dùng hoặc nguồn dữ liệu bên ngoài chèn các chỉ dẫn độc hại nhằm đánh lừa mô hình bỏ qua system prompt gốc để thực hiện ý đồ của kẻ tấn công.",
+            "C": "Khi lập trình viên cấu hình sai khóa bảo mật API key.",
+            "D": "Khi mô hình ngôn ngữ tự động nâng cấp phiên bản mới."
+          },
+          "answer": "B",
+          "explanation": "Prompt Injection lợi dụng khả năng đọc và hiểu ngôn ngữ của mô hình để chèn các câu lệnh ẩn (ví dụ: 'bỏ qua các lệnh trước đó và làm theo lệnh này') nhằm kiểm soát hành vi của Agent."
+        },
+        {
+          "id": 16,
+          "question": "Biện pháp nào dưới đây giúp bảo vệ Agent chống lại Prompt Injection từ nguồn dữ liệu bên ngoài (ví dụ đọc trang web chứa lệnh độc hại)?",
+          "options": {
+            "A": "Tin tưởng tuyệt đối vào kết quả trả về của công cụ.",
+            "B": "Không cho phép mô hình tự quyết định các hành động nguy hiểm, áp dụng whitelist công cụ và thực hiện sanitize dữ liệu lấy về.",
+            "C": "Ẩn toàn bộ log hoạt động của Agent khỏi hệ thống.",
+            "D": "Tắt tính năng gọi công cụ và chuyển về chatbot tĩnh."
+          },
+          "answer": "B",
+          "explanation": "Để phòng chống prompt injection gián tiếp, hệ thống cần cô lập dữ liệu thô, lọc bỏ ký tự nguy hiểm, dùng whitelist và bắt buộc phê duyệt thủ công đối với các tác vụ nhạy cảm."
+        },
+        {
+          "id": 17,
+          "question": "Tại sao cơ chế giám sát phê duyệt (Human-in-the-loop) lại bắt buộc phải áp dụng đối với các hành động như thanh toán, xóa dữ liệu hoặc gửi email?",
+          "options": {
+            "A": "Để giảm thiểu thời gian xử lý của máy chủ web.",
+            "B": "Vì đây là những hành động không thể đảo ngược hoặc có độ rủi ro cao, cần sự kiểm soát của con người để tránh thiệt hại thực tế do lỗi của Agent.",
+            "C": "Để tối ưu hóa lượng token tiêu thụ của Agent.",
+            "D": "Vì mô hình ngôn ngữ không có khả năng sinh cú pháp gọi các API này."
+          },
+          "answer": "B",
+          "explanation": "Các hành động có tác động vật lý hoặc tài chính thực tế cần có chốt chặn kiểm duyệt của con người để ngăn ngừa tổn thất khi Agent đưa ra quyết định sai lầm."
+        },
+        {
+          "id": 18,
+          "question": "Tại sao việc ghi nhật ký (logging) chi tiết từng bước lập luận (Thought, Action, Observation) lại cực kỳ quan trọng đối với Agent?",
+          "options": {
+            "A": "Để làm tăng dung lượng lưu trữ của cơ sở dữ liệu.",
+            "B": "Để có thể quan sát, debug và phân tích được nguyên nhân lỗi xảy ra ở bước nào trong chuỗi lập luận phức tạp của Agent.",
+            "C": "Để hiển thị toàn bộ mã nguồn cho người dùng cuối cùng xem.",
+            "D": "Để mô hình tự động đọc và học lại hành vi sau mỗi phiên chạy."
+          },
+          "answer": "B",
+          "explanation": "Agent chạy qua nhiều vòng lặp động. Nếu chỉ ghi nhận câu trả lời cuối cùng, lập trình viên sẽ không thể biết Agent bị sai do LLM chọn sai công cụ, tham số lỗi hay do API trả về dữ liệu hỏng."
+        },
+        {
+          "id": 19,
+          "question": "Khi Agent trả về kết quả sai, thông tin trace log nào giúp ta xác định lỗi do LLM suy luận sai hay do công cụ trả về thông tin sai?",
+          "options": {
+            "A": "Địa chỉ IP của người dùng gửi yêu cầu.",
+            "B": "Đối chiếu bước Thought (suy luận của LLM) và bước Observation (kết quả trả về từ công cụ thật).",
+            "C": "Tổng số lượng token tiêu thụ của cả phiên hoạt động.",
+            "D": "Thời điểm bắt đầu kích hoạt tiến trình hệ thống."
+          },
+          "answer": "B",
+          "explanation": "Bằng cách xem Observation, ta biết công cụ trả về đúng hay sai. Bằng cách xem Thought và Action kế tiếp, ta biết LLM có hiểu đúng dữ liệu của Observation đó để lập luận tiếp hay không."
+        },
+        {
+          "id": 20,
+          "question": "Yếu tố nào dưới đây đóng vai trò quan trọng nhất để tạo nên một Agent hoạt động ổn định và an toàn trong môi trường thực tế?",
+          "options": {
+            "A": "Sử dụng các prompt dài và phức tạp nhất có thể.",
+            "B": "Sự kết hợp đồng bộ giữa mô tả công cụ rõ ràng, kiểm tra validate tham số, thiết lập guardrails và giám sát ghi log đầy đủ.",
+            "C": "Tắt bỏ toàn bộ tính năng kiểm tra lỗi để Agent chạy nhanh hơn.",
+            "D": "Chỉ sử dụng một lượt gọi LLM duy nhất để đưa ra câu trả lời."
+          },
+          "answer": "B",
+          "explanation": "Một Agent tin cậy không chỉ phụ thuộc vào prompt mà cần một hệ thống kiểm soát chặt chẽ bao gồm validation, guardrails chống injection, retry logic và logging chi tiết."
+        }
+      ]
+    }
+  ]
+}
