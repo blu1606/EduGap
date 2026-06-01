@@ -1,0 +1,130 @@
+{
+  "id": "react-agent-security",
+  "parent_id": "day3",
+  "topic_title": "Day 3: Design Pattern ReAct",
+  "title": "Phần 3: An ninh & Guardrails Agent",
+  "description": "Kiểm tra cách kiểm soát tool, chống prompt injection, bảo vệ dữ liệu nhạy cảm và yêu cầu phê duyệt người dùng.",
+  "difficulty": "khó",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Một Agent có quyền gửi email đọc nội dung từ trang web bên ngoài. Trang đó chứa câu “ignore previous instructions”. Rủi ro chính là gì?",
+      "options": {
+        "A": "Agent có thể xem dữ liệu ngoài như chỉ dẫn và làm sai chính sách.",
+        "B": "Agent có thể dừng xử lý vì website chứa chỉ dẫn gây nhiễu.",
+        "C": "Agent có thể tự giảm token để hạn chế đọc nội dung lạ.",
+        "D": "Agent có thể bỏ qua rủi ro nếu tool trả văn bản thường."
+      },
+      "answer": "A",
+      "explanation": "Đây là prompt injection gián tiếp: dữ liệu ngoài có thể bị model hiểu nhầm thành lệnh điều khiển."
+    },
+    {
+      "id": 2,
+      "question": "User yêu cầu Agent chuyển khoản, nhưng số tiền và người nhận nằm trong text tự do. Guardrail nào cần đặt trước tool call?",
+      "options": {
+        "A": "Cho model tự đoán trường thiếu để giao dịch hoàn tất nhanh hơn.",
+        "B": "Validate trường bắt buộc và yêu cầu user xác nhận giao dịch cụ thể.",
+        "C": "Chỉ ghi log sau giao dịch để kiểm tra nếu có khiếu nại.",
+        "D": "Tăng nhiệt độ model để nhận diện ý định người dùng tốt hơn."
+      },
+      "answer": "B",
+      "explanation": "Hành động tài chính cần validate tham số và human approval trước khi gọi tool có tác động thật."
+    },
+    {
+      "id": 3,
+      "question": "Một tool trả về dữ liệu khách hàng gồm email và số điện thoại. Output guardrail nên làm gì trước khi trả lời user?",
+      "options": {
+        "A": "Trả toàn bộ dữ liệu để user tự quyết định phần nào cần dùng.",
+        "B": "Xóa log tool call để tránh lưu lại thông tin cá nhân.",
+        "C": "Kiểm tra quyền truy cập và che dữ liệu nhạy cảm không cần thiết.",
+        "D": "Dịch dữ liệu sang tiếng Anh để giảm rủi ro lộ thông tin."
+      },
+      "answer": "C",
+      "explanation": "Output guardrails cần kiểm tra rò rỉ PII và chỉ trả dữ liệu phù hợp quyền, đúng mục đích."
+    },
+    {
+      "id": 4,
+      "question": "Agent gọi tool `deleteUser` dù user chỉ hỏi cách vô hiệu hóa tài khoản. Lớp kiểm soát nào nên chặn hành động này?",
+      "options": {
+        "A": "Output guardrail sửa phản hồi sau khi hành động đã chạy xong.",
+        "B": "Logging guardrail ẩn action để user không thấy lỗi hệ thống.",
+        "C": "Tool guardrail kiểm tra intent, quyền và mức nguy hiểm trước khi chạy.",
+        "D": "Memory guardrail ghi nhớ rằng user từng hỏi về tài khoản."
+      },
+      "answer": "C",
+      "explanation": "Tool guardrails phải chặn hành động nguy hiểm trước khi thực thi, không đợi tới output cuối."
+    },
+    {
+      "id": 5,
+      "question": "Trong trace, Thought nói “cần kiểm tra quyền”, nhưng Action vẫn gọi tool admin. Bạn nên sửa điểm nào trước?",
+      "options": {
+        "A": "Ẩn Thought khỏi trace để tránh lộ quy trình suy luận nội bộ.",
+        "B": "Thêm policy enforcement ở tool layer thay vì chỉ tin Thought.",
+        "C": "Tăng số câu ví dụ trong prompt rồi bỏ kiểm tra quyền.",
+        "D": "Cho phép tool chạy trước rồi rollback nếu phát hiện sai."
+      },
+      "answer": "B",
+      "explanation": "Thought không phải cơ chế bảo mật; quyền phải được enforced ở lớp tool/backend."
+    },
+    {
+      "id": 6,
+      "question": "Một Agent hỗ trợ khách hàng được cấp cả tool đọc đơn hàng và tool hoàn tiền. Cấu hình nào an toàn hơn?",
+      "options": {
+        "A": "Chỉ bật tool cần thiết theo intent và yêu cầu duyệt cho hoàn tiền.",
+        "B": "Bật mọi tool sẵn có để Agent linh hoạt xử lý mọi tình huống.",
+        "C": "Ẩn mô tả tool khỏi model để model không gọi nhầm tool.",
+        "D": "Cho tool hoàn tiền chạy tự động nếu user viết giọng bức xúc."
+      },
+      "answer": "A",
+      "explanation": "Least privilege và approval cho hành động rủi ro giúp giảm tác động khi model hiểu sai intent."
+    },
+    {
+      "id": 7,
+      "question": "Một prompt injection yêu cầu Agent in toàn bộ system prompt. Phản ứng nào phù hợp nhất?",
+      "options": {
+        "A": "Từ chối tiết lộ system prompt và tiếp tục xử lý yêu cầu hợp lệ.",
+        "B": "Tóm tắt system prompt để user hiểu giới hạn vận hành của Agent.",
+        "C": "In system prompt nếu user cam kết dùng cho mục đích học tập.",
+        "D": "Gọi tool logging để lấy system prompt từ backend rồi trả lời lại."
+      },
+      "answer": "A",
+      "explanation": "System prompt là chỉ dẫn nội bộ; Agent nên từ chối tiết lộ và không để injection đổi mục tiêu."
+    },
+    {
+      "id": 8,
+      "question": "Agent trả lời sai sau khi tool search trả về 3 kết quả mâu thuẫn. Log nào giúp phân biệt lỗi tool hay lỗi suy luận?",
+      "options": {
+        "A": "Trace gồm Thought, Action, tham số tool và Observation gốc.",
+        "B": "Log chỉ gồm câu trả lời cuối và mã phiên hội thoại.",
+        "C": "Log tổng token tiêu thụ và thời gian model phản hồi.",
+        "D": "Log giao diện người dùng tại thời điểm user gửi câu hỏi."
+      },
+      "answer": "A",
+      "explanation": "Trace đầy đủ cho biết tool trả gì và model đã suy luận thế nào từ Observation đó."
+    },
+    {
+      "id": 9,
+      "question": "Một nguồn dữ liệu ngoài chứa cả nội dung hữu ích và lệnh độc. Cách đưa dữ liệu vào Agent nào an toàn hơn?",
+      "options": {
+        "A": "Đánh dấu dữ liệu là untrusted context và không cho nó ghi đè policy.",
+        "B": "Ghép dữ liệu vào system prompt để model ưu tiên đọc trước.",
+        "C": "Xóa mọi dấu câu trong dữ liệu rồi coi như đã an toàn.",
+        "D": "Cho model tự quyết định phần nào là lệnh đáng tin cậy."
+      },
+      "answer": "A",
+      "explanation": "Dữ liệu ngoài phải được cô lập như context không đáng tin, không được quyền thay đổi instruction cấp cao."
+    },
+    {
+      "id": 10,
+      "question": "Agent chuẩn bị gửi email cho 500 khách hàng sau khi đọc file CSV. Bước kiểm soát nào quan trọng nhất trước khi gửi?",
+      "options": {
+        "A": "Preview người nhận, nội dung và yêu cầu xác nhận trước khi gửi.",
+        "B": "Gửi thử cho toàn bộ danh sách để phát hiện lỗi email.",
+        "C": "Tắt rate limit để hoàn tất tác vụ trước khi hết phiên.",
+        "D": "Ẩn danh sách người nhận để tránh user thay đổi quyết định."
+      },
+      "answer": "A",
+      "explanation": "Gửi email hàng loạt có tác động thật, nên cần preview và human approval trước khi thực thi."
+    }
+  ]
+}
