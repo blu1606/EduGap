@@ -1,0 +1,60 @@
+{
+  "sets": [
+    {
+      "id": "day1-basics",
+      "parent_id": "day1",
+      "topic_title": "Day 1: AI & LLM Foundation",
+      "title": "Phần 1: Khái niệm cơ bản LLM",
+      "description": "Nắm nền tảng về Transformer, tokenization và cách mô hình ngôn ngữ lớn xử lý ngữ cảnh.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "day2-basics",
+      "parent_id": "day2",
+      "topic_title": "Day 2: Xác định Bài toán cho AI",
+      "title": "Phần 1: Định hình bài toán",
+      "description": "Luyện cách đánh giá tính khả thi, dữ liệu đầu vào và lựa chọn mô hình phù hợp cho bài toán AI.",
+      "difficulty": "bình thường"
+    },
+    {
+      "id": "react-loop-basics",
+      "parent_id": "day3",
+      "topic_title": "Day 3: Design Pattern ReAct",
+      "title": "Phần 1: Nền tảng vòng lặp ReAct",
+      "description": "Ôn kiến thức nền về Thought, Action, Observation và khi nào cần dùng Agent thay vì chatbot tĩnh.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "react-tool-calling-patterns",
+      "parent_id": "day3",
+      "topic_title": "Day 3: Design Pattern ReAct",
+      "title": "Phần 2: Tool Calling & Function Schema",
+      "description": "Thực hành thiết kế schema gọi công cụ, validate tham số và xử lý Observation trong vòng lặp ReAct.",
+      "difficulty": "bình thường"
+    },
+    {
+      "id": "react-agent-security",
+      "parent_id": "day3",
+      "topic_title": "Day 3: Design Pattern ReAct",
+      "title": "Phần 3: An ninh & Guardrails Agent",
+      "description": "Kiểm tra cách kiểm soát tool, chống prompt injection, bảo vệ dữ liệu nhạy cảm và yêu cầu phê duyệt người dùng.",
+      "difficulty": "khó"
+    },
+    {
+      "id": "react-agent-debugging",
+      "parent_id": "day3",
+      "topic_title": "Day 3: Design Pattern ReAct",
+      "title": "Phần 4: Debug Trace & Quan sát Agent",
+      "description": "Phân tích trace Thought/Action/Observation để tìm nguyên nhân lỗi, dữ liệu cũ, tool sai và vòng lặp bất thường.",
+      "difficulty": "khó"
+    },
+    {
+      "id": "prompt-engineering-standard",
+      "parent_id": "day4",
+      "topic_title": "Day 4: Prompt Engineering & Tool Calling",
+      "title": "Phần 1: Nền Tảng Prompt Engineering",
+      "description": "Các kỹ thuật thiết kế prompt rõ mục tiêu, có ràng buộc và dễ kiểm soát chất lượng phản hồi của LLM.",
+      "difficulty": "bình thường"
+    }
+  ]
+}
