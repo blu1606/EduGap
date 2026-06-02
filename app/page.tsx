@@ -31,14 +31,19 @@ type QuizDifficulty = 'dễ' | 'bình thường' | 'khó';
 interface Question {
   id: number;
   question: string;
-  options: {
-    A: string;
-    B: string;
-    C: string;
-    D: string;
+  options?: {
+    A?: string;
+    B?: string;
+    C?: string;
+    D?: string;
+    [key: string]: string | undefined;
   };
-  answer: string;
-  explanation: string;
+  answer?: string;
+  explanation?: string;
+  expected_answer?: string;
+  evaluation_points?: string[];
+  sfia_level?: string;
+  competency?: string;
 }
 
 interface QuestionSet {
@@ -94,9 +99,10 @@ export default function QuizApp() {
   const [data, setData] = useState<QuestionsData>(FALLBACK_DATA);
   const [activeSetId, setActiveSetId] = useState<string>('day1-basics');
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState<number>(0);
-  const [answersHistory, setAnswersHistory] = useState<{ [setId: string]: { [qId: number]: { selected: string, isCorrect: boolean } } }>({});
+  const [answersHistory, setAnswersHistory] = useState<{ [setId: string]: { [qId: number]: { selected?: string, essayAnswer?: string, checkedPoints?: string[], isCorrect: boolean } } }>({});
   const [showFinishScreen, setShowFinishScreen] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [essayInput, setEssayInput] = useState<string>('');
 
   // Loading state for quiz questions
   const [isLoadingQuestions, setIsLoadingQuestions] = useState<boolean>(true);
@@ -369,10 +375,13 @@ export default function QuizApp() {
   const selectedOption = currentHistory ? currentHistory.selected : null;
   const isSubmitted = !!currentHistory;
   const showExplanation = isSubmitted;
+  const isEssayCompleted = currentQuestion && (!currentQuestion.options || currentQuestion.expected_answer)
+    ? (selectedOption === 'essay_correct' || selectedOption === 'essay_incorrect')
+    : true;
 
   // Selected state update & Instant submission (auto check answer on click)
   const handleSelectOption = (optionKey: string) => {
-    if (isSubmitted || !currentQuestion) return;
+    if (isSubmitted || !currentQuestion || !currentQuestion.options) return;
     
     const isCorrect = optionKey === currentQuestion.answer;
     
@@ -383,6 +392,70 @@ export default function QuizApp() {
         [currentQuestion.id]: {
           selected: optionKey,
           isCorrect
+        }
+      }
+    }));
+  };
+
+  // Synchronize essayInput when currentQuestion changes
+  useEffect(() => {
+    if (currentQuestion) {
+      const history = answersHistory[activeSetId]?.[currentQuestion.id];
+      setEssayInput(history?.essayAnswer || '');
+    }
+  }, [currentQuestionIdx, activeSetId, answersHistory, currentQuestion?.id]);
+
+  // Submit the essay text
+  const handleSubmitEssay = () => {
+    if (isSubmitted || !currentQuestion || !essayInput.trim()) return;
+
+    setAnswersHistory(prev => ({
+      ...prev,
+      [activeSetId]: {
+        ...(prev[activeSetId] || {}),
+        [currentQuestion.id]: {
+          essayAnswer: essayInput,
+          isCorrect: false, // Default false until graded
+          selected: 'essay_submitted',
+          checkedPoints: []
+        }
+      }
+    }));
+  };
+
+  // Grade the essay (user clicks Correct or Incorrect)
+  const handleGradeEssay = (isCorrect: boolean) => {
+    if (!currentQuestion || !currentHistory) return;
+
+    setAnswersHistory(prev => ({
+      ...prev,
+      [activeSetId]: {
+        ...(prev[activeSetId] || {}),
+        [currentQuestion.id]: {
+          ...prev[activeSetId][currentQuestion.id],
+          isCorrect,
+          selected: isCorrect ? 'essay_correct' : 'essay_incorrect'
+        }
+      }
+    }));
+  };
+
+  // Toggle checklist for evaluation points
+  const handleToggleEvaluationPoint = (point: string) => {
+    if (!currentQuestion || !currentHistory) return;
+
+    const currentPoints = currentHistory.checkedPoints || [];
+    const newPoints = currentPoints.includes(point)
+      ? currentPoints.filter(p => p !== point)
+      : [...currentPoints, point];
+
+    setAnswersHistory(prev => ({
+      ...prev,
+      [activeSetId]: {
+        ...(prev[activeSetId] || {}),
+        [currentQuestion.id]: {
+          ...prev[activeSetId][currentQuestion.id],
+          checkedPoints: newPoints
         }
       }
     }));
@@ -951,94 +1024,244 @@ export default function QuizApp() {
                     {currentQuestion.question}
                   </h3>
 
-                  {/* Option buttons block */}
-                  <div id="question-options" className="grid grid-cols-1 gap-3 pt-2">
-                    {(Object.keys(currentQuestion.options) as Array<'A' | 'B' | 'C' | 'D'>).map(key => {
-                      const optionText = currentQuestion.options[key];
-                      const isSelected = selectedOption === key;
-                      const isAnswerCorrectKey = currentQuestion.answer === key;
-                      
-                      // Styling calculations based on submission state and selection status
-                      let buttonStyle = 'bg-amber-50/20 border-amber-100/80 text-stone-700 hover:bg-amber-50/60 hover:border-amber-200/80 shadow-inner-white';
-                      let badgeStyle = 'bg-amber-100/60 text-amber-800 border-amber-200/60';
-                      let indicatorIcon = null;
-
-                      if (!isSubmitted) {
-                        if (isSelected) {
-                          buttonStyle = 'bg-amber-500/10 border-amber-500 text-amber-950 shadow-md shadow-amber-500/5 ring-1 ring-amber-500/20 font-medium';
-                          badgeStyle = 'bg-amber-500 text-white border-amber-500';
-                        }
-                      } else {
-                        // After submission
-                        if (isSelected) {
-                          if (isAnswerCorrectKey) {
-                            buttonStyle = 'bg-emerald-500/10 border-emerald-500 text-emerald-990 shadow-md shadow-emerald-500/5 ring-1 ring-emerald-500/30 font-semibold';
-                            badgeStyle = 'bg-emerald-500 text-white border-emerald-500';
-                            indicatorIcon = <Check className="w-4 h-4 text-emerald-600 ml-auto" />;
-                          } else {
-                            buttonStyle = 'bg-rose-500/10 border-rose-500 text-rose-990 shadow-md shadow-rose-500/5 ring-1 ring-rose-500/30 font-semibold';
-                            badgeStyle = 'bg-rose-500 text-white border-rose-500';
-                            indicatorIcon = <X className="w-4 h-4 text-rose-600 ml-auto" />;
-                          }
-                        } else {
-                          // Not selected option
-                          if (isAnswerCorrectKey) {
-                            buttonStyle = 'bg-emerald-50/50 border-emerald-400 text-emerald-950 font-medium ring-1 ring-emerald-555/15';
-                            badgeStyle = 'bg-emerald-500 text-white border-emerald-500';
-                            indicatorIcon = <Check className="w-4 h-4 text-emerald-600 ml-auto" />;
-                          } else {
-                            buttonStyle = 'opacity-40 bg-stone-100/30 border-transparent text-stone-400 cursor-not-allowed';
-                            badgeStyle = 'bg-stone-200/50 text-stone-500 border-transparent';
-                          }
-                        }
-                      }
-
-                      return (
-                        <div key={key} className="space-y-2">
-                          <button
-                            id={`option-btn-${key}`}
-                            disabled={isSubmitted}
-                            onClick={() => handleSelectOption(key)}
-                            className={`w-full text-left p-3 rounded-lg border flex items-center gap-3 transition-all duration-200 group relative overflow-hidden cursor-pointer ${buttonStyle}`}
-                          >
-                            <span className={`w-7 h-7 shrink-0 rounded-md flex items-center justify-center font-mono text-xs border font-bold transition-colors ${badgeStyle}`}>
-                              {key}
+                  {/* Essay UI or Option buttons block */}
+                  {!currentQuestion.options || currentQuestion.expected_answer ? (
+                    <div id="essay-question-container" className="space-y-4 pt-2">
+                      {/* Competency & SFIA Badges */}
+                      {(currentQuestion.sfia_level || currentQuestion.competency) && (
+                        <div className="flex flex-wrap gap-2 items-center">
+                          {currentQuestion.sfia_level && (
+                            <span className="px-2.5 py-0.5 bg-amber-500/10 border border-amber-400/20 text-amber-800 text-[10px] uppercase font-bold tracking-wider font-mono rounded-md">
+                              {currentQuestion.sfia_level}
                             </span>
-                            
-                            <span className="flex-1 text-xs md:text-sm leading-relaxed">
-                              {optionText}
+                          )}
+                          {currentQuestion.competency && (
+                            <span className="text-[10px] text-stone-500 font-semibold italic truncate max-w-full">
+                              Năng lực: {currentQuestion.competency}
                             </span>
-
-                            {indicatorIcon}
-                          </button>
-
-                          {/* Render explanation directly below correct answer */}
-                          {isSubmitted && isAnswerCorrectKey && showExplanation && (
-                            <motion.div
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: 'auto' }}
-                              className="overflow-hidden"
-                            >
-                              <div className="p-3.5 rounded-lg bg-emerald-50/80 border border-emerald-200/60 shadow-inner-white space-y-1.5 pt-3 pb-3">
-                                <div className="flex items-center gap-1.5 text-emerald-900/90 text-[10px] font-bold uppercase tracking-wider font-mono">
-                                  <Info className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                  Giải thích đáp án đúng ({currentQuestion.answer})
-                                </div>
-                                <p className="text-stone-750 text-xs leading-relaxed font-medium">
-                                  {currentQuestion.explanation}
-                                </p>
-                              </div>
-                            </motion.div>
                           )}
                         </div>
-                      );
-                    })}
-                  </div>
+                      )}
+
+                      <div className="space-y-2">
+                        <label className="block text-xs font-bold text-amber-900/60 uppercase tracking-wider font-mono">
+                          Bài làm tự luận ngắn của bạn:
+                        </label>
+                        <textarea
+                          id="essay-response-textarea"
+                          disabled={isSubmitted}
+                          value={essayInput}
+                          onChange={(e) => setEssayInput(e.target.value)}
+                          placeholder="Trình bày phân tích, lập luận, thiết kế hoặc giải pháp của bạn cho tình huống trên..."
+                          className="w-full min-h-[140px] p-3.5 text-xs md:text-sm text-stone-850 bg-[#FDFBF7] border border-stone-205 focus:border-amber-400 focus:ring-1 focus:ring-amber-400/40 rounded-xl focus:outline-none transition-all duration-150 leading-relaxed font-sans shadow-inner-white"
+                        />
+                      </div>
+
+                      {!isSubmitted && (
+                        <div className="flex justify-end pt-1">
+                          <button
+                            id="submit-essay-btn"
+                            disabled={!essayInput.trim()}
+                            onClick={handleSubmitEssay}
+                            className={`w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all duration-150 cursor-pointer ${
+                              essayInput.trim()
+                                ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/10 active:translate-y-[1px]'
+                                : 'bg-stone-50 border border-stone-205 text-stone-400 cursor-not-allowed'
+                            }`}
+                          >
+                            <span>Nộp bài & Đối chiếu đáp án</span>
+                            <Sparkles className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      )}
+
+                      {isSubmitted && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="space-y-4 pt-1"
+                        >
+                          {/* Reference Sample Answer */}
+                          <div className="p-4 rounded-xl bg-amber-50/50 border border-amber-200/50 space-y-2 shadow-inner-white">
+                            <div className="flex items-center gap-1.5 text-amber-900/90 text-[10px] font-bold uppercase tracking-wider font-mono">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-300" />
+                              Đáp án tham chiếu đề xuất
+                            </div>
+                            <p className="text-stone-800 text-xs md:text-sm leading-relaxed font-medium whitespace-pre-line">
+                              {currentQuestion.expected_answer}
+                            </p>
+                          </div>
+
+                          {/* Interactive Rubric Checklist */}
+                          {currentQuestion.evaluation_points && currentQuestion.evaluation_points.length > 0 && (
+                            <div className="p-4 rounded-xl bg-white/70 border border-stone-200/60 space-y-3">
+                              <div className="flex items-center gap-1.5 text-stone-700 text-[10px] font-bold uppercase tracking-wider font-mono">
+                                <ListTodo className="w-3.5 h-3.5 text-amber-600" />
+                                Tự kiểm tra tiêu chí đạt được (Rà soát checklist):
+                              </div>
+                              <div className="grid grid-cols-1 gap-2">
+                                {currentQuestion.evaluation_points.map((point, idx) => {
+                                  const isChecked = currentHistory?.checkedPoints?.includes(point);
+                                  return (
+                                    <button
+                                      key={idx}
+                                      onClick={() => handleToggleEvaluationPoint(point)}
+                                      className={`flex items-start text-left gap-2.5 p-2 rounded-lg border transition-all duration-150 cursor-pointer ${
+                                        isChecked
+                                          ? 'bg-amber-500/5 border-amber-350 text-amber-950 font-medium'
+                                          : 'bg-stone-50/50 border-stone-150 text-stone-600 hover:bg-stone-50'
+                                      }`}
+                                    >
+                                      <span className={`w-4 h-4 shrink-0 rounded flex items-center justify-center border text-[9px] mt-0.5 transition-colors ${
+                                        isChecked ? 'bg-amber-500 border-amber-500 text-white' : 'border-stone-300 bg-white'
+                                      }`}>
+                                        {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                                      </span>
+                                      <span className="text-[11px] leading-normal">{point}</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Self grading controls */}
+                          <div className="p-4 rounded-xl bg-amber-50/20 border border-amber-100/65 space-y-3 text-center sm:text-left">
+                            <div className="text-xs font-bold text-stone-850 leading-relaxed">
+                              Đánh giá mức độ khớp câu trả lời của bạn so với đáp án mẫu:
+                            </div>
+                            <div className="flex flex-col sm:flex-row items-center gap-2">
+                              <button
+                                onClick={() => handleGradeEssay(true)}
+                                className={`w-full sm:w-auto px-4.5 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all duration-150 cursor-pointer ${
+                                  selectedOption === 'essay_correct'
+                                    ? 'bg-emerald-500 border border-emerald-500 text-white shadow-md shadow-emerald-500/10'
+                                    : 'bg-emerald-500/10 hover:bg-emerald-500/25 border border-emerald-500/25 text-emerald-800'
+                                }`}
+                              >
+                                <CheckCircle className="w-4 h-4" />
+                                <span>Khớp đáp án (Đạt chuẩn)</span>
+                              </button>
+
+                              <button
+                                onClick={() => handleGradeEssay(false)}
+                                className={`w-full sm:w-auto px-4.5 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all duration-150 cursor-pointer ${
+                                  selectedOption === 'essay_incorrect'
+                                    ? 'bg-rose-500 border border-rose-500 text-white shadow-md shadow-rose-500/10'
+                                    : 'bg-rose-500/10 hover:bg-rose-500/25 border border-rose-500/25 text-rose-800'
+                                }`}
+                              >
+                                <XCircle className="w-4 h-4" />
+                                <span>Chưa chính xác (Cần ôn tập)</span>
+                              </button>
+
+                              {selectedOption && selectedOption !== 'essay_submitted' && (
+                                <div className="text-[10px] text-stone-500 font-mono font-medium ml-auto pt-1 sm:pt-0">
+                                  {selectedOption === 'essay_correct' ? 'Đã ghi nhận: ĐẠT' : 'Đã ghi nhận: CẦN ÔN TẬP'}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+                  ) : (
+                    <div id="question-options" className="grid grid-cols-1 gap-3 pt-2">
+                      {(Object.keys(currentQuestion.options!) as Array<'A' | 'B' | 'C' | 'D'>).map(key => {
+                        const optionText = currentQuestion.options![key];
+                        const isSelected = selectedOption === key;
+                        const isAnswerCorrectKey = currentQuestion.answer === key;
+                        
+                        // Styling calculations based on submission state and selection status
+                        let buttonStyle = 'bg-amber-50/20 border-amber-100/80 text-stone-700 hover:bg-amber-50/60 hover:border-amber-200/80 shadow-inner-white';
+                        let badgeStyle = 'bg-amber-100/60 text-amber-800 border-amber-200/60';
+                        let indicatorIcon = null;
+
+                        if (!isSubmitted) {
+                          if (isSelected) {
+                            buttonStyle = 'bg-amber-500/10 border-amber-500 text-amber-950 shadow-md shadow-amber-500/5 ring-1 ring-amber-500/20 font-medium';
+                            badgeStyle = 'bg-amber-500 text-white border-amber-500';
+                          }
+                        } else {
+                          // After submission
+                          if (isSelected) {
+                            if (isAnswerCorrectKey) {
+                              buttonStyle = 'bg-emerald-500/10 border-emerald-500 text-emerald-990 shadow-md shadow-emerald-500/5 ring-1 ring-emerald-500/30 font-semibold';
+                              badgeStyle = 'bg-emerald-500 text-white border-emerald-500';
+                              indicatorIcon = <Check className="w-4 h-4 text-emerald-600 ml-auto" />;
+                            } else {
+                              buttonStyle = 'bg-rose-500/10 border-rose-500 text-rose-990 shadow-md shadow-rose-500/5 ring-1 ring-rose-500/30 font-semibold';
+                              badgeStyle = 'bg-rose-500 text-white border-rose-500';
+                              indicatorIcon = <X className="w-4 h-4 text-rose-600 ml-auto" />;
+                            }
+                          } else {
+                            // Not selected option
+                            if (isAnswerCorrectKey) {
+                              buttonStyle = 'bg-emerald-50/50 border-emerald-400 text-emerald-950 font-medium ring-1 ring-emerald-555/15';
+                              badgeStyle = 'bg-emerald-500 text-white border-emerald-500';
+                              indicatorIcon = <Check className="w-4 h-4 text-emerald-600 ml-auto" />;
+                            } else {
+                              buttonStyle = 'opacity-40 bg-stone-100/30 border-transparent text-stone-400 cursor-not-allowed';
+                              badgeStyle = 'bg-stone-200/50 text-stone-500 border-transparent';
+                            }
+                          }
+                        }
+
+                        return (
+                          <div key={key} className="space-y-2">
+                            <button
+                              id={`option-btn-${key}`}
+                              disabled={isSubmitted}
+                              onClick={() => handleSelectOption(key)}
+                              className={`w-full text-left p-3 rounded-lg border flex items-center gap-3 transition-all duration-200 group relative overflow-hidden cursor-pointer ${buttonStyle}`}
+                            >
+                              <span className={`w-7 h-7 shrink-0 rounded-md flex items-center justify-center font-mono text-xs border font-bold transition-colors ${badgeStyle}`}>
+                                {key}
+                              </span>
+                              
+                              <span className="flex-1 text-xs md:text-sm leading-relaxed">
+                                {optionText}
+                              </span>
+
+                              {indicatorIcon}
+                            </button>
+
+                            {/* Render explanation directly below correct answer */}
+                            {isSubmitted && isAnswerCorrectKey && showExplanation && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                className="overflow-hidden"
+                              >
+                                <div className="p-3.5 rounded-lg bg-emerald-50/80 border border-emerald-200/60 shadow-inner-white space-y-1.5 pt-3 pb-3">
+                                  <div className="flex items-center gap-1.5 text-emerald-900/90 text-[10px] font-bold uppercase tracking-wider font-mono">
+                                    <Info className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                    Giải thích đáp án đúng ({currentQuestion.answer})
+                                  </div>
+                                  <p className="text-stone-750 text-xs leading-relaxed font-medium">
+                                    {currentQuestion.explanation}
+                                  </p>
+                                </div>
+                              </motion.div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
 
                   {/* Bottom interactive navigation row */}
                   <div className="flex flex-col sm:flex-row gap-3 justify-between items-center pt-3 border-t border-amber-100/40">
                     <div className="text-[11px] text-stone-500 font-mono font-medium text-center sm:text-left">
-                      {!isSubmitted ? 'Hãy lựa chọn một đáp án phù hợp nhất' : 'Đáp án chính xác & chú giải hiển thị trực quan ở trên'}
+                      {!currentQuestion.options ? (
+                        !isSubmitted 
+                          ? 'Trình bày câu trả lời của bạn và bấm Nộp bài' 
+                          : (selectedOption === 'essay_correct' || selectedOption === 'essay_incorrect')
+                            ? 'Đánh giá đã được ghi nhận thành công'
+                            : 'Hãy rà soát checklist và chọn tự đánh giá ở trên'
+                      ) : (
+                        !isSubmitted ? 'Hãy lựa chọn một đáp án phù hợp nhất' : 'Đáp án chính xác & chú giải hiển thị trực quan ở trên'
+                      )}
                     </div>
 
                     <div className="w-full sm:w-auto flex flex-row gap-2 justify-end items-center">
@@ -1053,7 +1276,7 @@ export default function QuizApp() {
                         </button>
                       )}
 
-                      {isSubmitted && (
+                      {isSubmitted && isEssayCompleted && (
                         <button
                           id="next-question-btn"
                           onClick={handleNextQuestion}
@@ -1069,13 +1292,15 @@ export default function QuizApp() {
                   {/* Keyboard Shortcuts Hint */}
                   <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[10px] text-stone-500 font-mono border-t border-amber-100/25 pt-3 mt-1.5">
                     <span className="text-stone-400 font-medium">Phím tắt:</span>
-                    <span className="flex items-center gap-1">
-                      <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">1</kbd>
-                      <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">2</kbd>
-                      <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">3</kbd>
-                      <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">4</kbd>
-                      <span>Chọn A-D</span>
-                    </span>
+                    {currentQuestion.options && (
+                      <span className="flex items-center gap-1">
+                        <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">1</kbd>
+                        <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">2</kbd>
+                        <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">3</kbd>
+                        <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">4</kbd>
+                        <span>Chọn A-D</span>
+                      </span>
+                    )}
                     <span className="flex items-center gap-1">
                       <kbd className="px-1.5 py-0.5 bg-amber-50/50 border border-amber-200/40 rounded text-amber-900 font-bold shadow-sm">Enter</kbd>
                       <span>Tiếp theo</span>
@@ -1427,7 +1652,10 @@ export default function QuizApp() {
                   {getIncorrectQuestions().length > 0 ? (
                     <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                       {getIncorrectQuestions().map((q, idx) => {
-                        const wrongChoice = answersHistory[activeSetId]?.[q.id]?.selected;
+                        const history = answersHistory[activeSetId]?.[q.id];
+                        const wrongChoice = history?.selected;
+                        const isEssay = !q.options || q.expected_answer;
+                        
                         return (
                           <div 
                             key={q.id}
@@ -1435,18 +1663,43 @@ export default function QuizApp() {
                           >
                             <div className="flex justify-between font-semibold text-amber-950">
                               <span>Mục #{q.id} {"->"} {q.question.substring(0, 80)}...</span>
-                              <span className="text-rose-600 font-mono font-bold">Lỗi sai</span>
+                              <span className="text-rose-600 font-mono font-bold">Cần ôn tập</span>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                              <div className="p-2 bg-rose-500/5 border border-rose-500/10 text-rose-800 rounded flex gap-2 items-center font-medium">
-                                <XCircle className="w-3.5 h-3.5 shrink-0 text-rose-600" />
-                                Bạn chọn: {wrongChoice} {"->"} {q.options[wrongChoice as 'A' | 'B' | 'C' | 'D']?.substring(0, 45)}...
+                            
+                            {isEssay ? (
+                              <div className="grid grid-cols-1 gap-2.5 text-xs">
+                                <div className="p-3 bg-rose-500/5 border border-rose-500/10 text-stone-700 rounded space-y-1">
+                                  <div className="flex gap-1.5 items-center font-bold text-rose-800">
+                                    <XCircle className="w-3.5 h-3.5 text-rose-600" />
+                                    Bài làm của bạn:
+                                  </div>
+                                  <p className="pl-5 leading-relaxed font-sans italic whitespace-pre-line">
+                                    {history?.essayAnswer || '(Không có câu trả lời)'}
+                                  </p>
+                                </div>
+                                
+                                <div className="p-3 bg-emerald-500/5 border border-emerald-500/10 text-stone-700 rounded space-y-1">
+                                  <div className="flex gap-1.5 items-center font-bold text-emerald-800">
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                                    Đáp án mẫu đề xuất:
+                                  </div>
+                                  <p className="pl-5 leading-relaxed font-sans font-medium whitespace-pre-line">
+                                    {q.expected_answer}
+                                  </p>
+                                </div>
                               </div>
-                              <div className="p-2 bg-emerald-500/5 border border-emerald-500/10 text-emerald-800 rounded flex gap-2 items-center font-medium">
-                                <CheckCircle className="w-3.5 h-3.5 shrink-0 text-emerald-600" />
-                                Đáp án đúng: {q.answer} {"->"} {q.options[q.answer as 'A' | 'B' | 'C' | 'D']?.substring(0, 45)}...
+                            ) : (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                <div className="p-2 bg-rose-500/5 border border-rose-500/10 text-rose-800 rounded flex gap-2 items-center font-medium">
+                                  <XCircle className="w-3.5 h-3.5 shrink-0 text-rose-600" />
+                                  Bạn chọn: {wrongChoice} {"->"} {q.options?.[wrongChoice as 'A' | 'B' | 'C' | 'D']?.substring(0, 45)}...
+                                </div>
+                                <div className="p-2 bg-emerald-500/5 border border-emerald-500/10 text-emerald-800 rounded flex gap-2 items-center font-medium">
+                                  <CheckCircle className="w-3.5 h-3.5 shrink-0 text-emerald-600" />
+                                  Đáp án đúng: {q.answer} {"->"} {q.options?.[q.answer as 'A' | 'B' | 'C' | 'D']?.substring(0, 45)}...
+                                </div>
                               </div>
-                            </div>
+                            )}
                           </div>
                         );
                       })}

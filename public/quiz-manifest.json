@@ -49,12 +49,36 @@
       "difficulty": "khó"
     },
     {
-      "id": "prompt-engineering-standard",
+      "id": "prompt-context-foundations",
       "parent_id": "day4",
       "topic_title": "Day 4: Prompt Engineering & Tool Calling",
-      "title": "Phần 1: Nền Tảng Prompt Engineering",
-      "description": "Các kỹ thuật thiết kế prompt rõ mục tiêu, có ràng buộc và dễ kiểm soát chất lượng phản hồi của LLM.",
+      "title": "Phần 1: Nền Tảng Prompt và Context",
+      "description": "Kiểm tra nền tảng về prompt, context, ranh giới chỉ dẫn, định dạng đầu ra và cách hỏi lại khi thiếu dữ kiện.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "context-engineering-practice",
+      "parent_id": "day4",
+      "topic_title": "Day 4: Prompt Engineering & Tool Calling",
+      "title": "Phần 2: Context Engineering Thực Hành",
+      "description": "Kiểm tra cách quản lý token budget, context rot, JIT context, compaction, memory và kiến trúc sub-agent.",
       "difficulty": "bình thường"
+    },
+    {
+      "id": "tool-calling-security-control",
+      "parent_id": "day4",
+      "topic_title": "Day 4: Prompt Engineering & Tool Calling",
+      "title": "Phần 3: Tool Calling, Bảo Mật và Kiểm Soát",
+      "description": "Kiểm tra định nghĩa công cụ, vòng lặp tool_use/tool_result, vệ sinh tool result, ranh giới tin cậy và guardrail cho agent.",
+      "difficulty": "khó"
+    },
+    {
+      "id": "prompt-tool-calling-short-answer",
+      "parent_id": "day4",
+      "topic_title": "Day 4: Prompt Engineering & Tool Calling",
+      "title": "Tự Luận: Prompt, Context và Tool Calling Thực Chiến",
+      "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào case study doanh nghiệp, trade-off, context engineering, tool calling và kiểm soát rủi ro.",
+      "difficulty": "khó"
     }
   ]
 }

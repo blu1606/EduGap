@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(& \"$env:USERPROFILE\\\\.claude\\\\skills\\\\.venv\\\\Scripts\\\\python.exe\" '.claude/skills/mcq-generator/scripts/validate-quiz-schema.py' 'public/quizzes')",
+      "PowerShell($script = \"$env:USERPROFILE\\\\.claude\\\\skills\\\\skill-creator\\\\scripts\\\\quick_validate.py\"; & \"$env:USERPROFILE\\\\.claude\\\\skills\\\\.venv\\\\Scripts\\\\python.exe\" $script '.claude/skills/mcq-generator')",
+      "PowerShell(Get-Content *)",
+      "PowerShell(& \"$env:USERPROFILE\\\\.claude\\\\skills\\\\.venv\\\\Scripts\\\\python.exe\" '.claude/skills/mcq-generator/scripts/validate-option-balance.py' 'public/quizzes/day4/prompt-context-foundations.json' 'public/quizzes/day4/context-engineering-practice.json' 'public/quizzes/day4/tool-calling-security-control.json')",
+      "PowerShell(& \"$env:USERPROFILE\\\\.claude\\\\skills\\\\.venv\\\\Scripts\\\\python.exe\" '.claude/skills/mcq-generator/scripts/validate-answer-distribution.py' 'public/quizzes/day3' --max-share 0.40)",
+      "PowerShell(& \"$env:USERPROFILE\\\\.claude\\\\skills\\\\.venv\\\\Scripts\\\\python.exe\" '.claude/skills/mcq-generator/scripts/validate-answer-distribution.py' 'public/quizzes/day4' --max-share 0.40)"
+    ]
+  }
+}
