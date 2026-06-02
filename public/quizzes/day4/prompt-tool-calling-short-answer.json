@@ -1,0 +1,89 @@
+{
+  "id": "prompt-tool-calling-short-answer",
+  "parent_id": "day4",
+  "topic_title": "Day 4: Prompt Engineering & Tool Calling",
+  "title": "Tự Luận: Prompt, Context và Tool Calling Thực Chiến",
+  "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào case study doanh nghiệp, trade-off, context engineering, tool calling và kiểm soát rủi ro.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Một team đang build support agent nội bộ. Agent trả lời sai vì system prompt quá ngắn, còn bản mới lại quá dài và nhiều rule if-else. Bạn đề xuất cách chỉnh prompt thế nào để đạt 'Goldilocks zone'?",
+      "expected_answer": "Giữ prompt đủ rõ về vai trò, mục tiêu, nguồn được phép dùng, ranh giới, format và cách hỏi lại khi thiếu dữ kiện. Bỏ rule if-else vụn, dùng heading/XML tag để tách instruction, context, examples và output contract. Test bằng vài eval case trước khi thay bản production.",
+      "evaluation_points": [
+        "Nêu được rủi ro của prompt quá mơ hồ và quá cứng",
+        "Đề xuất cấu trúc prompt rõ vai trò, boundary, format",
+        "Có nhắc eval/versioning trước khi rollout",
+        "Không coi prompt là lớp bảo mật duy nhất"
+      ],
+      "sfia_level": "SFIA L3-L4",
+      "competency": "Apply prompt design and enable stable behavior through clear boundaries and validation"
+    },
+    {
+      "id": 2,
+      "question": "Một coding agent thường nạp toàn bộ repository vào context trước khi sửa bug, khiến chi phí tăng và model hay chọn sai file. Thiết kế lại flow JIT context cho tác vụ này.",
+      "expected_answer": "Bắt đầu từ metadata nhẹ như path, cấu trúc thư mục, grep keyword và file liên quan. Đọc từng đoạn nhỏ khi có bằng chứng, mở rộng theo call graph hoặc lỗi test. Lưu quyết định và file đã đọc vào state để tránh đọc lặp, chỉ đưa high-signal snippets vào context.",
+      "evaluation_points": [
+        "Dùng progressive disclosure thay vì preload toàn repo",
+        "Nêu được công cụ tìm kiếm nhẹ như glob/grep/read snippet",
+        "Có cơ chế tránh đọc lặp và giữ state",
+        "Giải thích trade-off giữa số lần tool call và token cost"
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Enable context engineering for long-running engineering tasks with cost and accuracy trade-offs"
+    },
+    {
+      "id": 3,
+      "question": "Agent đọc log CI dài 20.000 dòng rồi bị context rot. Bạn thiết kế bước xử lý tool_result trước khi trả lại model như thế nào?",
+      "expected_answer": "Không trả raw log đầy đủ vào context. Parse lỗi chính, command, timestamp, file/line, stack trace liên quan và link hoặc path tới raw log. Redact dữ liệu nhạy cảm, nén summary theo nhóm lỗi, giữ nguồn để truy lại nếu cần.",
+      "evaluation_points": [
+        "Nhận diện raw tool result là nguồn gây nhiễu context",
+        "Có bước parse/select/compress thay vì dán toàn bộ log",
+        "Có redact hoặc cô lập dữ liệu không tin cậy",
+        "Giữ source/path/timestamp để kiểm chứng lại"
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Design tool-result hygiene across trust boundaries while preserving useful evidence"
+    },
+    {
+      "id": 4,
+      "question": "Bạn cần định nghĩa một tool đọc cấu trúc codebase cho agent. Viết ngắn các nguyên tắc thiết kế name, description và input_schema để tránh agent gọi nhầm tool.",
+      "expected_answer": "Tên tool nên là hành động rõ ràng như analyze_codebase_structure. Description nêu khi dùng, khi không dùng, giới hạn dữ liệu trả về và negative constraints. input_schema cần kiểu dữ liệu, required fields, mô tả từng field, giới hạn path hoặc depth nếu cần.",
+      "evaluation_points": [
+        "Nêu đủ name, description và input_schema",
+        "Có negative constraints để giảm false positive",
+        "Có schema field rõ type và required",
+        "Có giới hạn scope hoặc output để tiết kiệm token"
+      ],
+      "sfia_level": "SFIA L3",
+      "competency": "Apply tool definition practices for accurate and bounded tool selection"
+    },
+    {
+      "id": 5,
+      "question": "Doanh nghiệp muốn agent tự chạy terminal để sửa code, nhưng từng bị indirect prompt injection trong README độc hại. Hãy đề xuất guardrail nhiều lớp ở tầng application client.",
+      "expected_answer": "Xem file ngoài là untrusted data, không phải instruction. Chạy agent trong sandbox, áp least privilege, whitelist/blacklist lệnh nguy hiểm, chặn exfiltration, yêu cầu HITL cho write/destructive commands và log đầy đủ tool call. Không dựa vào prompt-only defense.",
+      "evaluation_points": [
+        "Nhận diện prompt-only defense không đủ an toàn",
+        "Đề xuất sandbox và least privilege",
+        "Có hard-coded guards cho command/network/file access",
+        "Có HITL và logging cho hành động rủi ro cao",
+        "Tách rõ untrusted content khỏi instruction"
+      ],
+      "sfia_level": "SFIA L4-L5",
+      "competency": "Advise secure agent execution controls under prompt-injection and enterprise risk constraints"
+    },
+    {
+      "id": 6,
+      "question": "Một long-horizon agent phải chạy nhiều giờ để refactor hệ thống. Thiết kế kiến trúc lead agent và sub-agent để giảm context pollution và kiểm soát token budget.",
+      "expected_answer": "Lead agent giữ mục tiêu, plan, constraints và quyết định cuối. Sub-agent chuyên đọc code, điều tra lỗi hoặc chạy test trong context riêng, rồi trả báo cáo ngắn có bằng chứng. Dùng structured notes cho file đã sửa, quyết định, blocker và câu hỏi mở; compaction giữ state quan trọng, bỏ raw logs.",
+      "evaluation_points": [
+        "Phân vai rõ lead agent và sub-agent",
+        "Giải thích cách sub-agent cô lập context sâu",
+        "Có structured memory hoặc notes cho long-horizon state",
+        "Có compaction strategy giữ decision và bỏ noise",
+        "Nêu trade-off orchestration latency so với token/context control"
+      ],
+      "sfia_level": "SFIA L5",
+      "competency": "Ensure scalable multi-agent architecture with governance, memory, and token-budget trade-offs"
+    }
+  ]
+}

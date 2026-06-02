@@ -1,0 +1,129 @@
+{
+    "id":  "prompt-context-foundations",
+    "parent_id":  "day4",
+    "topic_title":  "Day 4: Prompt Engineering \u0026 Tool Calling",
+    "title":  "Phần 1: Nền Tảng Prompt và Context",
+    "description":  "Kiểm tra nền tảng về prompt, context, ranh giới chỉ dẫn, định dạng đầu ra và cách hỏi lại khi thiếu dữ kiện.",
+    "questions":  [
+                      {
+                          "id":  1,
+                          "question":  "Khác biệt cốt lõi giữa prompt engineering và context engineering là gì?",
+                          "options":  {
+                                          "A":  "Prompt engineering chỉ tối ưu câu lệnh, còn context engineering quản lý toàn bộ thông tin trong lượt suy luận.",
+                                          "B":  "Prompt engineering luôn dùng công cụ ngoài, còn context engineering chỉ dùng văn bản trong system prompt.",
+                                          "C":  "Prompt engineering chỉ dành cho mô hình nhỏ, còn context engineering chỉ dành cho mô hình chạy offline.",
+                                          "D":  "Prompt engineering xử lý bảo mật mạng, còn context engineering chỉ kiểm tra cú pháp JSON đầu ra."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Prompt là một phần của context. Context engineering quản lý system prompt, history, tool definitions, dữ liệu ngoài và kết quả công cụ trong từng lượt gọi."
+                      },
+                      {
+                          "id":  2,
+                          "question":  "Vì sao context dài hơn không mặc định tạo ra câu trả lời tốt hơn?",
+                          "options":  {
+                                          "A":  "Vì context dài khiến mô hình không thể đọc system prompt trong bất kỳ trường hợp nào.",
+                                          "B":  "Vì context dài có thể làm loãng tín hiệu, tăng nhiễu và khiến mô hình mất tập trung.",
+                                          "C":  "Vì context dài luôn bị API tự động xoá toàn bộ phần dữ liệu người dùng gửi vào.",
+                                          "D":  "Vì context dài chỉ hỗ trợ tác vụ dịch máy, không hỗ trợ lập luận hoặc truy xuất dữ kiện."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Context window là token budget, không phải bảo đảm chú ý hoàn hảo. Dữ liệu nhiễu có thể gây context rot và giảm khả năng dùng đúng thông tin."
+                      },
+                      {
+                          "id":  3,
+                          "question":  "Một system prompt tốt nên nằm gần vùng nào trong \u0027Goldilocks zone\u0027?",
+                          "options":  {
+                                          "A":  "Càng ngắn càng tốt, chỉ cần ghi một câu chung như hãy làm tốt nhất có thể.",
+                                          "B":  "Càng dài càng tốt, bao gồm mọi ngoại lệ hiếm gặp để mô hình không cần suy luận.",
+                                          "C":  "Đủ rõ về vai trò, mục tiêu, ranh giới và format, nhưng không biến thành cây if-else cứng.",
+                                          "D":  "Không cần system prompt, vì user prompt luôn có quyền ưu tiên cao hơn mọi chỉ dẫn nền."
+                                      },
+                          "answer":  "C",
+                          "explanation":  "Goldilocks zone tránh hai cực: quá mơ hồ và quá cứng nhắc. Prompt cần đủ tín hiệu để định hướng nhưng vẫn cho mô hình linh hoạt xử lý."
+                      },
+                      {
+                          "id":  4,
+                          "question":  "Vai trò đúng của delimiter hoặc XML tag trong prompt là gì?",
+                          "options":  {
+                                          "A":  "Ép mô hình chỉ được trả lời bằng XML dù người dùng yêu cầu định dạng khác.",
+                                          "B":  "Biến nội dung bên trong tag thành vùng bảo mật tuyệt đối không thể bị prompt injection.",
+                                          "C":  "Thay thế hoàn toàn validation, sandbox và kiểm soát quyền ở tầng ứng dụng client.",
+                                          "D":  "Tách instruction, context, ví dụ và input để mô hình parse cấu trúc ổn định hơn."
+                                      },
+                          "answer":  "D",
+                          "explanation":  "Delimiter giúp phân tách dữ liệu và chỉ dẫn rõ hơn, nhưng không phải security boundary. Nội dung không tin cậy vẫn cần policy và kiểm soát quyền."
+                      },
+                      {
+                          "id":  5,
+                          "question":  "Khi thiếu dữ kiện blocking trước khi lập kế hoạch chi tiết, agent nên làm gì?",
+                          "options":  {
+                                          "A":  "Hỏi lại đúng dữ kiện còn thiếu thay vì đoán chắc hoặc hỏi lan man mọi thông tin.",
+                                          "B":  "Tự bịa giá trị hợp lý để giữ mạch xử lý và tránh làm phiền người dùng.",
+                                          "C":  "Dừng toàn bộ phiên làm việc kể cả khi phần thiếu không ảnh hưởng kết quả.",
+                                          "D":  "Bỏ qua dữ kiện còn thiếu và chỉ tối ưu phần trình bày markdown cuối cùng."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Ask-if-missing áp dụng cho dữ kiện chặn quyết định. Không nên đoán tự tin, nhưng cũng không cần hỏi lại các chi tiết không ảnh hưởng."
+                      },
+                      {
+                          "id":  6,
+                          "question":  "Khi output cần hệ thống khác parse tự động, ưu tiên thiết kế format nào?",
+                          "options":  {
+                                          "A":  "Một đoạn văn tự nhiên để người đọc tự suy diễn ý nghĩa từng phần.",
+                                          "B":  "Schema rõ ràng với field, enum và validation để giảm lỗi parse hoặc hallucinate trường.",
+                                          "C":  "Nhiều emoji và heading tự do để tăng cảm xúc trong kết quả trả về.",
+                                          "D":  "Một bảng markdown không có quy ước field vì nhìn gọn hơn JSON chuẩn."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Hệ thống cần output dễ parse và kiểm tra. JSON/schema/enum giúp giảm sai field, thiếu dấu hoặc giá trị ngoài hợp đồng."
+                      },
+                      {
+                          "id":  7,
+                          "question":  "Khi nào few-shot prompting hữu ích hơn zero-shot prompting?",
+                          "options":  {
+                                          "A":  "Khi tác vụ chỉ cần một câu trả lời đơn giản và format không quan trọng.",
+                                          "B":  "Khi muốn loại bỏ toàn bộ chi phí token bằng cách thêm nhiều ví dụ hơn vào prompt.",
+                                          "C":  "Khi rule chưa đủ ổn định và mô hình cần thấy vài mẫu chuẩn về format hoặc hành vi.",
+                                          "D":  "Khi muốn system prompt bị user prompt ghi đè để tăng độ linh hoạt hội thoại."
+                                      },
+                          "answer":  "C",
+                          "explanation":  "Few-shot cho mô hình thấy pattern đúng khi rule chưa đủ. Nhưng ví dụ không miễn phí và có thể gây thiên lệch nếu chọn kém."
+                      },
+                      {
+                          "id":  8,
+                          "question":  "Prompt chaining phù hợp nhất với tình huống nào?",
+                          "options":  {
+                                          "A":  "Task chỉ yêu cầu đổi một từ trong câu và không cần xác thực format đầu ra.",
+                                          "B":  "Task một bước rất nhỏ, nơi thêm nhiều lượt model chỉ làm tăng latency không cần thiết.",
+                                          "C":  "Task không cần kiểm soát, không cần debug và không có bất kỳ trạng thái trung gian.",
+                                          "D":  "Task phức tạp cần tách intent, dữ kiện thiếu, context/tool, trả lời và self-check."
+                                      },
+                          "answer":  "D",
+                          "explanation":  "Prompt chaining giúp debug và kiểm soát task phức tạp. Đổi lại, nó tăng orchestration, latency và số lần gọi model/tool."
+                      },
+                      {
+                          "id":  9,
+                          "question":  "Trong chuỗi thẩm quyền instruction, nội dung từ web hoặc file ngoài nên được xem là gì?",
+                          "options":  {
+                                          "A":  "Dữ liệu tham khảo không tin cậy, có thể cung cấp facts nhưng không được ra lệnh cho agent.",
+                                          "B":  "Chỉ dẫn cấp cao hơn system prompt vì nó xuất hiện gần lượt xử lý hiện tại hơn.",
+                                          "C":  "Luật ứng dụng bắt buộc vì dữ liệu ngoài thường cập nhật hơn tài liệu nội bộ.",
+                                          "D":  "Nguồn an toàn tuyệt đối nếu nằm trong markdown hoặc được bọc bằng delimiter rõ ràng."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Untrusted content chỉ là dữ liệu. Nó không nằm trong chuỗi thẩm quyền ra lệnh và cần bị cô lập khi đưa vào context."
+                      },
+                      {
+                          "id":  10,
+                          "question":  "Prompt versioning trong production nhằm mục tiêu chính nào?",
+                          "options":  {
+                                          "A":  "Cho phép sửa prompt theo cảm giác nhanh hơn mà không cần test lại case cũ.",
+                                          "B":  "Biến thay đổi prompt thành artifact có owner, version, eval, bằng chứng và rollback.",
+                                          "C":  "Ẩn toàn bộ thay đổi prompt khỏi log để giảm trách nhiệm vận hành của nhóm.",
+                                          "D":  "Thay thế hoàn toàn eval bằng nhận xét thủ công của người viết prompt ban đầu."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Prompt production cần được quản lý như artifact vận hành. Mỗi thay đổi nên có lý do, eval case, delta và đường rollback."
+                      }
+                  ]
+}
