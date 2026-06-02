@@ -1,0 +1,129 @@
+{
+    "id":  "context-engineering-practice",
+    "parent_id":  "day4",
+    "topic_title":  "Day 4: Prompt Engineering \u0026 Tool Calling",
+    "title":  "Phần 2: Context Engineering Thực Hành",
+    "description":  "Kiểm tra cách quản lý token budget, context rot, JIT context, compaction, memory và kiến trúc sub-agent.",
+    "questions":  [
+                      {
+                          "id":  1,
+                          "question":  "Context rot mô tả vấn đề nào trong hệ thống agent?",
+                          "options":  {
+                                          "A":  "Ngữ cảnh bị nhiễu và loãng dần khi chứa quá nhiều dữ liệu rác hoặc không liên quan.",
+                                          "B":  "Mô hình tự động mất khả năng gọi tool sau khi nhận nhiều system prompt hợp lệ.",
+                                          "C":  "API xoá hoàn toàn lịch sử hội thoại ngay khi người dùng gửi thêm một tin nhắn mới.",
+                                          "D":  "Tool result luôn bị chuyển thành mã độc nếu phản hồi có nhiều dòng văn bản."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Context rot xảy ra khi context phình to bởi noise, log thô hoặc thông tin lệch mục tiêu. Mô hình vẫn có context nhưng khó tập trung vào tín hiệu chính."
+                      },
+                      {
+                          "id":  2,
+                          "question":  "Trong tư duy context engineering, token budget nên được hiểu đúng như thế nào?",
+                          "options":  {
+                                          "A":  "Không gian miễn phí nên lấp đầy bằng toàn bộ file, log và lịch sử hội thoại.",
+                                          "B":  "Tài nguyên chú ý hữu hạn cần dùng cho token có tín hiệu cao nhất với task hiện tại.",
+                                          "C":  "Giới hạn chỉ ảnh hưởng chi phí tiền, không ảnh hưởng độ chính xác hoặc hành vi chọn tool.",
+                                          "D":  "Dung lượng chỉ dùng cho user prompt, không liên quan system prompt hoặc tool definition nào."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Token budget vừa ảnh hưởng chi phí vừa ảnh hưởng khả năng chú ý. Thiết kế tốt là chọn tập token nhỏ nhất nhưng đủ tín hiệu."
+                      },
+                      {
+                          "id":  3,
+                          "question":  "Một agent cần sửa bug trong repo lớn. Cách JIT context nào phù hợp nhất?",
+                          "options":  {
+                                          "A":  "Chỉ dựa vào tên file trong README và không đọc code thật để tiết kiệm token.",
+                                          "B":  "Nạp toàn bộ repo vào context ngay từ đầu để tránh phải gọi tool nhiều lần.",
+                                          "C":  "Bắt đầu từ path, glob, grep, đọc đoạn liên quan rồi mở rộng dần khi có bằng chứng.",
+                                          "D":  "Yêu cầu người dùng dán toàn bộ mã nguồn vào prompt trước khi phân tích lỗi."
+                                      },
+                          "answer":  "C",
+                          "explanation":  "JIT context dùng progressive disclosure: bắt đầu nhẹ, lấy thêm dữ liệu khi cần. Cách này giống workflow glob/grep/read trong công cụ lập trình agentic."
+                      },
+                      {
+                          "id":  4,
+                          "question":  "Kỹ thuật \u0027lost in the middle\u0027 gợi ý cách sắp xếp context nào?",
+                          "options":  {
+                                          "A":  "Trộn instruction với raw logs để context tự nhiên hơn và giống hội thoại thật hơn.",
+                                          "B":  "Đưa mọi policy quan trọng vào chính giữa context để mô hình phải tìm kiếm nhiều hơn.",
+                                          "C":  "Xoá toàn bộ heading vì cấu trúc rõ ràng làm giảm khả năng tự suy luận của mô hình.",
+                                          "D":  "Không chôn facts quan trọng giữa đoạn dài; dùng heading và nhắc lại format ở vị trí dễ chú ý."
+                                      },
+                          "answer":  "D",
+                          "explanation":  "Context dài không được dùng đều ở mọi vị trí. Heading, cấu trúc rõ và vị trí nổi bật giúp facts quan trọng dễ được mô hình dùng hơn."
+                      },
+                      {
+                          "id":  5,
+                          "question":  "Khi compaction lịch sử agent, thông tin nào cần giữ lại nhất?",
+                          "options":  {
+                                          "A":  "Quyết định kiến trúc, constraints, file đã sửa, lỗi chưa giải quyết và câu hỏi còn mở.",
+                                          "B":  "Toàn bộ raw terminal output, lời chào xã giao và các lần tool trả về dữ liệu trùng lặp.",
+                                          "C":  "Chỉ giữ câu trả lời cuối cùng, bỏ hết nguồn và lý do để summary ngắn nhất có thể.",
+                                          "D":  "Chỉ giữ user prompt đầu tiên vì các lượt sau luôn ít quan trọng hơn lượt mở đầu."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Compaction là lossy nên phải giữ state quan trọng cho task tiếp tục. Raw logs, lặp lại và noise nên bị drop hoặc archive ngoài context."
+                      },
+                      {
+                          "id":  6,
+                          "question":  "Agentic memory khác gì với việc giữ toàn bộ chat history trong context?",
+                          "options":  {
+                                          "A":  "Nó nhân đôi toàn bộ lịch sử hội thoại vào prompt để tránh mất bất kỳ chi tiết nào.",
+                                          "B":  "Nó ghi state có cấu trúc ra ngoài context và chỉ đọc lại phần cần thiết khi tiếp tục task.",
+                                          "C":  "Nó thay thế validation vì mô hình đã nhớ mọi dữ kiện chính xác qua nhiều giờ.",
+                                          "D":  "Nó chỉ phù hợp cho chatbot vui vẻ, không dùng trong task kỹ thuật dài hạn."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Agentic memory giúp agent giữ tiến trình lâu dài mà không phình context. Nó cần cấu trúc rõ, nguồn, constraint và câu hỏi còn mở."
+                      },
+                      {
+                          "id":  7,
+                          "question":  "Trong mô hình write/select/compress/isolate, bước \u0027select\u0027 có mục tiêu gì?",
+                          "options":  {
+                                          "A":  "Mã hoá dữ liệu bằng delimiter để biến dữ liệu ngoài thành instruction đáng tin.",
+                                          "B":  "Ghi mọi dữ liệu vào prompt để model tự quyết định phần nào cần bỏ qua.",
+                                          "C":  "Chỉ lấy thông tin liên quan trực tiếp đến task hiện tại thay vì nhồi toàn bộ nguồn.",
+                                          "D":  "Xoá toàn bộ lịch sử trước đó kể cả quyết định và constraint chưa được giải quyết."
+                                      },
+                          "answer":  "C",
+                          "explanation":  "Select giảm nhiễu bằng cách chọn đúng dữ liệu cần cho lượt xử lý. Nó đi cùng write, compress và isolate để kiểm soát context rot."
+                      },
+                      {
+                          "id":  8,
+                          "question":  "Khi nào nên dùng sub-agent thay vì để lead agent tự đọc mọi thứ?",
+                          "options":  {
+                                          "A":  "Khi task đơn giản một bước và chi phí orchestration lớn hơn lợi ích nhận được.",
+                                          "B":  "Khi muốn mọi agent cùng sửa một file để tăng tốc độ hoàn thành công việc.",
+                                          "C":  "Khi muốn lead agent không cần biết kế hoạch tổng thể và bỏ qua điều phối.",
+                                          "D":  "Khi cần tìm kiếm sâu trong vùng riêng nhưng chỉ trả lại kết luận gọn cho lead agent."
+                                      },
+                          "answer":  "D",
+                          "explanation":  "Sub-agent giúp cô lập context và giảm pollution cho lead agent. Lead giữ kế hoạch, sub-agent xử lý vùng sâu rồi báo cáo ngắn."
+                      },
+                      {
+                          "id":  9,
+                          "question":  "Một tool trả về log 20.000 dòng cho agent. Cách đưa result lại vào context nào tốt nhất?",
+                          "options":  {
+                                          "A":  "Trích xuất lỗi, nguồn, timestamp, đoạn liên quan và summary; archive raw log ngoài context.",
+                                          "B":  "Dán toàn bộ log vào tool_result để mô hình tự tìm mọi chi tiết có thể cần.",
+                                          "C":  "Chỉ trả về dòng đầu tiên của log và coi phần còn lại là không liên quan.",
+                                          "D":  "Chuyển log thành instruction mới để mô hình ưu tiên hơn system prompt hiện tại."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Tool result là context mới và cần được làm sạch. Raw log dài nên được parse, chọn lọc, nén và giữ nguồn để truy lại khi cần."
+                      },
+                      {
+                          "id":  10,
+                          "question":  "Hybrid context strategy phù hợp với trường hợp nào?",
+                          "options":  {
+                                          "A":  "Nạp trước mọi dữ liệu biến động để tránh agent phải kiểm tra nguồn hiện tại.",
+                                          "B":  "Nạp trước tài liệu định hướng ổn định, còn dữ liệu lớn hoặc biến động để agent tìm JIT.",
+                                          "C":  "Không nạp bất cứ instruction nào và chỉ cho agent tự suy ra policy từ file ngoài.",
+                                          "D":  "Chỉ dùng vector search, không cho agent mở rộng context bằng công cụ đọc cụ thể."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Hybrid strategy dùng nền tảng ổn định như tài liệu định hướng, còn phần lớn dữ liệu được khám phá khi cần. Cách này cân bằng định hướng và token cost."
+                      }
+                  ]
+}

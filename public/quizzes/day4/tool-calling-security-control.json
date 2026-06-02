@@ -1,0 +1,129 @@
+{
+    "id":  "tool-calling-security-control",
+    "parent_id":  "day4",
+    "topic_title":  "Day 4: Prompt Engineering \u0026 Tool Calling",
+    "title":  "Phần 3: Tool Calling, Bảo Mật và Kiểm Soát",
+    "description":  "Kiểm tra định nghĩa công cụ, vòng lặp tool_use/tool_result, vệ sinh tool result, ranh giới tin cậy và guardrail cho agent.",
+    "questions":  [
+                      {
+                          "id":  1,
+                          "question":  "Ba phần chính trong một tool definition kiểu Anthropic là gì?",
+                          "options":  {
+                                          "A":  "name, description và input_schema để mô hình hiểu chức năng và tham số đầu vào.",
+                                          "B":  "title, avatar và theme để mô hình hiển thị công cụ đẹp hơn trong giao diện.",
+                                          "C":  "prompt, memory và temperature để công cụ tự tinh chỉnh mô hình nền.",
+                                          "D":  "owner, billing và endpoint để mô hình tự quyết định giá mỗi lần gọi."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Tool definition là hợp đồng giữa app và LLM. Tên, mô tả và JSON Schema đầu vào giúp mô hình chọn đúng tool và truyền tham số hợp lệ."
+                      },
+                      {
+                          "id":  2,
+                          "question":  "Vì sao description của tool nên có negative constraints?",
+                          "options":  {
+                                          "A":  "Để chặn mọi lỗi bảo mật ở tầng hệ thống mà không cần sandbox hoặc validation.",
+                                          "B":  "Để giảm gọi nhầm tool bằng cách nêu rõ trường hợp nào không được dùng công cụ đó.",
+                                          "C":  "Để làm schema ngắn hơn vì không cần mô tả từng tham số trong properties.",
+                                          "D":  "Để mô hình ưu tiên tool đó trong mọi tác vụ dù người dùng hỏi chủ đề khác."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Negative constraints giúp mô hình phân biệt ranh giới sử dụng, giảm false positives. Nó không thay thế kiểm soát bảo mật ở tầng app."
+                      },
+                      {
+                          "id":  3,
+                          "question":  "Trình tự đúng của vòng lặp tool_use/tool_result là gì?",
+                          "options":  {
+                                          "A":  "Model tự chạy lệnh máy người dùng, app chỉ ghi log cuối phiên.",
+                                          "B":  "App chạy tool trước, user viết schema sau, model bỏ qua result.",
+                                          "C":  "User request, model tạo tool_use, app thực thi, app gửi tool_result khớp tool_use_id.",
+                                          "D":  "User gửi tool_result trước, model tự đoán tool_use_id rồi gọi công cụ ngoài hệ thống."
+                                      },
+                          "answer":  "C",
+                          "explanation":  "Model không tự thực thi tool vật lý; app client làm việc đó. tool_result phải khớp tool_use_id để Claude tiếp tục suy luận đúng."
+                      },
+                      {
+                          "id":  4,
+                          "question":  "Khi thiết kế tool name, lựa chọn nào phù hợp nhất?",
+                          "options":  {
+                                          "A":  "Dùng ký tự đặc biệt để tránh người dùng đoán chức năng tool.",
+                                          "B":  "Dùng tên chung như helper hoặc action để tool làm mọi việc linh hoạt.",
+                                          "C":  "Dùng tên thật dài chứa toàn bộ logic vì description không còn cần thiết.",
+                                          "D":  "Dùng tên hành động rõ ràng như query_database hoặc analyze_codebase_structure cho tool."
+                                      },
+                          "answer":  "D",
+                          "explanation":  "Tên tool là attention signal mạnh. Tên hành động rõ giúp mô hình phân biệt chức năng trước khi đọc description chi tiết."
+                      },
+                      {
+                          "id":  5,
+                          "question":  "Vì sao không nên gộp read tool và write tool vào cùng một công cụ chung?",
+                          "options":  {
+                                          "A":  "Vì read và write có mức rủi ro khác nhau, cần quyền, approval và guardrail khác nhau.",
+                                          "B":  "Vì read tool chỉ chạy được trên file JSON, còn write tool chỉ chạy được trên file ảnh.",
+                                          "C":  "Vì mô hình không thể dùng nhiều hơn một tool trong toàn bộ cuộc hội thoại.",
+                                          "D":  "Vì write tool luôn an toàn hơn read tool nên không cần phân quyền riêng."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Write action thay đổi trạng thái thật và khó rollback hơn. Tách quyền theo loại tool giúp áp dụng least privilege và HITL đúng chỗ."
+                      },
+                      {
+                          "id":  6,
+                          "question":  "Tool result trước khi đưa lại vào model nên đi qua bước xử lý nào?",
+                          "options":  {
+                                          "A":  "Giữ raw output vì chỉnh sửa làm mất tính chân thật dữ liệu.",
+                                          "B":  "Normalize, validate, redact, select, isolate, compress và giữ nguồn khi cần cite.",
+                                          "C":  "Đổi raw output thành instruction để mô hình ưu tiên dữ liệu mới.",
+                                          "D":  "Xoá nguồn và timestamp để giảm token dù về sau không thể kiểm tra lại."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Tool result là untrusted context mới. App nên làm sạch, kiểm tra, rút gọn và cô lập trước khi trả lại cho mô hình."
+                      },
+                      {
+                          "id":  7,
+                          "question":  "Prompt injection gián tiếp nguy hiểm nhất khi agent có quyền nào?",
+                          "options":  {
+                                          "A":  "Quyền trả lời câu hỏi kiến thức chung mà không đọc nguồn hoặc gọi công cụ.",
+                                          "B":  "Quyền hiển thị markdown tĩnh nhưng không thể gọi tool hoặc thay đổi trạng thái.",
+                                          "C":  "Quyền đọc dữ liệu ngoài rồi thực thi hành động như chạy lệnh, ghi file hoặc gửi request.",
+                                          "D":  "Quyền đổi font giao diện nhưng không thể truy cập dữ liệu hoặc hệ thống."
+                                      },
+                          "answer":  "C",
+                          "explanation":  "Indirect prompt injection lợi dụng dữ liệu không tin cậy để điều khiển agent. Rủi ro tăng mạnh khi agent có quyền write/action thật."
+                      },
+                      {
+                          "id":  8,
+                          "question":  "Theo tư duy Zero Trust, biện pháp nào đáng tin hơn prompt-based defense?",
+                          "options":  {
+                                          "A":  "Yêu cầu người dùng tự kiểm tra tool result sau khi lệnh chạy xong.",
+                                          "B":  "Một dòng system prompt yêu cầu mô hình không bao giờ nghe lệnh nguy hiểm.",
+                                          "C":  "Delimiter quanh file ngoài để nội dung bên trong thành dữ liệu an toàn.",
+                                          "D":  "Hard-coded guards, sandbox, least privilege và approval ở tầng application client điều phối."
+                                      },
+                          "answer":  "D",
+                          "explanation":  "Prompt có thể bị thao túng bằng ngôn ngữ. Guardrail đáng tin phải nằm ở code client, quyền hệ thống và môi trường thực thi."
+                      },
+                      {
+                          "id":  9,
+                          "question":  "Một agent muốn chạy lệnh có thể xoá file trong repo. Control nào phù hợp nhất?",
+                          "options":  {
+                                          "A":  "Chặn hoặc yêu cầu xác nhận thủ công trước khi thực thi lệnh thay đổi trạng thái nguy hiểm.",
+                                          "B":  "Cho chạy tự động nếu mô hình giải thích rằng lệnh đó cần thiết cho nhiệm vụ.",
+                                          "C":  "Chỉ ghi lệnh vào chat history rồi coi như hệ thống đã được bảo vệ đầy đủ.",
+                                          "D":  "Đổi tên lệnh thành một alias ngắn hơn để mô hình ít bị phân tâm khi gọi tool."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Lệnh thay đổi trạng thái nghiêm trọng cần HITL hoặc hard block. Mức rủi ro không được quyết định chỉ bằng lời giải thích của mô hình."
+                      },
+                      {
+                          "id":  10,
+                          "question":  "Risk ladder của tool giúp nhóm phát triển quyết định điều gì?",
+                          "options":  {
+                                          "A":  "Màu sắc giao diện tool trong dashboard để người dùng dễ phân biệt hơn.",
+                                          "B":  "Mức quyền, logging, approval và rollback cần thiết theo tác động thật của tool.",
+                                          "C":  "Số lượng token tối đa trong system prompt bất kể tool có rủi ro hay không.",
+                                          "D":  "Thứ tự câu hỏi MCQ trong bài kiểm tra mà không cần xét quyền thực thi."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Tool từ read public đến pay/cancel/refund có mức rủi ro khác nhau. Risk ladder giúp áp policy vận hành phù hợp từng loại hành động."
+                      }
+                  ]
+}

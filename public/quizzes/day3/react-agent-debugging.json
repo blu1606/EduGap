@@ -1,130 +1,130 @@
 {
-  "id": "react-agent-debugging",
-  "parent_id": "day3",
-  "topic_title": "Day 3: Design Pattern ReAct",
-  "title": "Phần 4: Debug Trace & Quan sát Agent",
-  "description": "Phân tích trace Thought/Action/Observation để tìm nguyên nhân lỗi, dữ liệu cũ, tool sai và vòng lặp bất thường.",
-  "difficulty": "khó",
-  "questions": [
-    {
-      "id": 1,
-      "question": "Trace cho thấy Thought đúng mục tiêu, Action gọi đúng tool, nhưng Observation trả dữ liệu của hôm qua. Nên điều tra đâu trước?",
-      "options": {
-        "A": "Nguồn dữ liệu hoặc cache của tool vì lỗi nằm trong Observation.",
-        "B": "Prompt hệ thống vì mọi lỗi Agent đều bắt đầu từ prompt.",
-        "C": "Giao diện user vì Action đã gọi đúng tool cần thiết.",
-        "D": "Số token đầu vào vì token cao làm dữ liệu bị cũ."
-      },
-      "answer": "A",
-      "explanation": "Khi Thought và Action hợp lý nhưng Observation sai, lớp tool hoặc data source là nghi vấn đầu tiên."
-    },
-    {
-      "id": 2,
-      "question": "Agent trả lời sai dù Observation đã chứa đáp án đúng. Log nào giúp chứng minh lỗi nằm ở suy luận sau Observation?",
-      "options": {
-        "A": "Thought tiếp theo sau Observation và câu trả lời cuối cùng.",
-        "B": "Địa chỉ IP của user và thời điểm mở trình duyệt.",
-        "C": "Dung lượng bundle frontend và thời gian render UI.",
-        "D": "Số lượng token còn lại trong hạn mức tháng đó."
-      },
-      "answer": "A",
-      "explanation": "Cần xem model diễn giải Observation thế nào trước khi kết luận tool hay dữ liệu bị sai."
-    },
-    {
-      "id": 3,
-      "question": "Một Agent lặp cùng Action 8 lần sau mỗi Observation `timeout`. Cách fix nào đúng trọng tâm nhất?",
-      "options": {
-        "A": "Thêm retry limit, backoff và nhánh dừng khi lỗi lặp lại.",
-        "B": "Tăng max token để Agent có thêm chỗ suy luận tiếp.",
-        "C": "Ẩn timeout khỏi Observation để Agent đỡ bị nhiễu.",
-        "D": "Đổi màu giao diện lỗi để user dễ nhận ra hơn."
-      },
-      "answer": "A",
-      "explanation": "Timeout lặp cần policy dừng và backoff, không phải thêm token hay che lỗi khỏi Agent."
-    },
-    {
-      "id": 4,
-      "question": "Observation trả JSON thiếu field `price`, nhưng câu trả lời vẫn báo giá cụ thể. Đây là dấu hiệu lỗi gì?",
-      "options": {
-        "A": "Model hallucinate dữ liệu thay vì chỉ dùng kết quả tool có thật.",
-        "B": "Tool hoạt động đúng vì JSON thiếu field không ảnh hưởng gì.",
-        "C": "Frontend format sai nên model phải tự bù dữ liệu thiếu.",
-        "D": "Rate limit API khiến model sinh giá chính xác hơn bình thường."
-      },
-      "answer": "A",
-      "explanation": "Nếu tool không trả giá mà Agent vẫn nêu giá, lỗi nằm ở việc model bịa dữ liệu."
-    },
-    {
-      "id": 5,
-      "question": "Trace chỉ lưu final answer, không lưu Action hay Observation. Khi lỗi xảy ra, vấn đề lớn nhất là gì?",
-      "options": {
-        "A": "Không phân biệt được lỗi do model suy luận hay tool trả sai.",
-        "B": "Không biết user có thích giao diện trả lời hay không.",
-        "C": "Không thể tính chính xác dung lượng local storage còn lại.",
-        "D": "Không thể biết trình duyệt đang dùng light hay dark mode."
-      },
-      "answer": "A",
-      "explanation": "Debug Agent cần trace các bước trung gian; final answer một mình không đủ truy nguyên lỗi."
-    },
-    {
-      "id": 6,
-      "question": "Tool search trả 3 kết quả mâu thuẫn, Agent chọn kết quả đầu tiên mà không giải thích. Cải thiện nào hợp lý hơn?",
-      "options": {
-        "A": "Yêu cầu Agent nêu tiêu chí chọn nguồn và đánh dấu mâu thuẫn.",
-        "B": "Luôn chọn kết quả đầu tiên vì công cụ đã sắp xếp sẵn.",
-        "C": "Ẩn các kết quả còn lại để câu trả lời gọn hơn.",
-        "D": "Tắt search khi có nhiều hơn một kết quả trả về."
-      },
-      "answer": "A",
-      "explanation": "Khi nguồn mâu thuẫn, Agent cần tiêu chí chọn và minh bạch mức chắc chắn thay vì chọn mù."
-    },
-    {
-      "id": 7,
-      "question": "User báo Agent xóa nhầm file. Trace nào quan trọng nhất để audit sự cố?",
-      "options": {
-        "A": "User input, Thought, Action, tham số filePath và approval state.",
-        "B": "Kích thước màn hình, theme giao diện và vị trí nút bấm.",
-        "C": "Số câu hỏi quiz user đã làm trước khi gửi yêu cầu.",
-        "D": "Danh sách font đang tải trong trình duyệt của user."
-      },
-      "answer": "A",
-      "explanation": "Audit hành động nguy hiểm cần biết yêu cầu gốc, quyết định của model, tham số tool và có phê duyệt hay không."
-    },
-    {
-      "id": 8,
-      "question": "Một lỗi chỉ xuất hiện khi user dùng tiếng Việt có dấu. Nên thêm gì vào bộ test/debug trước?",
-      "options": {
-        "A": "Case input tiếng Việt thật và log tham số sau bước normalize.",
-        "B": "Case input tiếng Anh ngắn hơn để giảm độ phức tạp test.",
-        "C": "Snapshot màu giao diện để xem text có bị lệch không.",
-        "D": "Retry nhiều lần cùng input để lỗi tự biến mất."
-      },
-      "answer": "A",
-      "explanation": "Lỗi locale/normalize cần test đúng dữ liệu tiếng Việt và log sau bước biến đổi input."
-    },
-    {
-      "id": 9,
-      "question": "Observation chứa PII trong log debug. Cách xử lý nào vừa debug được vừa giảm rủi ro?",
-      "options": {
-        "A": "Redact dữ liệu nhạy cảm nhưng giữ cấu trúc trace cần phân tích.",
-        "B": "Tắt toàn bộ logging để không còn nguy cơ lộ dữ liệu.",
-        "C": "Ghi nguyên dữ liệu vì debug luôn quan trọng hơn bảo mật.",
-        "D": "Chuyển log sang file khác mà không cần che dữ liệu."
-      },
-      "answer": "A",
-      "explanation": "Redaction giữ thông tin kỹ thuật cần thiết mà không lưu thô dữ liệu nhạy cảm."
-    },
-    {
-      "id": 10,
-      "question": "Sau deploy, tỉ lệ tool call lỗi tăng từ 2% lên 25%. Bước điều tra đầu tiên nên là gì?",
-      "options": {
-        "A": "So sánh schema/tool registry trước và sau deploy để tìm lệch hợp đồng.",
-        "B": "Đổi toàn bộ model ngay vì lỗi tool call luôn do model yếu.",
-        "C": "Tăng max iterations để Agent có thêm cơ hội tự sửa lỗi.",
-        "D": "Ẩn metric lỗi khỏi dashboard cho tới khi có bản fix."
-      },
-      "answer": "A",
-      "explanation": "Lỗi tăng sau deploy thường cần kiểm tra thay đổi hợp đồng schema, registry hoặc backend trước."
-    }
-  ]
+    "id":  "react-agent-debugging",
+    "parent_id":  "day3",
+    "topic_title":  "Day 3: Design Pattern ReAct",
+    "title":  "Phần 4: Debug Trace \u0026 Quan sát Agent",
+    "description":  "Phân tích trace Thought/Action/Observation để tìm nguyên nhân lỗi, dữ liệu cũ, tool sai và vòng lặp bất thường.",
+    "difficulty":  "khó",
+    "questions":  [
+                      {
+                          "id":  1,
+                          "question":  "Trace cho thấy Thought đúng mục tiêu, Action gọi đúng tool, nhưng Observation trả dữ liệu của hôm qua. Nên điều tra đâu trước?",
+                          "options":  {
+                                          "A":  "Nguồn dữ liệu hoặc cache của tool vì lỗi nằm trong Observation.",
+                                          "B":  "Prompt hệ thống vì mọi lỗi Agent đều bắt đầu từ prompt.",
+                                          "C":  "Giao diện user vì Action đã gọi đúng tool cần thiết.",
+                                          "D":  "Số token đầu vào vì token cao làm dữ liệu bị cũ."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Khi Thought và Action hợp lý nhưng Observation sai, lớp tool hoặc data source là nghi vấn đầu tiên."
+                      },
+                      {
+                          "id":  2,
+                          "question":  "Agent trả lời sai dù Observation đã chứa đáp án đúng. Log nào giúp chứng minh lỗi nằm ở suy luận sau Observation?",
+                          "options":  {
+                                          "A":  "Địa chỉ IP của user và thời điểm mở trình duyệt.",
+                                          "B":  "Thought tiếp theo sau Observation và câu trả lời cuối cùng.",
+                                          "C":  "Dung lượng bundle frontend và thời gian render UI.",
+                                          "D":  "Số lượng token còn lại trong hạn mức tháng đó."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Cần xem model diễn giải Observation thế nào trước khi kết luận tool hay dữ liệu bị sai."
+                      },
+                      {
+                          "id":  3,
+                          "question":  "Một Agent lặp cùng Action 8 lần sau mỗi Observation `timeout`. Cách fix nào đúng trọng tâm nhất?",
+                          "options":  {
+                                          "A":  "Ẩn timeout khỏi Observation để Agent đỡ bị nhiễu.",
+                                          "B":  "Tăng max token để Agent có thêm chỗ suy luận tiếp.",
+                                          "C":  "Thêm retry limit, backoff và nhánh dừng khi lỗi lặp lại.",
+                                          "D":  "Đổi màu giao diện lỗi để user dễ nhận ra hơn."
+                                      },
+                          "answer":  "C",
+                          "explanation":  "Timeout lặp cần policy dừng và backoff, không phải thêm token hay che lỗi khỏi Agent."
+                      },
+                      {
+                          "id":  4,
+                          "question":  "Observation trả JSON thiếu field `price`, nhưng câu trả lời vẫn báo giá cụ thể. Đây là dấu hiệu lỗi gì?",
+                          "options":  {
+                                          "A":  "Rate limit API khiến model sinh giá chính xác hơn bình thường.",
+                                          "B":  "Tool hoạt động đúng vì JSON thiếu field không ảnh hưởng gì.",
+                                          "C":  "Frontend format sai nên model phải tự bù dữ liệu thiếu.",
+                                          "D":  "Model hallucinate dữ liệu thay vì chỉ dùng kết quả tool có thật."
+                                      },
+                          "answer":  "D",
+                          "explanation":  "Nếu tool không trả giá mà Agent vẫn nêu giá, lỗi nằm ở việc model bịa dữ liệu."
+                      },
+                      {
+                          "id":  5,
+                          "question":  "Trace chỉ lưu final answer, không lưu Action hay Observation. Khi lỗi xảy ra, vấn đề lớn nhất là gì?",
+                          "options":  {
+                                          "A":  "Không phân biệt được lỗi do model suy luận hay tool trả sai.",
+                                          "B":  "Không biết user có thích giao diện trả lời hay không.",
+                                          "C":  "Không thể tính chính xác dung lượng local storage còn lại.",
+                                          "D":  "Không thể biết trình duyệt đang dùng light hay dark mode."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Debug Agent cần trace các bước trung gian; final answer một mình không đủ truy nguyên lỗi."
+                      },
+                      {
+                          "id":  6,
+                          "question":  "Tool search trả 3 kết quả mâu thuẫn, Agent chọn kết quả đầu tiên mà không giải thích. Cải thiện nào hợp lý hơn?",
+                          "options":  {
+                                          "A":  "Luôn chọn kết quả đầu tiên vì công cụ đã sắp xếp sẵn.",
+                                          "B":  "Yêu cầu Agent nêu tiêu chí chọn nguồn và đánh dấu mâu thuẫn.",
+                                          "C":  "Ẩn các kết quả còn lại để câu trả lời gọn hơn.",
+                                          "D":  "Tắt search khi có nhiều hơn một kết quả trả về."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Khi nguồn mâu thuẫn, Agent cần tiêu chí chọn và minh bạch mức chắc chắn thay vì chọn mù."
+                      },
+                      {
+                          "id":  7,
+                          "question":  "User báo Agent xóa nhầm file. Trace nào quan trọng nhất để audit sự cố?",
+                          "options":  {
+                                          "A":  "Số câu hỏi quiz user đã làm trước khi gửi yêu cầu.",
+                                          "B":  "Kích thước màn hình, theme giao diện và vị trí nút bấm.",
+                                          "C":  "User input, Thought, Action, tham số filePath và approval state.",
+                                          "D":  "Danh sách font đang tải trong trình duyệt của user."
+                                      },
+                          "answer":  "C",
+                          "explanation":  "Audit hành động nguy hiểm cần biết yêu cầu gốc, quyết định của model, tham số tool và có phê duyệt hay không."
+                      },
+                      {
+                          "id":  8,
+                          "question":  "Một lỗi chỉ xuất hiện khi user dùng tiếng Việt có dấu. Nên thêm gì vào bộ test/debug trước?",
+                          "options":  {
+                                          "A":  "Retry nhiều lần cùng input để lỗi tự biến mất.",
+                                          "B":  "Case input tiếng Anh ngắn hơn để giảm độ phức tạp test.",
+                                          "C":  "Snapshot màu giao diện để xem text có bị lệch không.",
+                                          "D":  "Case input tiếng Việt thật và log tham số sau bước normalize."
+                                      },
+                          "answer":  "D",
+                          "explanation":  "Lỗi locale/normalize cần test đúng dữ liệu tiếng Việt và log sau bước biến đổi input."
+                      },
+                      {
+                          "id":  9,
+                          "question":  "Observation chứa PII trong log debug. Cách xử lý nào vừa debug được vừa giảm rủi ro?",
+                          "options":  {
+                                          "A":  "Redact dữ liệu nhạy cảm nhưng giữ cấu trúc trace cần phân tích.",
+                                          "B":  "Tắt toàn bộ logging để không còn nguy cơ lộ dữ liệu.",
+                                          "C":  "Ghi nguyên dữ liệu vì debug luôn quan trọng hơn bảo mật.",
+                                          "D":  "Chuyển log sang file khác mà không cần che dữ liệu."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Redaction giữ thông tin kỹ thuật cần thiết mà không lưu thô dữ liệu nhạy cảm."
+                      },
+                      {
+                          "id":  10,
+                          "question":  "Sau deploy, tỉ lệ tool call lỗi tăng từ 2% lên 25%. Bước điều tra đầu tiên nên là gì?",
+                          "options":  {
+                                          "A":  "Đổi toàn bộ model ngay vì lỗi tool call luôn do model yếu.",
+                                          "B":  "So sánh schema/tool registry trước và sau deploy để tìm lệch hợp đồng.",
+                                          "C":  "Tăng max iterations để Agent có thêm cơ hội tự sửa lỗi.",
+                                          "D":  "Ẩn metric lỗi khỏi dashboard cho tới khi có bản fix."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Lỗi tăng sau deploy thường cần kiểm tra thay đổi hợp đồng schema, registry hoặc backend trước."
+                      }
+                  ]
 }

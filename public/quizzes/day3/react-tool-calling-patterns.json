@@ -1,130 +1,130 @@
 {
-  "id": "react-tool-calling-patterns",
-  "parent_id": "day3",
-  "topic_title": "Day 3: Design Pattern ReAct",
-  "title": "Phần 2: Tool Calling & Function Schema",
-  "description": "Thực hành thiết kế schema gọi công cụ, validate tham số và xử lý Observation trong vòng lặp ReAct.",
-  "difficulty": "bình thường",
-  "questions": [
-    {
-      "id": 1,
-      "question": "Tool tìm chuyến bay cần `from`, `to`, `date`. User chỉ nói muốn bay từ Hà Nội vào Sài Gòn. Agent nên làm gì trước?",
-      "options": {
-        "A": "Hỏi lại ngày bay vì đây là tham số bắt buộc còn thiếu.",
-        "B": "Tự chọn ngày gần nhất để hoàn tất lời gọi công cụ.",
-        "C": "Gọi tool với trường date rỗng để API tự xử lý.",
-        "D": "Bỏ qua tool và trả danh sách hãng bay phổ biến."
-      },
-      "answer": "A",
-      "explanation": "Schema có tham số bắt buộc thì Agent phải hỏi bổ sung, không nên bịa hoặc gửi rỗng."
-    },
-    {
-      "id": 2,
-      "question": "Một tool yêu cầu `customerId` dạng số, nhưng model gửi chuỗi `khách VIP`. Guard nào nên chặn lỗi này?",
-      "options": {
-        "A": "Validate kiểu dữ liệu theo schema trước khi gọi backend thật.",
-        "B": "Cho backend tự ép kiểu để tránh làm gián đoạn hội thoại.",
-        "C": "Tăng temperature để model sinh tham số đa dạng hơn.",
-        "D": "Ẩn lỗi khỏi user rồi gọi lại với chuỗi khác."
-      },
-      "answer": "A",
-      "explanation": "Validate schema trước tool call giúp chặn tham số sai kiểu trước khi gây lỗi backend."
-    },
-    {
-      "id": 3,
-      "question": "Khi mô tả tool cho LLM, phần nào quan trọng nhất để model chọn đúng tool?",
-      "options": {
-        "A": "Tên tool, mục đích sử dụng, tham số bắt buộc và giới hạn rõ ràng.",
-        "B": "Tên tool thật ngắn và không cần mô tả thêm tham số.",
-        "C": "Mô tả tool dài nhất có thể để model có nhiều token.",
-        "D": "Ẩn mục đích tool để model tự suy luận từ ngữ cảnh."
-      },
-      "answer": "A",
-      "explanation": "Tool description tốt phải nói rõ khi nào dùng, cần tham số gì và giới hạn nào không được vượt."
-    },
-    {
-      "id": 4,
-      "question": "Tool trả về `status: not_found` khi tìm mã đơn hàng. Observation nên được đưa lại cho Agent theo cách nào?",
-      "options": {
-        "A": "Trả rõ trạng thái không tìm thấy để Agent hỏi lại hoặc báo thật.",
-        "B": "Chuyển `not_found` thành lỗi hệ thống để Agent thử tool khác ngay.",
-        "C": "Ẩn kết quả rỗng và để Agent tự viết câu trả lời chung.",
-        "D": "Tạo một đơn hàng mẫu để Agent tiếp tục quy trình hiện tại."
-      },
-      "answer": "A",
-      "explanation": "Observation cần phản ánh kết quả thật để Agent đổi hướng hợp lý thay vì đoán dữ liệu."
-    },
-    {
-      "id": 5,
-      "question": "User hỏi thời tiết và giá cổ phiếu trong cùng câu. Agent có hai tool riêng. Cách xử lý nào hợp lý?",
-      "options": {
-        "A": "Tách ý định, gọi đúng từng tool rồi tổng hợp kết quả cuối.",
-        "B": "Chỉ gọi tool đầu tiên vì Agent nên tránh nhiều Action.",
-        "C": "Dùng tool thời tiết cho cả hai vì user hỏi trong một câu.",
-        "D": "Không gọi tool nào và trả lời bằng kiến thức mô hình."
-      },
-      "answer": "A",
-      "explanation": "Nhiều ý định có thể cần nhiều Action, miễn là từng tool được gọi đúng mục đích."
-    },
-    {
-      "id": 6,
-      "question": "Một tool cập nhật hồ sơ user có tham số optional `nickname`. User không nhắc nickname. Payload nào phù hợp hơn?",
-      "options": {
-        "A": "Chỉ gửi các trường user đã cung cấp và bỏ qua nickname.",
-        "B": "Tự tạo nickname thân thiện để hồ sơ đầy đủ hơn.",
-        "C": "Gửi nickname rỗng để backend tự hiểu là không đổi.",
-        "D": "Dừng toàn bộ tác vụ vì thiếu mọi tham số optional."
-      },
-      "answer": "A",
-      "explanation": "Optional field không nên bị model tự điền; chỉ gửi dữ liệu có căn cứ từ user hoặc hệ thống."
-    },
-    {
-      "id": 7,
-      "question": "Backend báo lỗi `unknown tool name`. Nguyên nhân thiết kế nào thường gặp nhất?",
-      "options": {
-        "A": "Tên tool trong prompt/schema không khớp registry thực thi phía backend.",
-        "B": "User nhập câu hỏi quá ngắn nên model không đủ ngữ cảnh.",
-        "C": "Observation trả về quá ít trường để model suy luận tiếp.",
-        "D": "Tool chạy quá nhanh khiến backend chưa kịp ghi log."
-      },
-      "answer": "A",
-      "explanation": "Tool name phải khớp chính xác giữa schema đưa cho model và registry thực thi ở backend."
-    },
-    {
-      "id": 8,
-      "question": "Một API tính phí mỗi lần gọi. Agent chưa chắc cần dữ liệu đó. Thiết kế nào tiết kiệm và an toàn hơn?",
-      "options": {
-        "A": "Chỉ gọi tool khi Thought xác định dữ liệu đó thật sự cần thiết.",
-        "B": "Gọi tool sớm trong mọi lượt để cache kết quả dự phòng.",
-        "C": "Gọi tool nhiều lần để tăng độ tin cậy của câu trả lời.",
-        "D": "Không bao giờ gọi tool tính phí dù user cần dữ liệu thật."
-      },
-      "answer": "A",
-      "explanation": "Tool tốn chi phí nên chỉ gọi khi cần cho mục tiêu hiện tại và có đủ tham số hợp lệ."
-    },
-    {
-      "id": 9,
-      "question": "Sau tool call, API trả lỗi `rate_limited`. Agent nên xử lý Observation này thế nào?",
-      "options": {
-        "A": "Thông báo giới hạn, thử lại có kiểm soát hoặc đề xuất chờ.",
-        "B": "Lặp lại tool call ngay lập tức cho tới khi API mở lại.",
-        "C": "Bịa kết quả gần đúng để user không phải chờ lâu.",
-        "D": "Đổi sang tool bất kỳ khác để tránh giới hạn hiện tại."
-      },
-      "answer": "A",
-      "explanation": "Rate limit cần retry có kiểm soát hoặc phản hồi minh bạch, không nên spam API hoặc bịa dữ liệu."
-    },
-    {
-      "id": 10,
-      "question": "Một tool nhận tham số `limit`. User không chỉ định số lượng kết quả. Cách đặt limit nào hợp lý nhất?",
-      "options": {
-        "A": "Dùng default an toàn trong schema và nói rõ nếu cần thêm kết quả.",
-        "B": "Đặt limit tối đa để user luôn nhận đủ nhiều dữ liệu nhất.",
-        "C": "Đặt limit bằng 0 để backend tự chọn số lượng phù hợp.",
-        "D": "Hỏi lại user mọi lúc dù schema đã có default hợp lý."
-      },
-      "answer": "A",
-      "explanation": "Default an toàn giúp giảm hỏi lại không cần thiết nhưng vẫn kiểm soát chi phí và kích thước output."
-    }
-  ]
+    "id":  "react-tool-calling-patterns",
+    "parent_id":  "day3",
+    "topic_title":  "Day 3: Design Pattern ReAct",
+    "title":  "Phần 2: Tool Calling \u0026 Function Schema",
+    "description":  "Thực hành thiết kế schema gọi công cụ, validate tham số và xử lý Observation trong vòng lặp ReAct.",
+    "difficulty":  "bình thường",
+    "questions":  [
+                      {
+                          "id":  1,
+                          "question":  "Tool tìm chuyến bay cần `from`, `to`, `date`. User chỉ nói muốn bay từ Hà Nội vào Sài Gòn. Agent nên làm gì trước?",
+                          "options":  {
+                                          "A":  "Hỏi lại ngày bay vì đây là tham số bắt buộc còn thiếu.",
+                                          "B":  "Tự chọn ngày gần nhất để hoàn tất lời gọi công cụ.",
+                                          "C":  "Gọi tool với trường date rỗng để API tự xử lý.",
+                                          "D":  "Bỏ qua tool và trả danh sách hãng bay phổ biến."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Schema có tham số bắt buộc thì Agent phải hỏi bổ sung, không nên bịa hoặc gửi rỗng."
+                      },
+                      {
+                          "id":  2,
+                          "question":  "Một tool yêu cầu `customerId` dạng số, nhưng model gửi chuỗi `khách VIP`. Guard nào nên chặn lỗi này?",
+                          "options":  {
+                                          "A":  "Cho backend tự ép kiểu để tránh làm gián đoạn hội thoại.",
+                                          "B":  "Validate kiểu dữ liệu theo schema trước khi gọi backend thật.",
+                                          "C":  "Tăng temperature để model sinh tham số đa dạng hơn.",
+                                          "D":  "Ẩn lỗi khỏi user rồi gọi lại với chuỗi khác."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Validate schema trước tool call giúp chặn tham số sai kiểu trước khi gây lỗi backend."
+                      },
+                      {
+                          "id":  3,
+                          "question":  "Khi mô tả tool cho LLM, phần nào quan trọng nhất để model chọn đúng tool?",
+                          "options":  {
+                                          "A":  "Mô tả tool dài nhất có thể để model có nhiều token.",
+                                          "B":  "Tên tool thật ngắn và không cần mô tả thêm tham số.",
+                                          "C":  "Tên tool, mục đích sử dụng, tham số bắt buộc và giới hạn rõ ràng.",
+                                          "D":  "Ẩn mục đích tool để model tự suy luận từ ngữ cảnh."
+                                      },
+                          "answer":  "C",
+                          "explanation":  "Tool description tốt phải nói rõ khi nào dùng, cần tham số gì và giới hạn nào không được vượt."
+                      },
+                      {
+                          "id":  4,
+                          "question":  "Tool trả về `status: not_found` khi tìm mã đơn hàng. Observation nên được đưa lại cho Agent theo cách nào?",
+                          "options":  {
+                                          "A":  "Tạo một đơn hàng mẫu để Agent tiếp tục quy trình hiện tại.",
+                                          "B":  "Chuyển `not_found` thành lỗi hệ thống để Agent thử tool khác ngay.",
+                                          "C":  "Ẩn kết quả rỗng và để Agent tự viết câu trả lời chung.",
+                                          "D":  "Trả rõ trạng thái không tìm thấy để Agent hỏi lại hoặc báo thật."
+                                      },
+                          "answer":  "D",
+                          "explanation":  "Observation cần phản ánh kết quả thật để Agent đổi hướng hợp lý thay vì đoán dữ liệu."
+                      },
+                      {
+                          "id":  5,
+                          "question":  "User hỏi thời tiết và giá cổ phiếu trong cùng câu. Agent có hai tool riêng. Cách xử lý nào hợp lý?",
+                          "options":  {
+                                          "A":  "Tách ý định, gọi đúng từng tool rồi tổng hợp kết quả cuối.",
+                                          "B":  "Chỉ gọi tool đầu tiên vì Agent nên tránh nhiều Action.",
+                                          "C":  "Dùng tool thời tiết cho cả hai vì user hỏi trong một câu.",
+                                          "D":  "Không gọi tool nào và trả lời bằng kiến thức mô hình."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Nhiều ý định có thể cần nhiều Action, miễn là từng tool được gọi đúng mục đích."
+                      },
+                      {
+                          "id":  6,
+                          "question":  "Một tool cập nhật hồ sơ user có tham số optional `nickname`. User không nhắc nickname. Payload nào phù hợp hơn?",
+                          "options":  {
+                                          "A":  "Tự tạo nickname thân thiện để hồ sơ đầy đủ hơn.",
+                                          "B":  "Chỉ gửi các trường user đã cung cấp và bỏ qua nickname.",
+                                          "C":  "Gửi nickname rỗng để backend tự hiểu là không đổi.",
+                                          "D":  "Dừng toàn bộ tác vụ vì thiếu mọi tham số optional."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Optional field không nên bị model tự điền; chỉ gửi dữ liệu có căn cứ từ user hoặc hệ thống."
+                      },
+                      {
+                          "id":  7,
+                          "question":  "Backend báo lỗi `unknown tool name`. Nguyên nhân thiết kế nào thường gặp nhất?",
+                          "options":  {
+                                          "A":  "Observation trả về quá ít trường để model suy luận tiếp.",
+                                          "B":  "User nhập câu hỏi quá ngắn nên model không đủ ngữ cảnh.",
+                                          "C":  "Tên tool trong prompt/schema không khớp registry thực thi phía backend.",
+                                          "D":  "Tool chạy quá nhanh khiến backend chưa kịp ghi log."
+                                      },
+                          "answer":  "C",
+                          "explanation":  "Tool name phải khớp chính xác giữa schema đưa cho model và registry thực thi ở backend."
+                      },
+                      {
+                          "id":  8,
+                          "question":  "Một API tính phí mỗi lần gọi. Agent chưa chắc cần dữ liệu đó. Thiết kế nào tiết kiệm và an toàn hơn?",
+                          "options":  {
+                                          "A":  "Không bao giờ gọi tool tính phí dù user cần dữ liệu thật.",
+                                          "B":  "Gọi tool sớm trong mọi lượt để cache kết quả dự phòng.",
+                                          "C":  "Gọi tool nhiều lần để tăng độ tin cậy của câu trả lời.",
+                                          "D":  "Chỉ gọi tool khi Thought xác định dữ liệu đó thật sự cần thiết."
+                                      },
+                          "answer":  "D",
+                          "explanation":  "Tool tốn chi phí nên chỉ gọi khi cần cho mục tiêu hiện tại và có đủ tham số hợp lệ."
+                      },
+                      {
+                          "id":  9,
+                          "question":  "Sau tool call, API trả lỗi `rate_limited`. Agent nên xử lý Observation này thế nào?",
+                          "options":  {
+                                          "A":  "Thông báo giới hạn, thử lại có kiểm soát hoặc đề xuất chờ.",
+                                          "B":  "Lặp lại tool call ngay lập tức cho tới khi API mở lại.",
+                                          "C":  "Bịa kết quả gần đúng để user không phải chờ lâu.",
+                                          "D":  "Đổi sang tool bất kỳ khác để tránh giới hạn hiện tại."
+                                      },
+                          "answer":  "A",
+                          "explanation":  "Rate limit cần retry có kiểm soát hoặc phản hồi minh bạch, không nên spam API hoặc bịa dữ liệu."
+                      },
+                      {
+                          "id":  10,
+                          "question":  "Một tool nhận tham số `limit`. User không chỉ định số lượng kết quả. Cách đặt limit nào hợp lý nhất?",
+                          "options":  {
+                                          "A":  "Đặt limit tối đa để user luôn nhận đủ nhiều dữ liệu nhất.",
+                                          "B":  "Dùng default an toàn trong schema và nói rõ nếu cần thêm kết quả.",
+                                          "C":  "Đặt limit bằng 0 để backend tự chọn số lượng phù hợp.",
+                                          "D":  "Hỏi lại user mọi lúc dù schema đã có default hợp lý."
+                                      },
+                          "answer":  "B",
+                          "explanation":  "Default an toàn giúp giảm hỏi lại không cần thiết nhưng vẫn kiểm soát chi phí và kích thước output."
+                      }
+                  ]
 }
