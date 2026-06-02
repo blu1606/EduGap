@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { trackQuizEvent } from '@/lib/analytics';
 import { supabase } from '@/lib/supabase';
+import posthog from 'posthog-js';
 import { 
   BookOpen, 
   CheckCircle, 
@@ -434,9 +435,17 @@ export default function QuizApp() {
   // Selected state update & Instant submission (auto check answer on click)
   const handleSelectOption = useCallback((optionKey: string) => {
     if (isSubmitted || !currentQuestion || !currentQuestion.options) return;
-    
+
     const isCorrect = optionKey === currentQuestion.answer;
-    
+
+    posthog.capture('question_answered', {
+      set_id: activeSetId,
+      question_id: currentQuestion.id,
+      question_index: currentQuestionIdx,
+      is_correct: isCorrect,
+      selected_option: optionKey,
+    });
+
     setAnswersHistory(prev => ({
       ...prev,
       [activeSetId]: {
@@ -447,7 +456,7 @@ export default function QuizApp() {
         }
       }
     }));
-  }, [activeSetId, currentQuestion, isSubmitted]);
+  }, [activeSetId, currentQuestion, currentQuestionIdx, isSubmitted]);
 
   // Synchronize essayInput when currentQuestion changes
   useEffect(() => {
@@ -461,6 +470,13 @@ export default function QuizApp() {
   // Submit the essay text
   const handleSubmitEssay = () => {
     if (isSubmitted || !currentQuestion || !essayInput.trim()) return;
+
+    posthog.capture('essay_submitted', {
+      set_id: activeSetId,
+      question_id: currentQuestion.id,
+      question_index: currentQuestionIdx,
+      answer_length: essayInput.trim().length,
+    });
 
     setAnswersHistory(prev => ({
       ...prev,
@@ -479,6 +495,14 @@ export default function QuizApp() {
   // Grade the essay (user clicks Correct or Incorrect)
   const handleGradeEssay = (isCorrect: boolean) => {
     if (!currentQuestion || !currentHistory) return;
+
+    posthog.capture('essay_graded', {
+      set_id: activeSetId,
+      question_id: currentQuestion.id,
+      question_index: currentQuestionIdx,
+      is_correct: isCorrect,
+      checked_points_count: currentHistory.checkedPoints?.length ?? 0,
+    });
 
     setAnswersHistory(prev => ({
       ...prev,
@@ -535,6 +559,12 @@ export default function QuizApp() {
 
   // Reset the current active set
   const handleRestart = () => {
+    posthog.capture('quiz_restarted', {
+      set_id: activeSetId,
+      difficulty: activeSet.difficulty ?? null,
+      question_count: totalQuestions,
+    });
+
     setCurrentQuestionIdx(0);
     setShowFinishScreen(false);
     setSubmissionId(null);
