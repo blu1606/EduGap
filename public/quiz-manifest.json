@@ -79,6 +79,14 @@
       "title": "Tự Luận: Prompt, Context và Tool Calling Thực Chiến",
       "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào case study doanh nghiệp, trade-off, context engineering, tool calling và kiểm soát rủi ro.",
       "difficulty": "khó"
+    },
+    {
+      "id": "ai-product-uncertainty-foundations",
+      "parent_id": "day5",
+      "topic_title": "Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn",
+      "title": "Phần 1: Nền Tảng Thiết Kế Sản Phẩm AI",
+      "description": "Kiểm tra các khái niệm nền tảng về xác suất, độ tin cậy, augmentation, automation, eval, UX, feedback loop và ROI trong sản phẩm AI.",
+      "difficulty": "dễ"
     }
   ]
 }

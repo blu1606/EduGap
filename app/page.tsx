@@ -92,7 +92,8 @@ const TOPICS = [
   { id: 'day1', title: 'Day 1: AI & LLM Foundation' },
   { id: 'day2', title: 'Day 2: Xác định Bài toán cho AI' },
   { id: 'day3', title: 'Day 3: Design Pattern ReAct' },
-  { id: 'day4', title: 'Day 4: Prompt Engineering & Tool Calling' }
+  { id: 'day4', title: 'Day 4: Prompt Engineering & Tool Calling' },
+  { id: 'day5', title: 'Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn' }
 ];
 
 export default function QuizApp() {

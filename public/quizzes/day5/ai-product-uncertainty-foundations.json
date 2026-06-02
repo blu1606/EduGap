@@ -1,0 +1,129 @@
+{
+  "id": "ai-product-uncertainty-foundations",
+  "parent_id": "day5",
+  "topic_title": "Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn",
+  "title": "Phần 1: Nền Tảng Thiết Kế Sản Phẩm AI",
+  "description": "Kiểm tra các khái niệm nền tảng về xác suất, độ tin cậy, augmentation, automation, eval, UX, feedback loop và ROI trong sản phẩm AI.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Điểm khác biệt cốt lõi giữa phần mềm truyền thống và sản phẩm AI là gì?",
+      "options": {
+        "A": "Phần mềm truyền thống xử lý logic xác định, còn AI dự đoán theo xác suất và luôn có sai số.",
+        "B": "Phần mềm truyền thống không cần yêu cầu, còn AI chỉ cần giao diện đẹp để hoạt động đúng.",
+        "C": "Phần mềm truyền thống luôn chạy offline, còn AI chỉ chạy được khi có dữ liệu mạng xã hội.",
+        "D": "Phần mềm truyền thống không thể có bug, còn AI chỉ sai khi lập trình viên viết thiếu code."
+      },
+      "answer": "A",
+      "explanation": "AI không vận hành theo đúng/sai tuyệt đối như phần mềm xác định. Nó tạo dự đoán xác suất nên sản phẩm phải thiết kế cho sai số và độ tin cậy."
+    },
+    {
+      "id": 2,
+      "question": "Khi thiết kế sản phẩm AI, câu hỏi quan trọng nhất không chỉ là AI có chạy được hay không mà là gì?",
+      "options": {
+        "A": "AI có dùng được nhiều màu giao diện hơn sản phẩm phần mềm truyền thống hay không.",
+        "B": "AI có chạy đủ tốt, đủ ổn định và đủ đáng tin để người dùng dựa vào hay không.",
+        "C": "AI có thể thay toàn bộ đội sản phẩm ngay từ phiên bản thử nghiệm đầu tiên hay không.",
+        "D": "AI có thể bỏ qua mọi bước đánh giá vì mô hình nền đã được huấn luyện lớn hay không."
+      },
+      "answer": "B",
+      "explanation": "Thiết kế sản phẩm AI là thiết kế cho sự không chắc chắn. Vấn đề chính là mức độ đủ tốt và đủ tin cậy trong bối cảnh sử dụng thật."
+    },
+    {
+      "id": 3,
+      "question": "Augmentation phù hợp nhất với trường hợp nào?",
+      "options": {
+        "A": "AI cần tự quyết định âm thầm mọi việc và người dùng không cần thấy kết quả trung gian.",
+        "B": "AI đã đạt precision cực cao và sai lầm hầu như không tạo rủi ro kinh doanh nào.",
+        "C": "AI đóng vai trò gợi ý, còn người dùng kiểm tra và quyết định kết quả cuối cùng.",
+        "D": "AI phải loại bỏ hoàn toàn sự tham gia của con người ngay từ bản đầu tiên."
+      },
+      "answer": "C",
+      "explanation": "Augmentation dùng AI để tăng cường năng lực người dùng. Nó phù hợp khi model chưa đủ chính xác để tự động hóa hoàn toàn."
+    },
+    {
+      "id": 4,
+      "question": "Automation đòi hỏi điều kiện nào cao hơn augmentation?",
+      "options": {
+        "A": "Nhiều nút bấm hơn để người dùng tự sửa từng dự đoán của mô hình.",
+        "B": "Nhiều prompt mẫu hơn để che đi toàn bộ lỗi của hệ thống AI.",
+        "C": "Nhiều dữ liệu trang trí hơn để giao diện tạo cảm giác thông minh.",
+        "D": "Độ chuẩn xác cao vì AI tự hành động và người dùng ít thấy lỗi."
+      },
+      "answer": "D",
+      "explanation": "Automation ẩn quá trình xử lý khỏi người dùng nên lỗi có thể gây hậu quả lớn. Vì vậy precision và kiểm soát rủi ro phải cao hơn."
+    },
+    {
+      "id": 5,
+      "question": "Lộ trình thực tế thường được khuyến nghị khi xây sản phẩm AI mới là gì?",
+      "options": {
+        "A": "Bắt đầu bằng augmentation để thu thập dữ liệu, rồi tăng tự động hóa khi AI đủ tốt.",
+        "B": "Bắt đầu bằng automation toàn phần để tránh người dùng nhìn thấy bất kỳ lỗi nào.",
+        "C": "Bắt đầu bằng việc bỏ qua feedback vì dữ liệu người dùng làm mô hình nhiễu hơn.",
+        "D": "Bắt đầu bằng ROI lạc quan nhất rồi thiết kế sản phẩm theo con số đó."
+      },
+      "answer": "A",
+      "explanation": "Augmentation cho phép học từ người dùng và giảm rủi ro ban đầu. Khi chất lượng tăng, sản phẩm có thể tiến dần về automation."
+    },
+    {
+      "id": 6,
+      "question": "Requirement cho sản phẩm AI khác gì so với requirement phần mềm truyền thống?",
+      "options": {
+        "A": "Requirement AI chỉ cần mô tả giao diện, không cần nói về lỗi hoặc chất lượng đầu ra.",
+        "B": "Requirement AI định nghĩa kết quả mong đợi và cả thư viện failure modes cần xử lý.",
+        "C": "Requirement AI luôn chính xác tuyệt đối như luật if-else nên không cần đo lường chất lượng.",
+        "D": "Requirement AI chỉ viết sau khi launch vì trước đó không thể biết người dùng cần gì."
+      },
+      "answer": "B",
+      "explanation": "AI có thể sai theo nhiều kiểu, nên requirement cần nêu kết quả mong đợi và failure modes. Đây là nền tảng để thiết kế eval và UX xử lý lỗi."
+    },
+    {
+      "id": 7,
+      "question": "Eval trong sản phẩm AI nên được hiểu đúng như thế nào?",
+      "options": {
+        "A": "Eval là pass/fail tuyệt đối, chỉ cần một test đúng là đủ chứng minh sản phẩm ổn định.",
+        "B": "Eval chỉ là kiểm tra giao diện, không liên quan precision, recall hoặc chất lượng dự đoán.",
+        "C": "Eval đo phân bố chất lượng và xác định tỷ lệ đủ tốt cho bối cảnh sử dụng cụ thể.",
+        "D": "Eval có thể bỏ qua nếu mô hình nền đã nổi tiếng hoặc được nhà cung cấp lớn phát hành."
+      },
+      "answer": "C",
+      "explanation": "AI eval không chỉ là đúng/sai một lần. Nó đo chất lượng theo phân bố và giúp quyết định ngưỡng chấp nhận được trong sản phẩm."
+    },
+    {
+      "id": 8,
+      "question": "Khi sai lầm gây thiệt hại lớn như duyệt vay hoặc tư vấn luật, nên ưu tiên chỉ số nào hơn?",
+      "options": {
+        "A": "Recall, vì mục tiêu là bắt mọi trường hợp dù số lỗi báo sai tăng.",
+        "B": "Latency, vì tốc độ phản hồi luôn quan trọng hơn hậu quả của quyết định sai.",
+        "C": "Engagement, vì người dùng ở lại lâu chứng minh kết quả AI luôn chính xác.",
+        "D": "Precision, vì cần giảm tối đa trường hợp AI đưa ra quyết định sai gây thiệt hại."
+      },
+      "answer": "D",
+      "explanation": "Khi false positive hoặc quyết định sai gây thiệt hại cao, precision thường quan trọng hơn. Mục tiêu là giảm lỗi hành động sai."
+    },
+    {
+      "id": 9,
+      "question": "AI UX cần thiết kế đặc biệt cho tình huống nào?",
+      "options": {
+        "A": "Chỉ khi AI đúng hoàn toàn, vì khi AI sai nên ẩn lỗi khỏi người dùng để giữ niềm tin.",
+        "B": "Khi AI đúng, không chắc chắn, sai, và khi người dùng mất niềm tin cần được phục hồi.",
+        "C": "Chỉ khi giao diện thiếu màu sắc, vì chất lượng AI không ảnh hưởng trải nghiệm sản phẩm.",
+        "D": "Khi cần thay thế eval bằng cảm giác tin tưởng qua animation và lời giải thích dài."
+      },
+      "answer": "B",
+      "explanation": "AI UX phải xử lý cả lúc AI sai hoặc không chắc chắn. Sản phẩm cần đường lùi, khả năng sửa và cách phục hồi niềm tin."
+    },
+    {
+      "id": 10,
+      "question": "AI Product Canvas tóm gọn sản phẩm AI qua ba trục cốt lõi nào?",
+      "options": {
+        "A": "Model, màu sắc và slogan để nhấn mạnh hình ảnh thương hiệu AI với người dùng.",
+        "B": "Prompt, temperature và token limit để thay thế toàn bộ đặc tả sản phẩm.",
+        "C": "Value, Trust và Feasibility để nhìn rõ giá trị, độ tin cậy và khả năng triển khai.",
+        "D": "Backend, frontend và database để mô tả kiến trúc kỹ thuật giống phần mềm thường."
+      },
+      "answer": "C",
+      "explanation": "AI Product Canvas giúp gom SPEC trên một trang. Ba trục Value, Trust và Feasibility buộc nhóm nhìn cả giá trị, rủi ro và chi phí."
+    }
+  ]
+}
