@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { trackQuizEvent } from '@/lib/analytics';
 import { supabase } from '@/lib/supabase';
 import { 
   BookOpen, 
@@ -121,6 +122,7 @@ export default function QuizApp() {
   useEffect(() => {
     const currentSet = data.sets.find(s => s.id === activeSetId);
     if (currentSet && currentSet.parent_id) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setExpandedTopics(prev => ({
         ...prev,
         [currentSet.parent_id!]: true
@@ -146,12 +148,54 @@ export default function QuizApp() {
   const [waitlistEmail, setWaitlistEmail] = useState<string>('');
   const [waitlistSubmitted, setWaitlistSubmitted] = useState<boolean>(false);
 
+  const activeSet = data.sets.find(s => s.id === activeSetId) || data.sets[0];
+  const questionsList = activeSet?.questions || [];
+  const totalQuestions = questionsList.length;
+  const currentQuestionIdxBounded = totalQuestions > 0 ? Math.min(currentQuestionIdx, totalQuestions - 1) : 0;
+  const currentQuestion = questionsList[currentQuestionIdxBounded];
+
+  // Derive active question states on-the-fly based on answersHistory
+  const currentHistory = currentQuestion && activeSetId ? answersHistory[activeSetId]?.[currentQuestion.id] : undefined;
+  const selectedOption = currentHistory ? currentHistory.selected : null;
+  const isSubmitted = !!currentHistory;
+  const showExplanation = isSubmitted;
+  const isEssayCompleted = currentQuestion && (!currentQuestion.options || currentQuestion.expected_answer)
+    ? (selectedOption === 'essay_correct' || selectedOption === 'essay_incorrect')
+    : true;
+
+  const getCompactQuizAnalyticsProperties = useCallback(() => ({
+    set_id: activeSetId,
+    difficulty: activeSet.difficulty || null,
+    question_count: totalQuestions
+  }), [activeSet, activeSetId, totalQuestions]);
+
+  const getShareUrl = () => {
+    const slug = activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId;
+    return `${window.location.origin}${window.location.pathname}?set=${slug}`;
+  };
+
+  const handleCopyShareLink = (source: string) => {
+    navigator.clipboard.writeText(getShareUrl());
+    trackQuizEvent('share_link_copied', {
+      set_id: activeSetId,
+      source
+    });
+    setCopiedShareLink(true);
+    setTimeout(() => setCopiedShareLink(false), 2000);
+  };
+
   // Supabase submission handlers
   const handlePreQuizSubmit = async () => {
     const rating = preQuizRatings[activeSetId];
     const comment = preQuizComments[activeSetId] || '';
     if (!rating) return;
     
+    trackQuizEvent('pre_quiz_submitted', {
+      ...getCompactQuizAnalyticsProperties(),
+      rating_pre: rating,
+      has_comment: comment.trim().length > 0
+    });
+    trackQuizEvent('quiz_started', getCompactQuizAnalyticsProperties());
     setPreQuizSubmitted(prev => ({ ...prev, [activeSetId]: true }));
     
     try {
@@ -179,6 +223,10 @@ export default function QuizApp() {
     e.preventDefault();
     if (!waitlistEmail || !waitlistEmail.includes('@')) return;
     
+    trackQuizEvent('waitlist_submitted', {
+      set_id: activeSetId,
+      has_email: true
+    });
     setWaitlistSubmitted(true);
     
     try {
@@ -219,6 +267,13 @@ export default function QuizApp() {
     const comment = postQuizComments[activeSetId] || '';
     if (!ratings || !ratings.understanding || !ratings.utility || !ratings.personalized) return;
     
+    trackQuizEvent('post_quiz_submitted', {
+      set_id: activeSetId,
+      understanding: ratings.understanding,
+      utility: ratings.utility,
+      personalized: ratings.personalized,
+      has_comment: comment.trim().length > 0
+    });
     setPostQuizSubmitted(prev => ({ ...prev, [activeSetId]: true }));
     
     try {
@@ -320,6 +375,7 @@ export default function QuizApp() {
 
     const currentSet = data.sets.find(s => s.id === activeSetId);
     if (currentSet && currentSet.questions && currentSet.questions.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoadingQuestions(false);
       return;
     }
@@ -330,6 +386,12 @@ export default function QuizApp() {
       try {
         const parentId = currentSet?.parent_id || 'day1';
         const response = await fetch(`/quizzes/${parentId}/${activeSetId}.json`);
+        if (!response.ok) {
+          trackQuizEvent('quiz_questions_load_failed', {
+            set_id: activeSetId,
+            parent_id: parentId
+          });
+        }
         if (response.ok && isMounted) {
           const quizSet = await response.json();
           setData(prev => ({
@@ -341,6 +403,10 @@ export default function QuizApp() {
           }));
         }
       } catch (err) {
+        trackQuizEvent('quiz_questions_load_failed', {
+          set_id: activeSetId,
+          parent_id: currentSet?.parent_id || 'day1'
+        });
         console.error('Error fetching questions:', err);
       } finally {
         if (isMounted) {
@@ -365,23 +431,8 @@ export default function QuizApp() {
     );
   };
 
-  const activeSet = data.sets.find(s => s.id === activeSetId) || data.sets[0];
-  const questionsList = activeSet?.questions || [];
-  const totalQuestions = questionsList.length;
-  const currentQuestionIdxBounded = totalQuestions > 0 ? Math.min(currentQuestionIdx, totalQuestions - 1) : 0;
-  const currentQuestion = questionsList[currentQuestionIdxBounded];
-
-  // Derive active question states on-the-fly based on answersHistory
-  const currentHistory = currentQuestion && activeSetId ? answersHistory[activeSetId]?.[currentQuestion.id] : undefined;
-  const selectedOption = currentHistory ? currentHistory.selected : null;
-  const isSubmitted = !!currentHistory;
-  const showExplanation = isSubmitted;
-  const isEssayCompleted = currentQuestion && (!currentQuestion.options || currentQuestion.expected_answer)
-    ? (selectedOption === 'essay_correct' || selectedOption === 'essay_incorrect')
-    : true;
-
   // Selected state update & Instant submission (auto check answer on click)
-  const handleSelectOption = (optionKey: string) => {
+  const handleSelectOption = useCallback((optionKey: string) => {
     if (isSubmitted || !currentQuestion || !currentQuestion.options) return;
     
     const isCorrect = optionKey === currentQuestion.answer;
@@ -396,15 +447,16 @@ export default function QuizApp() {
         }
       }
     }));
-  };
+  }, [activeSetId, currentQuestion, isSubmitted]);
 
   // Synchronize essayInput when currentQuestion changes
   useEffect(() => {
     if (currentQuestion) {
       const history = answersHistory[activeSetId]?.[currentQuestion.id];
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEssayInput(history?.essayAnswer || '');
     }
-  }, [currentQuestionIdx, activeSetId, answersHistory, currentQuestion?.id]);
+  }, [currentQuestionIdx, activeSetId, answersHistory, currentQuestion]);
 
   // Submit the essay text
   const handleSubmitEssay = () => {
@@ -463,13 +515,23 @@ export default function QuizApp() {
   };
 
   // Move to next question or show finish details
-  const handleNextQuestion = () => {
+  const handleNextQuestion = useCallback(() => {
     if (currentQuestionIdx === totalQuestions - 1) {
+      const setHistory = answersHistory[activeSetId] || {};
+      const correctCount = activeSet.questions.reduce(
+        (correct, question) => correct + (setHistory[question.id]?.isCorrect ? 1 : 0),
+        0
+      );
+      trackQuizEvent('quiz_completed', {
+        ...getCompactQuizAnalyticsProperties(),
+        score_percent: totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0,
+        correct_count: correctCount
+      });
       setShowFinishScreen(true);
     } else {
       setCurrentQuestionIdx(prev => prev + 1);
     }
-  };
+  }, [activeSet, activeSetId, answersHistory, currentQuestionIdx, getCompactQuizAnalyticsProperties, totalQuestions]);
 
   // Reset the current active set
   const handleRestart = () => {
@@ -494,6 +556,10 @@ export default function QuizApp() {
 
   // Quick switch between sets
   const handleSetChange = (setId: string) => {
+    trackQuizEvent('quiz_set_changed', {
+      from_set_id: activeSetId,
+      to_set_id: setId
+    });
     setActiveSetId(setId);
     setCurrentQuestionIdx(0);
     setShowFinishScreen(false);
@@ -509,7 +575,7 @@ export default function QuizApp() {
   };
 
   // Calculate score for the active set
-  const getActiveSetCorrectCount = () => {
+  function getActiveSetCorrectCount() {
     let correct = 0;
     const setHistory = answersHistory[activeSetId] || {};
     activeSet.questions.forEach(q => {
@@ -518,7 +584,7 @@ export default function QuizApp() {
       }
     });
     return correct;
-  };
+  }
 
   // Find incorrectly answered questions
   const getIncorrectQuestions = () => {
@@ -742,13 +808,7 @@ export default function QuizApp() {
                   }
                 </code>
                 <button
-                  onClick={() => {
-                    const slug = activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId;
-                    const url = `${window.location.origin}${window.location.pathname}?set=${slug}`;
-                    navigator.clipboard.writeText(url);
-                    setCopiedShareLink(true);
-                    setTimeout(() => setCopiedShareLink(false), 2000);
-                  }}
+                  onClick={() => handleCopyShareLink('sidebar')}
                   className="text-[10px] text-amber-600 hover:text-amber-850 hover:underline font-semibold flex items-center gap-0.5 shrink-0 cursor-pointer"
                 >
                   {copiedShareLink ? 'Đã copy' : 'Copy'}
@@ -848,13 +908,7 @@ export default function QuizApp() {
                 >
                   {/* Share button in top-right */}
                   <button
-                    onClick={() => {
-                      const slug = activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId;
-                      const shareUrl = `${window.location.origin}${window.location.pathname}?set=${slug}`;
-                      navigator.clipboard.writeText(shareUrl);
-                      setCopiedShareLink(true);
-                      setTimeout(() => setCopiedShareLink(false), 2000);
-                    }}
+                  onClick={() => handleCopyShareLink('pre_quiz')}
                     className="absolute top-4 right-4 p-2 rounded-lg border border-amber-250/50 hover:bg-amber-100/50 text-amber-800 transition-colors flex items-center gap-1.5 text-[11px] font-semibold cursor-pointer bg-white/80 shadow-sm"
                     title="Chia sẻ bộ đề này"
                   >
@@ -1004,13 +1058,7 @@ export default function QuizApp() {
                     )}
 
                     <button
-                      onClick={() => {
-                        const slug = activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId;
-                        const shareUrl = `${window.location.origin}${window.location.pathname}?set=${slug}`;
-                        navigator.clipboard.writeText(shareUrl);
-                        setCopiedShareLink(true);
-                        setTimeout(() => setCopiedShareLink(false), 2000);
-                      }}
+                  onClick={() => handleCopyShareLink('question')}
                       className="p-1.5 rounded-lg border border-amber-250/40 hover:bg-amber-100/50 text-amber-800 transition-colors flex items-center gap-1.5 text-[11px] font-semibold cursor-pointer bg-white/80 shadow-sm"
                       title="Chia sẻ bộ đề này"
                     >
@@ -1328,13 +1376,7 @@ export default function QuizApp() {
               >
                 {/* Share button in top-right */}
                 <button
-                  onClick={() => {
-                    const slug = activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId;
-                    const shareUrl = `${window.location.origin}${window.location.pathname}?set=${slug}`;
-                    navigator.clipboard.writeText(shareUrl);
-                    setCopiedShareLink(true);
-                    setTimeout(() => setCopiedShareLink(false), 2000);
-                  }}
+                  onClick={() => handleCopyShareLink('results')}
                   className="absolute top-4 right-4 p-2 rounded-lg border border-amber-250/50 hover:bg-amber-100/50 text-amber-800 transition-colors flex items-center gap-1.5 text-[11px] font-semibold cursor-pointer bg-white/80 shadow-sm"
                   title="Chia sẻ bộ đề này"
                 >
@@ -1738,3 +1780,7 @@ export default function QuizApp() {
     </div>
   );
 }
+
+
+
+
