@@ -95,7 +95,8 @@ const TOPICS = [
   { id: 'day2', title: 'Day 2: Xác định Bài toán cho AI' },
   { id: 'day3', title: 'Day 3: Design Pattern ReAct' },
   { id: 'day4', title: 'Day 4: Prompt Engineering & Tool Calling' },
-  { id: 'day5', title: 'Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn' }
+  { id: 'day5', title: 'Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn' },
+  { id: 'day6', title: 'Day 6: Hackathon Day' }
 ];
 
 export default function QuizApp() {
@@ -148,6 +149,7 @@ export default function QuizApp() {
   const [postQuizComments, setPostQuizComments] = useState<{ [setId: string]: string }>({});
   const [waitlistEmail, setWaitlistEmail] = useState<string>('');
   const [waitlistSubmitted, setWaitlistSubmitted] = useState<boolean>(false);
+  const [showPreComment, setShowPreComment] = useState<boolean>(false);
 
   const activeSet = data.sets.find(s => s.id === activeSetId) || data.sets[0];
   const questionsList = activeSet?.questions || [];
@@ -570,6 +572,7 @@ export default function QuizApp() {
     setSubmissionId(null);
     setWaitlistSubmitted(false);
     setWaitlistEmail('');
+    setShowPreComment(false);
     
     // Clear responses pertaining only to the current active set questions to avoid mixing data
     setAnswersHistory(prev => {
@@ -597,6 +600,7 @@ export default function QuizApp() {
     setSubmissionId(null);
     setWaitlistSubmitted(false);
     setWaitlistEmail('');
+    setShowPreComment(false);
 
     // Update URL query param to make it shareable
     const slug = setId === 'react-agent-day3' ? 'design-pattern-react' : setId;
@@ -784,86 +788,29 @@ export default function QuizApp() {
               })}
             </div>
           </div>
-
-          {/* Progress Indicator Side widget */}
-          <div id="progress-indicator-box" className="p-4 rounded-xl bg-white/80 backdrop-blur-md border border-amber-100/80 shadow-md shadow-amber-955/[0.02] space-y-3">
-            <h2 className="text-[11px] font-bold tracking-wider uppercase text-amber-900/60">
-              Tiến Trình Học Tập
-            </h2>
-
-            <div className="space-y-2.5">
-              <div className="flex justify-between items-end">
-                <span className="text-[10px] font-mono text-amber-700 uppercase tracking-wider font-semibold">
-                  Trạng Thái
-                </span>
-                <span className="text-xs font-mono font-medium text-amber-950">
-                  Câu {Math.min(currentQuestionIdx + 1, totalQuestions)} / {totalQuestions}
-                </span>
-              </div>
-
-              {/* Progress Bar wrapper */}
-              <div id="progress-bar-container" className="w-full h-1.5 bg-amber-100/50 rounded-full overflow-hidden border border-amber-200/25">
-                <div 
-                  id="progress-bar-indicator"
-                  className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full transition-all duration-300"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-
-              <div id="set-metadata" className="pt-2 border-t border-amber-100/40 space-y-1">
-                <div className="text-[10px] text-stone-500">Bộ đề đang mở:</div>
-                <div className="flex items-center justify-between gap-2">
-                  <div className="text-xs font-semibold text-amber-950 line-clamp-1">{activeSet.title}</div>
-                  {renderDifficultyBadge(activeSet.difficulty)}
-                </div>
-                <div className="text-[10px] text-stone-500 line-clamp-2 leading-relaxed">{activeSet.description}</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Share Set Box */}
-          <div id="share-set-box" className="p-4 rounded-xl bg-white/80 backdrop-blur-md border border-amber-100/80 shadow-md shadow-amber-955/[0.02] space-y-3">
-            <h2 className="text-[11px] font-bold tracking-wider uppercase text-amber-900/60 flex items-center gap-1.5">
-              <Share2 className="w-3.5 h-3.5 text-amber-600" />
-              Chia Sẻ Bộ Đề
-            </h2>
-
-            <div className="space-y-2 text-xs">
-              <div className="text-[10px] text-stone-500">Đường dẫn học tập:</div>
-              <div className="flex items-center gap-1.5 bg-amber-50/50 p-2 rounded-lg border border-amber-150/40">
-                <code className="text-[10px] text-amber-900 font-mono select-all truncate flex-1">
-                  {typeof window !== 'undefined' 
-                    ? `${window.location.origin}${window.location.pathname}?set=${activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId}` 
-                    : `?set=${activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId}`
-                  }
-                </code>
-                <button
-                  onClick={() => handleCopyShareLink('sidebar')}
-                  className="text-[10px] text-amber-600 hover:text-amber-850 hover:underline font-semibold flex items-center gap-0.5 shrink-0 cursor-pointer"
-                >
-                  {copiedShareLink ? 'Đã copy' : 'Copy'}
-                </button>
-              </div>
-              
-              <div className="flex items-center justify-between pt-1 text-[10px] text-stone-500 border-t border-amber-100/30">
-                <span>API Endpoint:</span>
-                <a 
-                  href={`/api/questions/${activeSetId === 'react-loop-basics' ? 'design-pattern-react' : activeSetId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-amber-600 hover:text-amber-850 font-semibold flex items-center gap-0.5"
-                >
-                  Mở JSON
-                  <ExternalLink className="w-2.5 h-2.5" />
-                </a>
-              </div>
-            </div>
-          </div>
         </section>
 
         {/* Main Workspace component */}
         <section id="quiz-workspace" className="md:col-span-9 space-y-4">
           
+          {/* Simple Top Progress Bar */}
+          {preQuizSubmitted[activeSetId] && !showFinishScreen && !isLoadingQuestions && (
+            <div id="top-progress-bar-container" className="w-full bg-white/80 backdrop-blur-md p-3.5 rounded-xl border border-amber-100/80 shadow-sm shadow-amber-955/[0.01] flex items-center gap-4">
+              <span className="text-[10px] font-mono text-amber-700 uppercase tracking-wider font-bold shrink-0">
+                Tiến trình
+              </span>
+              <div className="flex-1 h-1.5 bg-amber-100/50 rounded-full overflow-hidden border border-amber-200/25">
+                <div 
+                  className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full transition-all duration-300"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+              <span className="text-xs font-mono font-bold text-amber-955 shrink-0">
+                {Math.min(currentQuestionIdx + 1, totalQuestions)} / {totalQuestions}
+              </span>
+            </div>
+          )}
+
           {/* Mobile Set Selector Pill Row */}
           <div className="block md:hidden bg-white/80 backdrop-blur-md p-3.5 rounded-2xl border border-amber-100/80 shadow-sm shadow-amber-955/[0.02]">
             <div className="flex items-center gap-1.5 mb-2 px-0.5">
@@ -1011,15 +958,36 @@ export default function QuizApp() {
                     </p>
 
                     {/* Tự luận khảo sát trước khi làm bài */}
-                    {preQuizRatings[activeSetId] > 0 && (
+                    {preQuizRatings[activeSetId] > 0 && !showPreComment && (
+                      <div className="pt-1.5 text-center">
+                        <button
+                          type="button"
+                          onClick={() => setShowPreComment(true)}
+                          className="text-[11px] text-amber-600 hover:text-amber-800 hover:underline font-semibold cursor-pointer"
+                        >
+                          ✍️ Thêm phản hồi/góp ý khác (không bắt buộc)
+                        </button>
+                      </div>
+                    )}
+
+                    {preQuizRatings[activeSetId] > 0 && showPreComment && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         className="text-left space-y-2 pt-3 border-t border-amber-100/30 overflow-hidden"
                       >
-                        <p className="text-xs font-semibold text-stone-750 block">
-                          Cảm nhận của bạn về buổi học & lí do chưa hiểu bài (nếu có):
-                        </p>
+                        <div className="flex justify-between items-center">
+                          <p className="text-xs font-semibold text-stone-750 block">
+                            Cảm nhận của bạn về buổi học & lí do chưa hiểu bài (nếu có):
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setShowPreComment(false)}
+                            className="text-[10px] text-stone-400 hover:text-stone-600 font-semibold cursor-pointer"
+                          >
+                            Ẩn bớt
+                          </button>
+                        </div>
                         <textarea
                           id="pre-quiz-comment-textarea"
                           value={preQuizComments[activeSetId] || ''}

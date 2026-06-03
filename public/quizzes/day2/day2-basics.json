@@ -1,0 +1,21 @@
+{
+  "id": "day2-basics",
+  "parent_id": "day2",
+  "topic_title": "Day 2: Xác định Bài toán cho AI",
+  "title": "Phần 1: Định hình bài toán",
+  "description": "Cách xác định tính khả thi và lựa chọn mô hình phù hợp cho bài toán thực tế.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Khi bắt đầu dự án AI, bước nào dưới đây cần được ưu tiên thực hiện trước nhất để định hình bài toán?",
+      "options": {
+        "A": "Viết code huấn luyện mô hình ngay lập tức.",
+        "B": "Xác định rõ vấn đề kinh doanh, mục tiêu đầu ra và thu thập dữ liệu sạch.",
+        "C": "Lựa chọn GPU đắt nhất để tối ưu hiệu năng.",
+        "D": "Tạo giao diện người dùng frontend thật đẹp mắt."
+      },
+      "answer": "B",
+      "explanation": "Định nghĩa rõ ràng mục tiêu và chuẩn bị dữ liệu sạch là bước quyết định sự thành bại của bất kỳ dự án AI nào trước khi chọn mô hình hoặc hạ tầng phần cứng."
+    }
+  ]
+}

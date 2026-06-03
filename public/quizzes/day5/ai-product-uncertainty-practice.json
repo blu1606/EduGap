@@ -1,0 +1,129 @@
+{
+  "id": "ai-product-uncertainty-practice",
+  "parent_id": "day5",
+  "topic_title": "Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn",
+  "title": "Phần 2: Thiết kế UX/UI cho sự bất định & Tự động hóa",
+  "description": "Luyện tập thiết kế giao diện (Confidence UI, editable plan, showing work), ranh giới giữa Augmentation & Automation, và 4-path user stories.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Khi xây dựng một tính năng AI viết email phản hồi khách hàng, mô hình chỉ đạt độ chính xác khoảng 50%. Chiến lược thiết kế sản phẩm nào là phù hợp nhất?",
+      "options": {
+        "A": "Áp dụng Automation hoàn toàn để giảm thời gian xử lý của nhân viên chăm sóc khách hàng.",
+        "B": "Trì hoãn việc phát hành tính năng cho đến khi mô hình đạt độ chính xác tuyệt đối 100%.",
+        "C": "Áp dụng Augmentation để AI viết bản nháp và nhân viên sẽ duyệt hoặc sửa trước khi gửi.",
+        "D": "Ẩn hoàn toàn tính năng này và chỉ sử dụng các mẫu email tĩnh được viết sẵn từ trước."
+      },
+      "answer": "C",
+      "explanation": "Với độ chính xác thấp (50%), việc tự động hóa hoàn toàn rất nguy hiểm. Áp dụng Augmentation giúp con người đóng vai trò chốt chặn cuối cùng kiểm soát chất lượng."
+    },
+    {
+      "id": 2,
+      "question": "Lộ trình thực tế và an toàn nhất được khuyến nghị khi phát triển một tính năng AI mới là gì?",
+      "options": {
+        "A": "Bắt đầu bằng Augmentation để thu thập dữ liệu người dùng rồi nâng cấp lên Automation khi mô hình đủ tốt.",
+        "B": "Bắt đầu bằng Automation hoàn toàn để tạo ấn tượng mạnh mẽ cho người dùng ngay từ phiên bản thử nghiệm.",
+        "C": "Bắt đầu bằng việc tinh chỉnh (fine-tune) mô hình trong nhiều năm trước khi thiết kế bất kỳ giao diện nào.",
+        "D": "Bắt đầu bằng việc thu thập phản hồi của người dùng mà không cần cung cấp bất kỳ tính năng AI nào."
+      },
+      "answer": "A",
+      "explanation": "Bắt đầu bằng Augmentation giúp giảm thiểu rủi ro ban đầu, đồng thời thu thập được dữ liệu phản hồi từ thế giới thực để cải tiến mô hình hướng tới tự động hóa."
+    },
+    {
+      "id": 3,
+      "question": "Trong mô hình tăng cường năng lực (Augmentation), quyền hành động cuối cùng thuộc về ai và rủi ro được kiểm soát như thế nào?",
+      "options": {
+        "A": "Thuộc về mô hình AI, rủi ro được kiểm soát bằng cách giới hạn số lượng token sử dụng hàng ngày.",
+        "B": "Thuộc về con người, rủi ro được giảm thiểu vì con người có cơ hội kiểm tra và chỉnh sửa trước.",
+        "C": "Thuộc về nhà phát triển hệ thống, rủi ro được kiểm soát bằng cách cập nhật các prompt ẩn định kỳ.",
+        "D": "Thuộc về nhà cung cấp mô hình nền, rủi ro được giảm thiểu bằng các bộ lọc an toàn tích hợp sẵn."
+      },
+      "answer": "B",
+      "explanation": "Augmentation giữ con người ở trung tâm (Human-in-the-loop). Người dùng có quyền quyết định hành động cuối cùng, giúp phát hiện và ngăn chặn các sai sót của mô hình."
+    },
+    {
+      "id": 4,
+      "question": "Thiết kế cơ chế 'Graceful Failure' (thất bại nhẹ nhàng) trong sản phẩm AI UX nên được thực hiện như thế nào?",
+      "options": {
+        "A": "Ẩn hoàn toàn thông báo lỗi và tự động thực thi hành động mặc định mà không cần người dùng biết.",
+        "B": "Hiển thị một thông báo lỗi kỹ thuật chi tiết kèm theo mã lỗi của API để người dùng tự debug.",
+        "C": "Đưa ra lời xin lỗi dài dòng về giới hạn của công nghệ AI và yêu cầu người dùng thử lại sau.",
+        "D": "Cung cấp giao diện trực quan cho phép người dùng dễ dàng chỉnh sửa kết quả sai hoặc dùng fallback."
+      },
+      "answer": "D",
+      "explanation": "Graceful Failure không chỉ đơn giản là báo lỗi mà là cung cấp cơ chế phục hồi (recovery) hiệu quả cho người dùng, chẳng hạn như cho phép chỉnh sửa kết quả lỗi trực tiếp."
+    },
+    {
+      "id": 5,
+      "question": "Thành phần giao diện 'Editable Plan' (kế hoạch có thể chỉnh sửa) mang lại lợi ích gì cho trải nghiệm người dùng?",
+      "options": {
+        "A": "Cho phép người dùng kiểm tra và điều chỉnh các bước hành động mà AI đề xuất trước khi thực thi.",
+        "B": "Cho phép người dùng chỉnh sửa mã nguồn cốt lõi của mô hình AI trực tiếp trên giao diện web.",
+        "C": "Cho phép người dùng thay đổi cấu hình phần cứng của máy chủ chạy mô hình để tăng tốc xử lý.",
+        "D": "Cho phép người dùng lựa chọn các màu sắc giao diện khác nhau cho khung nhập liệu của chatbot AI."
+      },
+      "answer": "A",
+      "explanation": "Editable Plan cho phép người dùng kiểm soát và chỉnh sửa quy trình trung gian mà AI tạo ra trước khi hệ thống thực thi, tăng độ tin cậy và cá nhân hóa."
+    },
+    {
+      "id": 6,
+      "question": "Khi thiết kế thành phần giao diện 'Showing Work' (hiển thị quá trình xử lý), nguyên tắc nào cần được ưu tiên?",
+      "options": {
+        "A": "Hiển thị toàn bộ log hệ thống và mã nguồn Python để chứng minh AI đang hoạt động cực kỳ thông minh.",
+        "B": "Hiển thị các bước suy luận trung gian ở mức độ vừa đủ giúp người dùng hiểu và tin tưởng kết quả.",
+        "C": "Ẩn đi hoàn toàn mọi trạng thái xử lý để giao diện trông tối giản và không làm phiền người dùng.",
+        "D": "Hiển thị các thông tin quảng cáo về tính năng cao cấp để khuyến khích người dùng nâng cấp tài khoản."
+      },
+      "answer": "B",
+      "explanation": "Showing Work giúp tăng tính minh bạch (accountability) cho AI bằng cách hiển thị các bước suy luận cốt lõi ở mức vừa đủ, tránh làm người dùng quá tải thông tin."
+    },
+    {
+      "id": 7,
+      "question": "Trong thiết kế AI UX theo kịch bản 4 đường đi (4-path user stories), ta cần làm gì khi người dùng mất niềm tin vào AI?",
+      "options": {
+        "A": "Tự động khóa tài khoản của người dùng và yêu cầu họ liên hệ với bộ phận hỗ trợ kỹ thuật.",
+        "B": "Tăng nhiệt độ (temperature) của mô hình để tạo ra các phản hồi ngẫu nhiên và thú vị hơn nữa.",
+        "C": "Giải thích lý do đưa ra gợi ý, hiển thị mức độ tự tin và cung cấp quyền kiểm soát cho họ.",
+        "D": "Hiển thị các chứng chỉ bảo mật và cam kết rằng mô hình AI không bao giờ đưa ra kết quả sai."
+      },
+      "answer": "C",
+      "explanation": "Khi người dùng mất niềm tin, việc giải thích minh bạch (explainability) và trả lại quyền kiểm soát là cách hiệu quả nhất để phục hồi niềm tin của họ vào sản phẩm."
+    },
+    {
+      "id": 8,
+      "question": "Ứng dụng đặt vé du lịch Kayak hiển thị mức độ tự tin (confidence) của dự báo giá vé nhằm mục đích gì?",
+      "options": {
+        "A": "Trao quyền tự quyết định cho người dùng bằng cách cung cấp thông tin về độ không chắc chắn.",
+        "B": "Thuyết phục người dùng mua gói bảo hiểm chuyến đi đắt tiền nhất để tối ưu hóa lợi nhuận.",
+        "C": "Chứng minh rằng hệ thống AI của họ luôn chính xác tuyệt đối trong mọi điều kiện thị trường.",
+        "D": "Giảm thiểu dung lượng băng thông mạng bằng cách ẩn đi các biểu đồ lịch sử biến động giá vé."
+      },
+      "answer": "A",
+      "explanation": "Hiển thị mức độ tự tin là một phần quan trọng của AI UX nhằm thông báo cho người dùng về độ bất định, giúp họ tự đánh giá rủi ro và ra quyết định phù hợp."
+    },
+    {
+      "id": 9,
+      "question": "Vai trò 'Decider' (Người quyết định) trong mô hình Human-in-the-loop (HITL) được hiểu chính xác là gì?",
+      "options": {
+        "A": "AI tự động đưa ra quyết định cuối cùng dựa trên các trọng số đã được huấn luyện từ trước.",
+        "B": "AI đề xuất các phương án khả thi, còn con người sẽ cân nhắc và đưa ra lựa chọn cuối cùng.",
+        "C": "Con người chịu trách nhiệm viết lại prompt, còn AI sẽ tự động thực thi hành động mà không duyệt.",
+        "D": "Nhà phát triển phần mềm kiểm tra tính năng và quyết định khi nào nên tắt hệ thống AI đi."
+      },
+      "answer": "B",
+      "explanation": "Trong vai trò Decider, con người đóng vai trò là bên đưa ra quyết định tối cao dựa trên các lựa chọn/gợi ý mà mô hình AI cung cấp."
+    },
+    {
+      "id": 10,
+      "question": "Tín hiệu nào từ hành vi người dùng mang lại giá trị học tập (learning signal) cao nhất cho mô hình AI?",
+      "options": {
+        "A": "Số lần người dùng nhấn nút tải lại trang web khi mô hình AI đang xử lý kết quả.",
+        "B": "Thời gian người dùng di chuột xung quanh các thành phần giao diện của ứng dụng chatbot.",
+        "C": "Lượt nhấn nút thích (like) hoặc không thích (dislike) một cách ngẫu nhiên từ phía người dùng.",
+        "D": "Hành động người dùng trực tiếp chỉnh sửa phần văn bản bị sai do mô hình AI tạo ra."
+      },
+      "answer": "D",
+      "explanation": "Hành động sửa lỗi (correction signal) cung cấp dữ liệu huấn luyện chất lượng cao nhất vì nó cho biết chính xác AI sai ở đâu và kết quả đúng là gì (edit distance)."
+    }
+  ]
+}

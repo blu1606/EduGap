@@ -87,6 +87,46 @@
       "title": "Phần 1: Nền Tảng Thiết Kế Sản Phẩm AI",
       "description": "Kiểm tra các khái niệm nền tảng về xác suất, độ tin cậy, augmentation, automation, eval, UX, feedback loop và ROI trong sản phẩm AI.",
       "difficulty": "dễ"
+    },
+    {
+      "id": "ai-product-uncertainty-practice",
+      "parent_id": "day5",
+      "topic_title": "Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn",
+      "title": "Phần 2: Thiết kế UX/UI cho sự bất định & Tự động hóa",
+      "description": "Luyện tập thiết kế giao diện (Confidence UI, editable plan, showing work), ranh giới giữa Augmentation & Automation, và 4-path user stories.",
+      "difficulty": "bình thường"
+    },
+    {
+      "id": "ai-product-uncertainty-advanced",
+      "parent_id": "day5",
+      "topic_title": "Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn",
+      "title": "Phần 3: Đo lường chất lượng, Quản lý sai số & Rủi ro",
+      "description": "Đánh giá nâng cao về Precision vs Recall trade-offs, Failure Mode Library, cách xử lý phản hồi phá hoại (sabotage), LLM Adaptation và rủi ro từ sự thay đổi mô hình bên ngoài.",
+      "difficulty": "khó"
+    },
+    {
+      "id": "ai-product-uncertainty-business-roi",
+      "parent_id": "day5",
+      "topic_title": "Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn",
+      "title": "Phần 4: Quản lý Chi phí, ROI & Bánh đà Dữ liệu",
+      "description": "Kiểm tra khả năng thiết kế hệ thống tối ưu chi phí token, rate limits, tính ROI theo 3 kịch bản, AI Product Canvas và cách phân chia công việc trong dự án AI.",
+      "difficulty": "khó"
+    },
+    {
+      "id": "ai-product-uncertainty-short-answer",
+      "parent_id": "day5",
+      "topic_title": "Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn",
+      "title": "Tự Luận: Thiết kế Sản phẩm AI Thực Chiến",
+      "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào thiết kế sản phẩm AI, ranh giới Augmentation/Automation, quản lý sai số, vòng lặp phản hồi và bài toán tối ưu ROI.",
+      "difficulty": "khó"
+    },
+    {
+      "id": "hackathon-day-preview",
+      "parent_id": "day6",
+      "topic_title": "Day 6: Hackathon Day",
+      "title": "Phần 1: Trải nghiệm trước Hackathon Day",
+      "description": "Luyện tập các từ khóa cốt lõi về lộ trình sản phẩm mẫu (Prototype), tài liệu đặc tả (SPEC) và thuyết trình (Demo) cho ngày Hackathon.",
+      "difficulty": "dễ"
     }
   ]
 }
