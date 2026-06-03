@@ -1,0 +1,69 @@
+{
+  "id": "ai-product-uncertainty-short-answer",
+  "parent_id": "day5",
+  "topic_title": "Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn",
+  "title": "Tự Luận: Thiết kế Sản phẩm AI Thực Chiến",
+  "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào thiết kế sản phẩm AI, ranh giới Augmentation/Automation, quản lý sai số, vòng lặp phản hồi và bài toán tối ưu ROI.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Một công ty thương mại điện tử muốn tích hợp AI vào quy trình viết mô tả sản phẩm. Do ngân sách có hạn và mô hình chỉ có độ chính xác khoảng 65%, bạn được giao nhiệm vụ tích hợp tính năng này cho đội ngũ viết nội dung (content writers). Bạn sẽ thiết kế quy trình theo hướng Augmentation hay Automation? Hãy giải thích lý do lựa chọn.\n\n*Giải nghĩa thuật ngữ:*\n- **Augmentation (Tăng cường):** AI đóng vai trò làm trợ lý gợi ý hoặc tạo bản nháp, con người duyệt và đưa ra quyết định cuối cùng.\n- **Automation (Tự động hóa):** AI tự động xử lý và xuất bản kết quả mà không cần có sự can thiệp hay kiểm tra của con người.",
+      "expected_answer": "Thiết kế theo hướng Augmentation. Vì độ chính xác của mô hình chưa cao (65%), tự động hóa (Automation) sẽ tạo ra nhiều mô tả lỗi hiển thị trực tiếp lên trang web, gây rủi ro thương hiệu lớn. Lựa chọn Augmentation giúp tận dụng AI để tạo bản nháp nhanh, con người đóng vai trò chốt chặn kiểm duyệt để đảm bảo chất lượng, đồng thời thu thập phản hồi để cải tiến mô hình.",
+      "evaluation_points": [
+        "Xác định rõ việc chọn hướng Augmentation thay vì Automation.",
+        "Giải thích lý do dựa trên tỷ lệ lỗi 35% của mô hình gây rủi ro thương hiệu nếu tự động hóa hoàn toàn.",
+        "Nêu được lợi ích của Augmentation: tận dụng tốc độ của AI nhưng có con người kiểm duyệt làm chốt chặn cuối cùng."
+      ],
+      "sfia_level": "SFIA L3",
+      "competency": "Lựa chọn và tích hợp phương pháp tiếp cận AI phù hợp trong phạm vi một tác vụ cụ thể để giảm thiểu rủi ro."
+    },
+    {
+      "id": 2,
+      "question": "Bạn đang thiết kế giao diện (UI/UX) cho một trợ lý AI phân loại email khách hàng tự động để nhân viên phản hồi. Hãy mô tả cách bạn thiết kế giao diện cho các trường hợp: (1) AI dự báo với độ tin cậy thấp (Low Confidence) và (2) AI phân loại sai (Failure Path) dẫn đến phản hồi nhầm lẫn.\n\n*Giải nghĩa thuật ngữ:*\n- **Confidence Score (Mức độ tự tin):** Chỉ số biểu thị khả năng chính xác của kết quả dự đoán do mô hình AI tự đánh giá.\n- **Graceful Failure (Thất bại nhẹ nhàng):** Khả năng hệ thống xử lý lỗi êm đẹp bằng giao diện đường lui hoặc giải pháp dự phòng thay vì treo máy hay báo lỗi hệ thống khó hiểu.",
+      "expected_answer": "(1) Khi độ tự tin thấp (Low Confidence): Hệ thống hiển thị cảnh báo phân loại không chắc chắn, làm nổi bật nhãn gợi ý kèm confidence score, đề xuất nhân viên kiểm tra kỹ. (2) Khi AI phân loại sai (Failure Path): Cung cấp tính năng sửa đổi nhãn trực tiếp trên giao diện bằng menu thả xuống (editable correction path) và ghi nhận hành vi sửa này để làm tín hiệu học tập cho mô hình.",
+      "evaluation_points": [
+        "Đề xuất giao diện cảnh báo rõ ràng khi mô hình có độ tự tin thấp.",
+        "Thiết kế tính năng sửa đổi nhãn trực tiếp (correction UI) cho phép người dùng khôi phục và điều chỉnh khi AI sai.",
+        "Nêu được việc lưu trữ hành động chỉnh sửa của người dùng làm tín hiệu học tập (learning signal) cải tiến hệ thống."
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Thiết kế các kịch bản trải nghiệm người dùng (AI UX) ứng phó với sai số và độ bất định của mô hình nhằm duy trì niềm tin."
+    },
+    {
+      "id": 3,
+      "question": "Một mạng xã hội nội bộ doanh nghiệp cần xây dựng hệ thống AI để phát hiện các bài viết chứa thông tin rò rỉ bí mật công nghệ của công ty. Nhóm phát triển đang tranh luận giữa việc tối ưu hóa Precision hay Recall. Trong vai trò Product Owner, bạn sẽ quyết định ưu tiên chỉ số nào? Hãy phân tích chi phí sai lầm (cost of error) của mỗi chỉ số trong bối cảnh này để lập luận.\n\n*Giải nghĩa thuật ngữ:*\n- **Precision (Độ chuẩn xác):** Tỷ lệ bài viết thực sự là rò rỉ trong số những bài viết bị AI gắn nhãn là rò rỉ (sai lầm là báo động nhầm).\n- **Recall (Độ phủ/Độ thu hồi):** Tỷ lệ các bài viết rò rỉ thực tế được AI phát hiện thành công (sai lầm là bỏ sót bài rò rỉ).",
+      "expected_answer": "Quyết định ưu tiên Recall. Vì chi phí sai lầm của việc bỏ sót (False Negative) thông tin rò rỉ là cực kỳ lớn (nguy cơ mất tài sản trí tuệ doanh nghiệp). Nếu ưu tiên Precision, hệ thống ít báo nhầm nhưng sẽ bỏ sót nhiều bài viết nguy hiểm. Ưu tiên Recall giúp phát hiện tối đa các ca nghi ngờ, dù tỷ lệ báo nhầm (False Positive) tăng lên nhưng có thể xử lý bằng cách đưa qua bộ phận nhân sự duyệt thủ công sau đó.",
+      "evaluation_points": [
+        "Lựa chọn ưu tiên Recall cho bài toán phát hiện rò rỉ bảo mật.",
+        "Phân tích rõ chi phí sai lầm của bỏ sót (False Negative) là mất mát thông tin công nghệ nghiêm trọng.",
+        "Giải thích được rằng việc báo động nhầm (False Positive) có thể khắc phục được bằng bước duyệt thủ công từ con người."
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Đánh giá chi phí sai lầm và đưa ra quyết định tối ưu hóa chỉ số đo lường (Precision vs Recall) phù hợp với bối cảnh nghiệp vụ."
+    },
+    {
+      "id": 4,
+      "question": "Hệ thống AI dịch thuật tài liệu kỹ thuật của công ty bạn thu thập phản hồi sửa đổi (correction) của người dùng để huấn luyện lại mô hình. Tuy nhiên, nhóm phân tích dữ liệu phát hiện có hiện tượng người dùng cố tình gửi phản hồi rác, sai lệch để phá hoại mô hình. Bạn hãy thiết kế một quy trình kiểm soát dữ liệu đầu vào để bảo vệ vòng lặp phản hồi này.\n\n*Giải nghĩa thuật ngữ:*\n- **Feedback Loop (Vòng lặp phản hồi):** Quy trình thu thập dữ liệu hành vi/phản hồi của người dùng để đưa ngược lại làm đầu vào cải tiến mô hình.\n- **Sabotage (Phá hoại dữ liệu):** Hành vi cố tình cung cấp thông tin sai lệch, phản hồi nhiễu nhằm mục đích làm suy giảm chất lượng hoặc làm lệch hướng dự đoán của AI.",
+      "expected_answer": "Thiết kế quy trình kiểm soát 2 tầng: (1) Dựa vào Confidence Score: Nếu AI tự tin cao (>80%) nhưng người dùng chê và gửi phản hồi sửa đổi lệch nhiều, dữ liệu sẽ chuyển sang hàng đợi kiểm duyệt thủ công (Human check) thay vì tự động nạp. (2) Lọc tự động: Thiết lập hệ thống tự động loại bỏ các phản hồi chứa spam, thô tục hoặc cấu trúc bất thường trước khi đưa vào tập huấn luyện.",
+      "evaluation_points": [
+        "Nêu ra cơ chế phân loại dữ liệu phản hồi dựa trên Confidence Score kết hợp với mức độ chỉnh sửa (edit distance).",
+        "Thiết lập quy trình kiểm duyệt thủ công (human check) đối với các ca nghi ngờ phá hoại.",
+        "Đề xuất bộ lọc tự động sơ cấp (spam, độ dài bất thường, ký tự lạ) để vệ sinh dữ liệu phản hồi trước khi nạp vào hệ thống huấn luyện."
+      ],
+      "sfia_level": "SFIA L5",
+      "competency": "Thiết lập cơ chế kiểm soát chất lượng dữ liệu phản hồi và phòng chống rủi ro phá hoại trong kiến trúc vòng lặp tự thích ứng của AI."
+    },
+    {
+      "id": 5,
+      "question": "Một ứng dụng AI phân tích báo cáo tài chính doanh nghiệp đang chịu chi phí API rất cao do người dùng liên tục tải lên các tệp PDF dài hàng trăm trang. Hãy thiết kế một kế hoạch tối ưu hóa chi phí token và đề xuất cách tính toán ROI theo 3 kịch bản sử dụng để báo cáo ban giám đốc.\n\n*Giải nghĩa thuật ngữ:*\n- **ROI (Return on Investment):** Tỷ suất hoàn vốn đầu tư, đo lường hiệu quả tài chính của dự án bằng cách so sánh lợi ích thu được với chi phí bỏ ra.\n- **Token (Đơn vị ngôn ngữ):** Đơn vị cơ bản mà mô hình LLM dùng để xử lý văn bản đầu vào và đầu ra. Chi phí gọi API của mô hình nền tính theo số lượng token này.",
+      "expected_answer": "Tối ưu token: (1) Áp dụng Rate Limit giới hạn lượt gọi theo thời gian. (2) Sử dụng Context Compaction/JIT Context chỉ trích xuất phần nội dung quan trọng thay vì gửi toàn bộ tệp PDF. ROI 3 kịch bản: (1) Thận trọng (lượng dùng ít, chi phí tối thiểu); (2) Thực tế (lượng dùng trung bình, tiết kiệm 40% thời gian nhân sự); (3) Lạc quan (lượng dùng cao, tự động hóa sâu và cắt giảm nhân sự ngoài).",
+      "evaluation_points": [
+        "Đề xuất các phương án kỹ thuật cụ thể để giảm thiểu token (Rate Limiting, trích xuất text/compaction).",
+        "Định nghĩa rõ 3 kịch bản tính toán ROI (Thận trọng, Thực tế, Lạc quan) dựa trên các biến số về số lượng người dùng và chi phí API.",
+        "Liên kết được các chỉ số hiệu năng kỹ thuật (token consumption) trực tiếp với hiệu quả tài chính (tiết kiệm thời gian/tiền bạc)."
+      ],
+      "sfia_level": "SFIA L5",
+      "competency": "Lập kế hoạch quản trị chi phí tài nguyên AI và xây dựng mô hình dự báo hiệu quả đầu tư tài chính đa kịch bản cho doanh nghiệp."
+    }
+  ]
+}

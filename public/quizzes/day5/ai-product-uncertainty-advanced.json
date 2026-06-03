@@ -1,0 +1,129 @@
+{
+  "id": "ai-product-uncertainty-advanced",
+  "parent_id": "day5",
+  "topic_title": "Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn",
+  "title": "Phần 3: Đo lường chất lượng, Quản lý sai số & Rủi ro",
+  "description": "Đánh giá nâng cao về Precision vs Recall trade-offs, Failure Mode Library, cách xử lý phản hồi phá hoại (sabotage), LLM Adaptation và rủi ro từ sự thay đổi mô hình bên ngoài.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Khi lập tài liệu yêu cầu (requirement) cho sản phẩm AI, 'Thư viện các dạng lỗi' (Failure Mode Library) được dùng để làm gì?",
+      "options": {
+        "A": "Liệt kê các lỗi cú pháp trong mã nguồn Python để lập trình viên sửa chữa trong giai đoạn lập trình.",
+        "B": "Thống kê số lượng máy chủ bị quá tải hệ thống khi gọi API của nhà cung cấp dịch vụ mô hình.",
+        "C": "Mô tả các kiểu dự đoán sai của mô hình AI và định hình kịch bản xử lý tương ứng trên giao diện.",
+        "D": "Đánh giá hiệu năng xử lý của cơ sở dữ liệu và lưu lượng băng thông tiêu thụ khi hệ thống vận hành."
+      },
+      "answer": "C",
+      "explanation": "Failure Mode Library mô tả chi tiết các loại lỗi mô hình có thể mắc phải trong thực tế, giúp nhóm thiết kế sẵn các luồng giao diện xử lý (recovery/fallback) tương ứng."
+    },
+    {
+      "id": 2,
+      "question": "Khi xây dựng tính năng AI duyệt vay tiền của ngân hàng, sai lầm hành động sai (False Positive) gây thiệt hại lớn. Ta nên ưu tiên chỉ số nào?",
+      "options": {
+        "A": "Ưu tiên Precision để giảm thiểu tối đa các trường hợp duyệt nhầm hồ sơ khách hàng không đủ điều kiện.",
+        "B": "Ưu tiên Recall để đảm bảo thu hút được lượng hồ sơ đăng ký vay tiền trực tuyến nhiều nhất có thể.",
+        "C": "Ưu tiên F1-Score để cân bằng hoàn hảo giữa tính thẩm mỹ giao diện và thời gian tải trang của hệ thống.",
+        "D": "Ưu tiên Latency để tối ưu hóa thời gian phản hồi kết quả duyệt vay cho khách hàng dưới hai giây."
+      },
+      "answer": "A",
+      "explanation": "Khi False Positive (duyệt nhầm người xấu) gây mất mát tài chính trực tiếp, doanh nghiệp cần ưu tiên Precision để đảm bảo độ tin cậy cực cao cho mỗi quyết định duyệt."
+    },
+    {
+      "id": 3,
+      "question": "Trong hệ thống AI phát hiện tế bào ung thư từ hình ảnh y khoa, việc bỏ sót bệnh nhân mắc bệnh là một thảm họa. Ta nên ưu tiên chỉ số nào?",
+      "options": {
+        "A": "Ưu tiên Precision để tránh việc chẩn đoán nhầm và làm cho các bệnh nhân khỏe mạnh bị lo lắng.",
+        "B": "Ưu tiên F1-Score để cân bằng dung lượng hình ảnh tải lên và tốc độ hiển thị trên giao diện ứng dụng.",
+        "C": "Ưu tiên Latency để đảm bảo các bác sĩ nhận được kết quả phân tích hình ảnh y tế ngay lập tức.",
+        "D": "Ưu tiên Recall để lọc ra tất cả các ca nghi nhiễm và không bỏ sót bất kỳ bệnh nhân thực tế nào."
+      },
+      "answer": "D",
+      "explanation": "Khi bỏ sót lỗi (False Negative) gây thảm họa (bệnh nhân không được chữa trị), ta cần ưu tiên Recall cao nhất có thể để quét sạch các ca nghi ngờ trước khi bác sĩ kiểm tra lại."
+    },
+    {
+      "id": 4,
+      "question": "Nếu một phản hồi của người dùng chê kết quả AI tệ, nhưng hệ thống ghi nhận AI dự đoán với độ tin cậy rất cao (trên 80%), ta nên làm gì?",
+      "options": {
+        "A": "Tự động đưa ngay dữ liệu này vào tập huấn luyện lại mà không cần kiểm duyệt để làm hài lòng người dùng.",
+        "B": "Chuyển trường hợp này sang cho con người (human check) kiểm tra vì có thể người dùng đang cố tình phá hoại.",
+        "C": "Tự động khóa tài khoản của người dùng vì họ đã đưa ra đánh giá không trùng khớp với mô hình AI.",
+        "D": "Bỏ qua phản hồi này hoàn toàn vì mô hình có độ tin cậy cao nghĩa là kết quả chắc chắn đúng."
+      },
+      "answer": "B",
+      "explanation": "Nếu mô hình rất tự tin (>80%) nhưng vẫn bị chê tệ, có khả năng người dùng đang cố tình phá hoại (sabotage) bằng feedback rác hoặc mô hình bị lỗi nghiêm trọng. Cần có con người lọc lại."
+    },
+    {
+      "id": 5,
+      "question": "Khi người dùng chê kết quả AI là tệ, và hệ thống ghi nhận AI dự đoán với độ tin cậy thấp (dưới 50%), hệ thống xử lý thế nào?",
+      "options": {
+        "A": "Tự động hiển thị các chứng chỉ năng lực của AI để chứng minh với người dùng là họ đã sai.",
+        "B": "Yêu cầu người dùng tự viết lại toàn bộ mã nguồn của prompt để mô hình đưa ra kết quả tốt hơn.",
+        "C": "Cho phép hệ thống tự động ghi nhận lỗi và đưa dữ liệu này vào danh sách cần cải tiến mô hình.",
+        "D": "Chuyển toàn bộ dữ liệu này sang cho giảng viên kiểm duyệt và chấm điểm thủ công từng trường hợp lỗi."
+      },
+      "answer": "C",
+      "explanation": "Khi độ tự tin của AI thấp và người dùng chê tệ, phản hồi này khớp với đánh giá của hệ thống. Dữ liệu này rất giá trị để máy tự động gom vào tập dữ liệu huấn luyện hoặc cải tiến sau này."
+    },
+    {
+      "id": 6,
+      "question": "Đâu là giải pháp tối ưu được đề xuất để nâng cấp chất lượng mô hình LLM từ 80% lên 90% độ chính xác trong dự án ngắn hạn?",
+      "options": {
+        "A": "Thu thập hành vi thực tế của người dùng và thiết kế để hệ thống tự thích ứng và cập nhật dần.",
+        "B": "Tiến hành tinh chỉnh (fine-tune) toàn bộ mô hình LLM nền tảng ngay lập tức trong thời gian 1 đến 2 ngày.",
+        "C": "Thu thập dữ liệu rác để huấn luyện lại mô hình từ đầu nhằm tiết kiệm chi phí thuê máy chủ GPU.",
+        "D": "Thay đổi hoàn toàn giao diện người dùng và không cần quan tâm đến chất lượng đầu ra của mô hình."
+      },
+      "answer": "A",
+      "explanation": "Fine-tuning mô hình ngôn ngữ lớn (LLM) rất phức tạp và tốn kém, không phù hợp cho dự án ngắn hạn. Thiết kế cơ chế thích ứng dần dựa trên phản hồi của người dùng là lựa chọn thực tế hơn."
+    },
+    {
+      "id": 7,
+      "question": "Mối đe dọa 'Upstream Model Update' (nhà cung cấp cập nhật mô hình nền) có thể gây ra hậu quả gì cho hệ thống AI của bạn?",
+      "options": {
+        "A": "Làm tăng băng thông đường truyền internet của máy chủ và khiến cho cơ sở dữ liệu Supabase bị khóa.",
+        "B": "Khiến cho giao diện người dùng tự động chuyển đổi ngôn ngữ hiển thị từ tiếng Việt sang tiếng Anh.",
+        "C": "Làm tăng dung lượng bộ nhớ đệm (cache) của trình duyệt và gây ra lỗi tràn bộ nhớ của client.",
+        "D": "Thay đổi đột ngột hành vi hoặc định dạng đầu ra của mô hình và làm hỏng logic xử lý hiện tại."
+      },
+      "answer": "D",
+      "explanation": "Khi nhà cung cấp cập nhật mô hình nền (ví dụ nâng cấp từ GPT-4 lên GPT-4o), cấu trúc câu trả lời hoặc cách suy luận có thể thay đổi, gây lỗi cho hệ thống xử lý regex hoặc schema hiện tại."
+    },
+    {
+      "id": 8,
+      "question": "Hiện tượng 'Context Drift' (sự dịch chuyển bối cảnh) trong các sản phẩm AI vận hành thực tế được hiểu là gì?",
+      "options": {
+        "A": "Hiện tượng dung lượng bộ nhớ của mô hình bị đầy sau một thời gian dài người dùng trò chuyện.",
+        "B": "Hiện tượng bối cảnh dữ liệu bên ngoài thay đổi (như giá cả, chính sách, tài liệu) khiến hành vi AI lệch đi.",
+        "C": "Hiện tượng mã nguồn giao diện bị lỗi thời sau khi người dùng nâng cấp hệ điều hành của thiết bị.",
+        "D": "Hiện tượng các prompt hệ thống bị người dùng khác sửa đổi trực tiếp trên máy chủ cơ sở dữ liệu."
+      },
+      "answer": "B",
+      "explanation": "Context Drift xảy ra khi môi trường, dữ liệu hoặc chính sách thực tế bị thay đổi theo thời gian, khiến những gì mô hình đã học trước đây không còn hoàn toàn chính xác."
+    },
+    {
+      "id": 9,
+      "question": "Tại sao việc đánh giá (Eval) một sản phẩm AI không nên dựa trên kết quả của một vài trường hợp (Pass/Fail) đơn lẻ?",
+      "options": {
+        "A": "Vì mô hình AI chỉ hoạt động đúng vào một số khung giờ cố định trong ngày do lượng truy cập.",
+        "B": "Vì các trường hợp đơn lẻ không thể hiển thị đầy đủ các màu sắc giao diện của sản phẩm AI.",
+        "C": "Vì AI mang tính xác suất, chất lượng của nó được thể hiện qua phân phối trên tập dữ liệu lớn.",
+        "D": "Vì việc chạy thử một vài trường hợp tốn nhiều chi phí token hơn là chạy trên tập dữ liệu lớn."
+      },
+      "answer": "C",
+      "explanation": "Vì AI hoạt động theo xác suất nên nó luôn có sai số. Đánh giá chất lượng sản phẩm AI phải nhìn vào phân phối (phần trăm đủ tốt) trên tập kiểm thử lớn, tránh phiến diện theo 1-2 ca."
+    },
+    {
+      "id": 10,
+      "question": "Sự không chắc chắn ở đầu vào (Input Uncertainty) của sản phẩm AI thường xuất phát từ nguyên nhân nào?",
+      "options": {
+        "A": "Hệ thống máy chủ của nhà cung cấp mô hình bị lỗi kết nối hoặc phản hồi dữ liệu quá chậm.",
+        "B": "Các tham số temperature của mô hình bị thay đổi liên tục trong quá trình người dùng sử dụng.",
+        "C": "Cơ sở dữ liệu Supabase bị mất kết nối và không thể lưu trữ các thông tin khảo sát người dùng.",
+        "D": "Người dùng nhập liệu mơ hồ, thiếu thông tin bối cảnh hoặc cố tình tấn công bằng prompt injection."
+      },
+      "answer": "D",
+      "explanation": "Input Uncertainty xuất phát từ phía người dùng khi họ đặt câu hỏi không rõ nghĩa, dùng tiếng lóng, thiếu bối cảnh hoặc cố tình nhập các prompt phá hoại hệ thống."
+    }
+  ]
+}

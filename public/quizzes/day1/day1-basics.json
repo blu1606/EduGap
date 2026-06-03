@@ -1,0 +1,21 @@
+{
+  "id": "day1-basics",
+  "parent_id": "day1",
+  "topic_title": "Day 1: AI & LLM Foundation",
+  "title": "Phần 1: Khái niệm cơ bản LLM",
+  "description": "Lý thuyết nền tảng về Transformer, Tokenization và mô hình ngôn ngữ lớn.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Kiến trúc nền tảng đứng sau sự bùng nổ của các Đại mô hình ngôn ngữ (LLM) hiện nay là gì?",
+      "options": {
+        "A": "Kiến trúc mạng nơ-ron tích chập (CNN).",
+        "B": "Kiến trúc mạng nơ-ron hồi quy (RNN).",
+        "C": "Kiến trúc Transformer giới thiệu cơ chế Self-Attention.",
+        "D": "Kiến trúc mạng bộ nhớ dài-ngắn (LSTM)."
+      },
+      "answer": "C",
+      "explanation": "Kiến trúc Transformer giới thiệu cơ chế Self-Attention năm 2017 là nền móng cốt lõi cho các mô hình GPT, Claude, Gemini ngày nay nhờ khả năng xử lý song song và học ngữ cảnh vượt trội."
+    }
+  ]
+}

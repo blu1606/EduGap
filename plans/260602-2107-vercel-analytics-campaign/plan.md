@@ -1,11 +1,12 @@
----
-status: planned
+﻿---
+status: superseded
 created: 2026-06-02
 updated: 2026-06-02
 owner: blu1606
 scope: vercel-analytics-campaign
-blockedBy: []
+blockedBy: [260602-2204-posthog-analytics-migration]
 blocks: []
+supersededBy: [260602-2204-posthog-analytics-migration]
 ---
 
 # Vercel Analytics Campaign Plan
@@ -93,3 +94,4 @@ Run:
 
 - Should `quiz_answer_selected` be enabled in Phase 1 despite quota cost? Recommended: no on Hobby; use `quiz_completed` score first.
 - Should anonymous/session IDs be added in Phase 1? Recommended: no for Vercel-only MVP; add only when Supabase event stream is implemented.
+
