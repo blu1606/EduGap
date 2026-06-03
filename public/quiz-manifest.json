@@ -119,6 +119,14 @@
       "title": "Tự Luận: Thiết kế Sản phẩm AI Thực Chiến",
       "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào thiết kế sản phẩm AI, ranh giới Augmentation/Automation, quản lý sai số, vòng lặp phản hồi và bài toán tối ưu ROI.",
       "difficulty": "khó"
+    },
+    {
+      "id": "hackathon-day-preview",
+      "parent_id": "day6",
+      "topic_title": "Day 6: Hackathon Day",
+      "title": "Phần 1: Trải nghiệm trước Hackathon Day",
+      "description": "Luyện tập các từ khóa cốt lõi về lộ trình sản phẩm mẫu (Prototype), tài liệu đặc tả (SPEC) và thuyết trình (Demo) cho ngày Hackathon.",
+      "difficulty": "dễ"
     }
   ]
 }

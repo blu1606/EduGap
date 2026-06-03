@@ -1,0 +1,129 @@
+{
+  "id": "hackathon-day-preview",
+  "parent_id": "day6",
+  "topic_title": "Day 6: Hackathon Day",
+  "title": "Phần 1: Trải nghiệm trước Hackathon Day",
+  "description": "Luyện tập các từ khóa cốt lõi về lộ trình sản phẩm mẫu (Prototype), tài liệu đặc tả (SPEC) và thuyết trình (Demo) cho ngày Hackathon.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Trong một sự kiện Hackathon Day của sản phẩm AI, mục tiêu quan trọng nhất khi xây dựng sản phẩm mẫu (Prototype) là gì?",
+      "options": {
+        "A": "Tập trung hoàn thiện một luồng trải nghiệm cốt lõi (core flow) bằng dữ liệu thực tế.",
+        "B": "Xây dựng toàn bộ tất cả các tính năng phụ của ứng dụng để người dùng dùng thử.",
+        "C": "Viết báo cáo chi tiết về kế hoạch phát triển sản phẩm trong vòng năm năm tới.",
+        "D": "Thiết kế giao diện đồ họa đẹp mắt và bóng bẩy nhất có thể mà không cần chạy được."
+      },
+      "answer": "A",
+      "explanation": "Trong Hackathon, thời gian có hạn nên việc tập trung hoàn thành một luồng cốt lõi (core flow) chạy được là điều tối quan trọng để chứng minh tính khả thi."
+    },
+    {
+      "id": 2,
+      "question": "Khái niệm 'Sợi chỉ đỏ' (Red thread) trong chuỗi bài học từ Ngày 2 đến Ngày 6 được hiểu là gì?",
+      "options": {
+        "A": "Việc kết nối các ngôn ngữ lập trình khác nhau để xây dựng một hệ thống AI.",
+        "B": "Quy trình kiểm thử bảo mật nghiêm ngặt trước khi triển khai sản phẩm lên máy chủ.",
+        "C": "Sự kết nối logic xuyên suốt từ xác định vấn đề, lập SPEC đến làm Prototype và Demo.",
+        "D": "Phương pháp tối ưu hóa chi phí vận hành API của các nhà cung cấp mô hình ngôn ngữ lớn."
+      },
+      "answer": "C",
+      "explanation": "'Sợi chỉ đỏ' là tính nhất quán xuyên suốt từ việc tìm ra nỗi đau người dùng cho đến việc đặc tả giải pháp và hiện thực hóa nó thành Demo."
+    },
+    {
+      "id": 3,
+      "question": "Tài liệu SPEC của một sản phẩm AI cần xác định rõ điều gì để đo lường mức độ chấp nhận được của mô hình AI?",
+      "options": {
+        "A": "Số lượng người dùng truy cập ứng dụng cùng một thời điểm.",
+        "B": "Các chỉ số đánh giá và ngưỡng chấp nhận (Eval metrics & threshold).",
+        "C": "Kế hoạch phân bổ ngân sách tiếp thị cho sản phẩm hàng năm.",
+        "D": "Các ngôn ngữ lập trình được sử dụng để xây dựng cơ sở dữ liệu."
+      },
+      "answer": "B",
+      "explanation": "Eval metrics + threshold giúp định rõ thế nào là một mô hình AI chạy đạt yêu cầu trong thực tế."
+    },
+    {
+      "id": 4,
+      "question": "Việc xác định 'Top 3 failure modes' (lỗi sai phổ biến của AI) trong tài liệu SPEC nhằm mục đích gì?",
+      "options": {
+        "A": "Để chứng minh hệ thống AI không thể sử dụng được và hủy bỏ dự án ngay lập tức.",
+        "B": "Để yêu cầu nhà cung cấp mô hình đền bù thiệt hại khi mô hình đưa ra kết quả sai.",
+        "C": "Để người dùng tự sửa lỗi mã nguồn của hệ thống mà không cần đến đội phát triển.",
+        "D": "Để chủ động thiết kế các phương án dự phòng và cơ chế kiểm soát rủi ro từ trước."
+      },
+      "answer": "D",
+      "explanation": "Biết trước các cách AI có thể thất bại giúp đội phát triển chủ động xây dựng giải pháp UX dự phòng (fallback) để bảo vệ trải nghiệm của người dùng."
+    },
+    {
+      "id": 5,
+      "question": "Thuật ngữ 'Vibe-coding' (chỉ dựa vào AI để sinh code mà không hiểu) bị cấm hoặc hạn chế trong Hackathon vì lý do gì?",
+      "options": {
+        "A": "Khiến thành viên không giải thích được mã nguồn và không làm chủ được sản phẩm.",
+        "B": "Làm tăng chi phí bản quyền sử dụng các công cụ hỗ trợ lập trình tự động.",
+        "C": "Làm giảm tốc độ viết mã nguồn của lập trình viên trong quá trình phát triển.",
+        "D": "Gây ra lỗi bảo mật nghiêm trọng khiến hệ điều hành của máy chủ bị sập hoàn toàn."
+      },
+      "answer": "A",
+      "explanation": "Hackathon yêu cầu sự hiểu biết sâu sắc về sản phẩm. Việc lạm dụng sinh code tự động mà không hiểu sẽ khiến đội thi bị đánh giá thấp hoặc nhận 0 điểm Demo."
+    },
+    {
+      "id": 6,
+      "question": "Nếu một nhóm chọn 'Option A' (Prompt-based demo) để làm sản phẩm mẫu, họ sẽ thực hiện công việc nào sau đây?",
+      "options": {
+        "A": "Thiết kế toàn bộ giao diện bằng Figma và không cần viết bất kỳ prompt nào.",
+        "B": "Triển khai sản phẩm hoàn chỉnh lên môi trường cloud với hệ thống cơ sở dữ liệu lớn.",
+        "C": "Tạo chatbot hoặc tác vụ xử lý dùng prompt và gọi API thật để trả kết quả.",
+        "D": "Viết một tập tài liệu đặc tả kỹ thuật dài năm mươi trang để giải thích sản phẩm."
+      },
+      "answer": "C",
+      "explanation": "Option A tập trung vào việc thử nghiệm prompt và gọi API thực tế để chứng minh tính khả thi của luồng AI cốt lõi."
+    },
+    {
+      "id": 7,
+      "question": "Trong buổi Demo Day, các nhóm sẽ tiến hành chấm chéo và đánh giá sản phẩm của nhau dựa trên tiêu chí nào?",
+      "options": {
+        "A": "Số lượng dòng code mà các thành viên trong nhóm đã viết được trong ngày.",
+        "B": "Sự phù hợp giữa vấn đề và giải pháp cùng với tư duy sản phẩm AI.",
+        "C": "Số năm kinh nghiệm làm việc thực tế của các thành viên trong đội phát triển.",
+        "D": "Khả năng gọi vốn thành công của dự án từ các quỹ đầu tư mạo hiểm."
+      },
+      "answer": "B",
+      "explanation": "Chấm chéo giữa các nhóm tập trung vào tính logic của bài toán (problem-solution fit), tư duy làm sản phẩm AI và chất lượng của buổi demo."
+    },
+    {
+      "id": 8,
+      "question": "Tại sao câu hỏi về lựa chọn ưu tiên giữa 'Precision' (Độ chính xác) và 'Recall' (Độ phủ) lại quan trọng đối với các nhóm thuyết trình?",
+      "options": {
+        "A": "Vì nó giúp hệ thống chạy nhanh hơn và giảm thiểu tài nguyên bộ nhớ máy chủ.",
+        "B": "Vì nó quyết định ngôn ngữ lập trình nào sẽ được sử dụng để chạy mô hình.",
+        "C": "Vì nó chứng minh rằng nhóm đã xây dựng được mô hình AI hoàn hảo không sai sót.",
+        "D": "Vì nó thể hiện tư duy thiết kế sản phẩm trước các đánh đổi về mặt rủi ro."
+      },
+      "answer": "D",
+      "explanation": "Lựa chọn giữa Precision và Recall thể hiện sự hiểu biết về bài toán nghiệp vụ và cách quản lý sai số của AI phù hợp với kỳ vọng của người dùng."
+    },
+    {
+      "id": 9,
+      "question": "Khái niệm 'Bánh đà dữ liệu' (Data flywheel) trong thiết kế sản phẩm AI được hiểu như thế nào?",
+      "options": {
+        "A": "Chu kỳ mà sản phẩm có thêm người dùng, sinh ra dữ liệu để cải tiến AI.",
+        "B": "Bộ phận phần cứng giúp tăng tốc độ xử lý dữ liệu trong máy chủ AI.",
+        "C": "Thuật toán nén dữ liệu giúp giảm dung lượng lưu trữ trên hệ thống đám mây.",
+        "D": "Quy trình tuyển dụng thêm kỹ sư dữ liệu để gắn nhãn thủ công cho mô hình."
+      },
+      "answer": "A",
+      "explanation": "Data flywheel là động lực tăng trưởng cốt lõi của sản phẩm AI: nhiều người dùng -> nhiều dữ liệu thực tế -> AI thông minh hơn -> thu hút thêm người dùng."
+    },
+    {
+      "id": 10,
+      "question": "Sau khi chứng minh tính khả thi của giải pháp ở Ngày 6, trọng tâm của các Ngày 7 đến 10 tiếp theo là gì?",
+      "options": {
+        "A": "Tiếp tục thay đổi ý tưởng và viết lại toàn bộ SPEC từ đầu đến cuối.",
+        "B": "Chỉ tập trung thuyết trình dự án trước hội đồng giám khảo để nhận điểm thưởng.",
+        "C": "Bắt tay vào xây dựng hệ thống kỹ thuật hoàn chỉnh để giải quyết bài toán.",
+        "D": "Tổ chức thêm các sự kiện thảo luận nhóm để tìm kiếm cơ hội kinh doanh mới."
+      },
+      "answer": "C",
+      "explanation": "Các ngày cuối (Ngày 7-10) là giai đoạn hiện thực hóa giải pháp bằng kỹ thuật thực tế (Build the system) dựa trên SPEC đã được duyệt."
+    }
+  ]
+}
