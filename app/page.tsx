@@ -102,6 +102,7 @@ const TOPICS = [
 export default function QuizApp() {
   const [data, setData] = useState<QuestionsData>(FALLBACK_DATA);
   const [activeSetId, setActiveSetId] = useState<string>('day1-basics');
+  const [activeMobileDayId, setActiveMobileDayId] = useState<string>('day1');
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState<number>(0);
   const [answersHistory, setAnswersHistory] = useState<{ [setId: string]: { [qId: number]: { selected?: string, essayAnswer?: string, checkedPoints?: string[], isCorrect: boolean } } }>({});
   const [showFinishScreen, setShowFinishScreen] = useState<boolean>(false);
@@ -120,7 +121,7 @@ export default function QuizApp() {
     'day1': true
   });
 
-  // Automatically expand parent day/topic when activeSetId changes
+  // Automatically expand parent day/topic and sync mobile day filter when activeSetId changes
   useEffect(() => {
     const currentSet = data.sets.find(s => s.id === activeSetId);
     if (currentSet && currentSet.parent_id) {
@@ -129,6 +130,8 @@ export default function QuizApp() {
         ...prev,
         [currentSet.parent_id!]: true
       }));
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveMobileDayId(currentSet.parent_id);
     }
   }, [activeSetId, data.sets]);
 
@@ -811,42 +814,138 @@ export default function QuizApp() {
             </div>
           )}
 
-          {/* Mobile Set Selector Pill Row */}
-          <div className="block md:hidden bg-white/80 backdrop-blur-md p-3.5 rounded-2xl border border-amber-100/80 shadow-sm shadow-amber-955/[0.02]">
-            <div className="flex items-center gap-1.5 mb-2 px-0.5">
-              <ListTodo className="text-amber-600 w-4 h-4" />
-              <span className="text-[10px] font-bold tracking-wider uppercase text-amber-900/60 font-mono">
-                Chọn bộ đề học tập
-              </span>
+          {/* Mobile Day Selector & Quiz Selector (UI/UX Pro-Max) */}
+          <div className="block md:hidden space-y-3.5">
+            {/* Day Segmented Control */}
+            <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl border border-amber-100/80 shadow-sm shadow-amber-955/[0.01]">
+              <div className="flex gap-1 overflow-x-auto scrollbar-none p-1 bg-amber-50/30 rounded-xl relative">
+                {TOPICS.map(topic => {
+                  const isActiveDay = activeMobileDayId === topic.id;
+                  // e.g. "Day 1" from "Day 1: AI & LLM Foundation"
+                  const shortDayName = topic.title.split(':')[0].trim();
+                  
+                  return (
+                    <button
+                      key={topic.id}
+                      onClick={() => setActiveMobileDayId(topic.id)}
+                      className={`relative flex-1 min-w-[72px] text-center py-2 px-2.5 rounded-lg text-[10.5px] font-bold transition-all duration-200 cursor-pointer ${
+                        isActiveDay 
+                          ? 'text-amber-950 z-10 font-extrabold' 
+                          : 'text-stone-500 hover:text-amber-800'
+                      }`}
+                    >
+                      {isActiveDay && (
+                        <motion.div
+                          layoutId="activeMobileDayBg"
+                          className="absolute inset-0 bg-white border border-amber-200/60 rounded-lg shadow-sm"
+                          transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                      <span className="relative z-20 block">{shortDayName}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none snap-x">
-              {data.sets.map(set => {
-                const isActive = set.id === activeSetId;
+
+            {/* Filtered Quiz Cards Stack */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-1.5">
+                  <ListTodo className="text-amber-600 w-4 h-4" />
+                  <span className="text-[10px] font-bold tracking-wider uppercase text-amber-900/60 font-mono">
+                    Danh sách đề ôn tập
+                  </span>
+                </div>
+                <span className="text-[9px] font-mono text-stone-400 font-bold bg-stone-100/65 px-1.5 py-0.5 rounded-md">
+                  {TOPICS.find(t => t.id === activeMobileDayId)?.title}
+                </span>
+              </div>
+
+              {(() => {
+                const filteredSets = data.sets.filter(set => set.parent_id === activeMobileDayId);
+                
+                if (filteredSets.length === 0) {
+                  return (
+                    <div className="p-5 bg-white/70 border border-stone-200/50 rounded-2xl text-center text-[11px] text-stone-400 font-mono italic">
+                      Sắp ra mắt đề ôn tập mới
+                    </div>
+                  );
+                }
+
                 return (
-                  <button
-                    key={set.id}
-                    id={`mobile-set-btn-${set.id}`}
-                    onClick={() => handleSetChange(set.id)}
-                    className={`shrink-0 snap-start text-left px-3.5 py-2.5 rounded-xl border transition-all duration-150 text-[11px] font-bold flex flex-col gap-0.5 cursor-pointer max-w-[220px] ${
-                      isActive 
-                        ? 'bg-amber-100/60 border-amber-400 text-amber-950 shadow-sm' 
-                        : 'bg-amber-55/15 border-amber-100/40 text-stone-600 hover:bg-[#FFFDF9]/60'
-                    }`}
-                  >
-                    <span className="line-clamp-1">{set.title}</span>
-                    {set.difficulty && (
-                      <span className="text-[9px] text-amber-800/80 font-medium">
-                        Độ khó: {set.difficulty}
-                      </span>
-                    )}
-                    {isActive && (
-                      <span className="text-[9px] text-amber-800/80 font-mono font-normal">
-                        API: /{set.id === 'react-loop-basics' ? 'design-pattern-react' : set.id}
-                      </span>
-                    )}
-                  </button>
+                  <div className="grid grid-cols-1 gap-2.5">
+                    {filteredSets.map(set => {
+                      const isActive = set.id === activeSetId;
+                      const setSlug = set.id === 'react-loop-basics' ? 'design-pattern-react' : set.id;
+                      
+                      // Check progress / status based on answers history
+                      const setHistory = answersHistory[set.id] || {};
+                      const answeredCount = Object.keys(setHistory).length;
+                      const isFinished = answeredCount > 0 && answeredCount === (set.questions?.length || 0);
+                      const isStarted = answeredCount > 0 && answeredCount < (set.questions?.length || 0);
+
+                      let statusBadge = null;
+                      if (isFinished) {
+                        statusBadge = (
+                          <span className="shrink-0 inline-flex items-center gap-0.5 rounded-md bg-emerald-50 px-1.5 py-0.5 text-[8.5px] font-bold text-emerald-800 border border-emerald-250/30">
+                            <Check className="w-2.5 h-2.5 stroke-[3]" />
+                            Hoàn thành
+                          </span>
+                        );
+                      } else if (isStarted) {
+                        statusBadge = (
+                          <span className="shrink-0 inline-flex items-center gap-0.5 rounded-md bg-amber-50 px-1.5 py-0.5 text-[8.5px] font-bold text-amber-800 border border-amber-250/30">
+                            Đang làm ({answeredCount}/{set.questions?.length || 0})
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <motion.button
+                          key={set.id}
+                          id={`mobile-set-btn-${set.id}`}
+                          onClick={() => handleSetChange(set.id)}
+                          whileTap={{ scale: 0.98 }}
+                          className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-150 flex flex-col gap-1.5 cursor-pointer bg-white/80 backdrop-blur-sm relative overflow-hidden ${
+                            isActive 
+                              ? 'border-amber-400/80 shadow-md shadow-amber-900/5 ring-1 ring-amber-400/10' 
+                              : 'border-amber-100/60 shadow-sm shadow-amber-955/[0.01] hover:border-amber-200/50'
+                          }`}
+                        >
+                          {/* Top row: Title and difficulty badge */}
+                          <div className="flex items-start justify-between gap-3 w-full">
+                            <span className={`text-[12.5px] leading-snug flex-1 font-bold ${
+                              isActive ? 'text-amber-950' : 'text-stone-850'
+                            }`}>
+                              {set.title}
+                            </span>
+                            <div className="flex items-center gap-1 shrink-0">
+                              {statusBadge}
+                              {renderDifficultyBadge(set.difficulty)}
+                            </div>
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-[10.5px] text-stone-500 leading-normal line-clamp-2">
+                            {set.description}
+                          </p>
+
+                          {/* Extra info/footer for selected card */}
+                          {isActive && (
+                            <div className="mt-1 pt-2 border-t border-amber-200/30 flex items-center justify-between text-[8.5px] text-amber-800/80 font-mono w-full font-semibold">
+                              <span>slug: {setSlug}</span>
+                              <span className="text-[8px] font-bold text-amber-900 bg-amber-100/50 px-1.5 py-0.5 rounded shrink-0">
+                                Đang chọn
+                              </span>
+                            </div>
+                          )}
+                        </motion.button>
+                      );
+                    })}
+                  </div>
                 );
-              })}
+              })()}
             </div>
           </div>
 
