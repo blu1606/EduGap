@@ -96,13 +96,16 @@ const TOPICS = [
   { id: 'day3', title: 'Day 3: Design Pattern ReAct' },
   { id: 'day4', title: 'Day 4: Prompt Engineering & Tool Calling' },
   { id: 'day5', title: 'Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn' },
-  { id: 'day6', title: 'Day 6: Hackathon Day' }
+  { id: 'day6', title: 'Day 6: Hackathon Day' },
+  { id: 'day7', title: 'Day 7: Data Foundations - Embedding & Vector Store' }
 ];
 
 export default function QuizApp() {
   const [data, setData] = useState<QuestionsData>(FALLBACK_DATA);
   const [activeSetId, setActiveSetId] = useState<string>('day1-basics');
+  const [activeMobileDayId, setActiveMobileDayId] = useState<string>('day1');
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState<number>(0);
+  const [isMobileSelectorExpanded, setIsMobileSelectorExpanded] = useState<boolean>(true);
   const [answersHistory, setAnswersHistory] = useState<{ [setId: string]: { [qId: number]: { selected?: string, essayAnswer?: string, checkedPoints?: string[], isCorrect: boolean } } }>({});
   const [showFinishScreen, setShowFinishScreen] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -120,7 +123,7 @@ export default function QuizApp() {
     'day1': true
   });
 
-  // Automatically expand parent day/topic when activeSetId changes
+  // Automatically expand parent day/topic and sync mobile day filter when activeSetId changes
   useEffect(() => {
     const currentSet = data.sets.find(s => s.id === activeSetId);
     if (currentSet && currentSet.parent_id) {
@@ -129,6 +132,8 @@ export default function QuizApp() {
         ...prev,
         [currentSet.parent_id!]: true
       }));
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveMobileDayId(currentSet.parent_id);
     }
   }, [activeSetId, data.sets]);
 
@@ -601,6 +606,7 @@ export default function QuizApp() {
     setWaitlistSubmitted(false);
     setWaitlistEmail('');
     setShowPreComment(false);
+    setIsMobileSelectorExpanded(false);
 
     // Update URL query param to make it shareable
     const slug = setId === 'react-agent-day3' ? 'design-pattern-react' : setId;
@@ -811,43 +817,187 @@ export default function QuizApp() {
             </div>
           )}
 
-          {/* Mobile Set Selector Pill Row */}
-          <div className="block md:hidden bg-white/80 backdrop-blur-md p-3.5 rounded-2xl border border-amber-100/80 shadow-sm shadow-amber-955/[0.02]">
-            <div className="flex items-center gap-1.5 mb-2 px-0.5">
-              <ListTodo className="text-amber-600 w-4 h-4" />
-              <span className="text-[10px] font-bold tracking-wider uppercase text-amber-900/60 font-mono">
-                Chọn bộ đề học tập
-              </span>
-            </div>
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none snap-x">
-              {data.sets.map(set => {
-                const isActive = set.id === activeSetId;
-                return (
-                  <button
-                    key={set.id}
-                    id={`mobile-set-btn-${set.id}`}
-                    onClick={() => handleSetChange(set.id)}
-                    className={`shrink-0 snap-start text-left px-3.5 py-2.5 rounded-xl border transition-all duration-150 text-[11px] font-bold flex flex-col gap-0.5 cursor-pointer max-w-[220px] ${
-                      isActive 
-                        ? 'bg-amber-100/60 border-amber-400 text-amber-950 shadow-sm' 
-                        : 'bg-amber-55/15 border-amber-100/40 text-stone-600 hover:bg-[#FFFDF9]/60'
-                    }`}
-                  >
-                    <span className="line-clamp-1">{set.title}</span>
-                    {set.difficulty && (
-                      <span className="text-[9px] text-amber-800/80 font-medium">
-                        Độ khó: {set.difficulty}
-                      </span>
-                    )}
-                    {isActive && (
-                      <span className="text-[9px] text-amber-800/80 font-mono font-normal">
-                        API: /{set.id === 'react-loop-basics' ? 'design-pattern-react' : set.id}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+          {/* Mobile Day Selector & Quiz Selector (UI/UX Pro-Max) */}
+          <div className="block md:hidden space-y-3.5">
+            <AnimatePresence mode="wait">
+              {!isMobileSelectorExpanded ? (
+                <motion.div
+                  key="collapsed-selector"
+                  initial={{ opacity: 0, height: 0, y: -10 }}
+                  animate={{ opacity: 1, height: 'auto', y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="bg-gradient-to-r from-amber-500/10 to-yellow-500/5 border border-amber-200/50 rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3"
+                >
+                  <div className="space-y-1 flex-1 min-w-0">
+                    <span className="text-[9px] font-mono font-bold text-amber-800 uppercase tracking-wider block">
+                      Đề hiện tại ({TOPICS.find(t => t.id === activeSet?.parent_id)?.title?.split(':')[0] || 'Day'})
+                    </span>
+                    <h3 className="text-xs font-bold text-amber-955 truncate">
+                      {activeSet?.title}
+                    </h3>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {renderDifficultyBadge(activeSet?.difficulty)}
+                    <button
+                      onClick={() => setIsMobileSelectorExpanded(true)}
+                      className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-bold shadow-sm shadow-amber-500/10 active:translate-y-[1px] transition-all cursor-pointer"
+                    >
+                      Đổi đề
+                    </button>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="expanded-selector"
+                  initial={{ opacity: 0, height: 0, y: -10 }}
+                  animate={{ opacity: 1, height: 'auto', y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-3.5"
+                >
+                  {/* Day Segmented Control */}
+                  <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl border border-amber-100/80 shadow-sm shadow-amber-955/[0.01]">
+                    <div className="flex gap-1 overflow-x-auto scrollbar-none p-1 bg-amber-50/30 rounded-xl relative">
+                      {TOPICS.map(topic => {
+                        const isActiveDay = activeMobileDayId === topic.id;
+                        // e.g. "Day 1" from "Day 1: AI & LLM Foundation"
+                        const shortDayName = topic.title.split(':')[0].trim();
+                        
+                        return (
+                          <button
+                            key={topic.id}
+                            onClick={() => setActiveMobileDayId(topic.id)}
+                            className={`relative flex-1 min-w-[72px] text-center py-2 px-2.5 rounded-lg text-[10.5px] font-bold transition-all duration-200 cursor-pointer ${
+                              isActiveDay 
+                                ? 'text-amber-955 z-10 font-extrabold' 
+                                : 'text-stone-500 hover:text-amber-800'
+                            }`}
+                          >
+                            {isActiveDay && (
+                              <motion.div
+                                layoutId="activeMobileDayBg"
+                                className="absolute inset-0 bg-white border border-amber-200/60 rounded-lg shadow-sm"
+                                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                              />
+                            )}
+                            <span className="relative z-20 block">{shortDayName}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Filtered Quiz Cards Stack */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between px-1">
+                      <div className="flex items-center gap-1.5">
+                        <ListTodo className="text-amber-600 w-4 h-4" />
+                        <span className="text-[10px] font-bold tracking-wider uppercase text-amber-900/60 font-mono">
+                          Danh sách đề ôn tập
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-mono text-stone-400 font-bold bg-stone-100/65 px-1.5 py-0.5 rounded-md">
+                          {TOPICS.find(t => t.id === activeMobileDayId)?.title}
+                        </span>
+                        <button
+                          onClick={() => setIsMobileSelectorExpanded(false)}
+                          className="text-[9px] text-amber-700 hover:text-amber-955 font-bold bg-amber-100/55 hover:bg-amber-100/80 px-2 py-0.5 rounded-md cursor-pointer transition-colors"
+                        >
+                          Thu gọn ▲
+                        </button>
+                      </div>
+                    </div>
+
+                    {(() => {
+                      const filteredSets = data.sets.filter(set => set.parent_id === activeMobileDayId);
+                      
+                      if (filteredSets.length === 0) {
+                        return (
+                          <div className="p-5 bg-white/70 border border-stone-200/50 rounded-2xl text-center text-[11px] text-stone-400 font-mono italic">
+                            Sắp ra mắt đề ôn tập mới
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div className="grid grid-cols-1 gap-2.5">
+                          {filteredSets.map(set => {
+                            const isActive = set.id === activeSetId;
+                            const setSlug = set.id === 'react-loop-basics' ? 'design-pattern-react' : set.id;
+                            
+                            // Check progress / status based on answers history
+                            const setHistory = answersHistory[set.id] || {};
+                            const answeredCount = Object.keys(setHistory).length;
+                            const isFinished = answeredCount > 0 && answeredCount === (set.questions?.length || 0);
+                            const isStarted = answeredCount > 0 && answeredCount < (set.questions?.length || 0);
+
+                            let statusBadge = null;
+                            if (isFinished) {
+                              statusBadge = (
+                                <span className="shrink-0 inline-flex items-center gap-0.5 rounded-md bg-emerald-50 px-1.5 py-0.5 text-[8.5px] font-bold text-emerald-800 border border-emerald-250/30">
+                                  <Check className="w-2.5 h-2.5 stroke-[3]" />
+                                  Hoàn thành
+                                </span>
+                              );
+                            } else if (isStarted) {
+                              statusBadge = (
+                                <span className="shrink-0 inline-flex items-center gap-0.5 rounded-md bg-amber-50 px-1.5 py-0.5 text-[8.5px] font-bold text-amber-800 border border-amber-250/30">
+                                  Đang làm ({answeredCount}/{set.questions?.length || 0})
+                                </span>
+                              );
+                            }
+
+                            return (
+                              <motion.button
+                                key={set.id}
+                                id={`mobile-set-btn-${set.id}`}
+                                onClick={() => handleSetChange(set.id)}
+                                whileTap={{ scale: 0.98 }}
+                                className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-150 flex flex-col gap-1.5 cursor-pointer bg-white/80 backdrop-blur-sm relative overflow-hidden ${
+                                  isActive 
+                                    ? 'border-amber-400/80 shadow-md shadow-amber-900/5 ring-1 ring-amber-400/10' 
+                                    : 'border-amber-100/60 shadow-sm shadow-amber-955/[0.01] hover:border-amber-200/50'
+                                }`}
+                              >
+                                {/* Top row: Title and difficulty badge */}
+                                <div className="flex items-start justify-between gap-3 w-full">
+                                  <span className={`text-[12.5px] leading-snug flex-1 font-bold ${
+                                    isActive ? 'text-amber-950' : 'text-stone-850'
+                                  }`}>
+                                    {set.title}
+                                  </span>
+                                  <div className="flex items-center gap-1 shrink-0">
+                                    {statusBadge}
+                                    {renderDifficultyBadge(set.difficulty)}
+                                  </div>
+                                </div>
+
+                                {/* Description */}
+                                <p className="text-[10.5px] text-stone-500 leading-normal line-clamp-2">
+                                  {set.description}
+                                </p>
+
+                                {/* Extra info/footer for selected card */}
+                                {isActive && (
+                                  <div className="mt-1 pt-2 border-t border-amber-200/30 flex items-center justify-between text-[8.5px] text-amber-800/80 font-mono w-full font-semibold">
+                                    <span>slug: {setSlug}</span>
+                                    <span className="text-[8px] font-bold text-amber-900 bg-amber-100/50 px-1.5 py-0.5 rounded shrink-0">
+                                      Đang chọn
+                                    </span>
+                                  </div>
+                                )}
+                              </motion.button>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <AnimatePresence mode="wait">
@@ -881,6 +1031,11 @@ export default function QuizApp() {
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.2 }}
                   id="pre-quiz-survey-card"
+                  onClick={() => {
+                    if (isMobileSelectorExpanded) {
+                      setIsMobileSelectorExpanded(false);
+                    }
+                  }}
                   className="p-5 md:p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] space-y-6 text-center relative"
                 >
                   {/* Share button in top-right */}
@@ -1026,7 +1181,12 @@ export default function QuizApp() {
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.2 }}
                   id="question-active-card"
-                  className="p-5 md:p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] space-y-5 relative"
+                  onClick={() => {
+                    if (isMobileSelectorExpanded) {
+                      setIsMobileSelectorExpanded(false);
+                    }
+                  }}
+                  className="p-5 pb-20 md:p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] space-y-5 relative"
                 >
                   {/* Header question status info */}
                   <div className="flex justify-between items-center border-b border-amber-100/40 pb-3">
@@ -1298,8 +1458,8 @@ export default function QuizApp() {
                   )}
 
                   {/* Bottom interactive navigation row */}
-                  <div className="flex flex-col sm:flex-row gap-3 justify-between items-center pt-3 border-t border-amber-100/40">
-                    <div className="text-[11px] text-stone-500 font-mono font-medium text-center sm:text-left">
+                  <div className="sticky bottom-0 md:static -mx-5 -mb-5 md:mx-0 md:mb-0 bg-[#FDFBF7]/95 md:bg-transparent p-4 md:p-0 md:pt-3 border-t border-amber-100/40 rounded-b-2xl md:rounded-none z-10 flex flex-col sm:flex-row gap-3 justify-between items-center backdrop-blur-md md:backdrop-blur-none">
+                    <div className="hidden md:block text-[11px] text-stone-500 font-mono font-medium text-center sm:text-left">
                       {!currentQuestion.options ? (
                         !isSubmitted 
                           ? 'Trình bày câu trả lời của bạn và bấm Nộp bài' 
@@ -1311,12 +1471,12 @@ export default function QuizApp() {
                       )}
                     </div>
 
-                    <div className="w-full sm:w-auto flex flex-row gap-2 justify-end items-center">
+                    <div className="w-full sm:w-auto flex flex-row gap-2.5 justify-end items-center">
                       {currentQuestionIdx > 0 && (
                         <button
                           id="back-question-btn"
                           onClick={() => setCurrentQuestionIdx(prev => prev - 1)}
-                          className="px-4 py-2 bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 shadow-sm active:translate-y-[1px] cursor-pointer"
+                          className="flex-1 sm:flex-initial px-4 py-2.5 bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 shadow-sm active:translate-y-[1px] cursor-pointer"
                         >
                           <ChevronLeft className="w-3.5 h-3.5" />
                           Quay lại
@@ -1327,7 +1487,7 @@ export default function QuizApp() {
                         <button
                           id="next-question-btn"
                           onClick={handleNextQuestion}
-                          className="px-5 py-2 bg-amber-50 hover:bg-amber-100/80 border border-amber-200 text-amber-950 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 shadow-sm active:translate-y-[1px] cursor-pointer"
+                          className="flex-1 sm:flex-initial px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 shadow-md shadow-amber-500/10 active:translate-y-[1px] cursor-pointer"
                         >
                           {currentQuestionIdx === totalQuestions - 1 ? 'Xem kết quả' : 'Câu tiếp theo'}
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -1337,7 +1497,7 @@ export default function QuizApp() {
                   </div>
 
                   {/* Keyboard Shortcuts Hint */}
-                  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[10px] text-stone-500 font-mono border-t border-amber-100/25 pt-3 mt-1.5">
+                  <div className="hidden md:flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[10px] text-stone-500 font-mono border-t border-amber-100/25 pt-3 mt-1.5">
                     <span className="text-stone-400 font-medium">Phím tắt:</span>
                     {currentQuestion.options && (
                       <span className="flex items-center gap-1">
@@ -1370,6 +1530,11 @@ export default function QuizApp() {
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 id="result-dashboard-card"
+                onClick={() => {
+                  if (isMobileSelectorExpanded) {
+                    setIsMobileSelectorExpanded(false);
+                  }
+                }}
                 className="p-5 md:p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-100/80 shadow-lg shadow-amber-955/[0.03] space-y-6 relative"
               >
                 {/* Share button in top-right */}

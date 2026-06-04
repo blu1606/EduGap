@@ -1,0 +1,130 @@
+{
+  "id": "day7-basics",
+  "parent_id": "day7",
+  "topic_title": "Day 7: Data Foundations - Embedding & Vector Store",
+  "title": "Phần 1: Nền tảng Embedding & Vector Store",
+  "description": "Nắm vững kiến thức nền tảng về chiến lược dữ liệu, kiến trúc bộ nhớ Agent, Embedding và Vector Store.",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Khi một Agent trả lời sai hoặc gặp hiện tượng ảo giác (hallucination) do dữ liệu đầu vào bị lỗi hoặc chưa được làm sạch, giải pháp nào dưới đây là hiệu quả và đúng đắn nhất?",
+      "options": {
+        "A": "Chuyển sang sử dụng một mô hình ngôn ngữ lớn (LLM) khác đắt tiền và mạnh mẽ hơn.",
+        "B": "Tăng độ dài của Context Window và nạp thêm toàn bộ tài liệu thô vào prompt.",
+        "C": "Tiến hành lọc sạch, chuẩn hóa và xử lý chất lượng của nguồn dữ liệu đầu vào.",
+        "D": "Thiết lập nhiệt độ (temperature) của mô hình về giá trị cao nhất để tăng tính sáng tạo."
+      },
+      "answer": "C",
+      "explanation": "Theo nguyên tắc 'Garbage In, Garbage Out', chất lượng dữ liệu đầu vào quyết định tính chính xác của Agent. Việc nâng cấp mô hình đắt tiền hơn không giải quyết được vấn đề nếu dữ liệu bị lỗi."
+    },
+    {
+      "id": 2,
+      "question": "Trong thiết kế Agent, loại dữ liệu nào thường ít thay đổi, có độ dài lớn (như tài liệu SOP, FAQ, điều khoản hợp đồng) và phù hợp nhất để lưu trữ trong Vector Store phục vụ truy xuất?",
+      "options": {
+        "A": "Contextual Data (Dữ liệu ngữ cảnh hội thoại).",
+        "B": "Knowledge Data (Dữ liệu tri thức nội bộ).",
+        "C": "Operational Data (Dữ liệu vận hành hệ thống).",
+        "D": "Temporary Data (Dữ liệu ghi nhớ tạm thời)."
+      },
+      "answer": "B",
+      "explanation": "Knowledge Data là nguồn tri thức tĩnh/ít biến động, thích hợp lưu vào Vector Store phục vụ RAG. Operational Data cần truy vấn trực tiếp qua API/SQL, còn Contextual Data được tiêm trực tiếp vào prompt."
+    },
+    {
+      "id": 3,
+      "question": "Đối với các thông tin vận hành thay đổi liên tục theo thời gian thực như trạng thái đơn hàng hoặc log server, Agent nên truy xuất thông tin này bằng cách nào?",
+      "options": {
+        "A": "Thực hiện nhúng (embedding) định kỳ mỗi phút và lưu trữ vào Vector Store.",
+        "B": "Nạp toàn bộ cơ sở dữ liệu vận hành vào System Prompt của mô hình ngôn ngữ.",
+        "C": "Sử dụng thuật toán so khớp Cosine Similarity để tìm kiếm trên file log thô.",
+        "D": "Thực hiện truy vấn trực tiếp qua API hoặc câu lệnh SQL vào cơ sở dữ liệu."
+      },
+      "answer": "D",
+      "explanation": "Dữ liệu vận hành (Operational Data) đòi hỏi tính chính xác thời gian thực nên cần được truy xuất trực tiếp qua API hoặc SQL, không phù hợp để tìm kiếm ngữ nghĩa qua Vector Store."
+    },
+    {
+      "id": 4,
+      "question": "Trước khi đưa dữ liệu tri thức chứa thông tin cá nhân nhạy cảm (PII) như số điện thoại hay căn cước công dân vào Vector Store, bước xử lý nào là bắt buộc để đảm bảo an toàn thông tin?",
+      "options": {
+        "A": "Tiến hành mã hóa một chiều toàn bộ văn bản gốc chứa thông tin nhạy cảm.",
+        "B": "Thực hiện ẩn danh hóa (masking) các thông tin nhạy cảm trước khi nhúng.",
+        "C": "Tăng kích thước chunk khi chia nhỏ tài liệu để làm loãng thông tin PII.",
+        "D": "Cấu hình phân quyền truy cập ở mức ứng dụng thay vì xử lý dữ liệu thô."
+      },
+      "answer": "B",
+      "explanation": "Ẩn danh hóa (masking) thông tin nhạy cảm trước khi đưa vào embedding là quy trình bắt buộc để ngăn chặn rủi ro rò rỉ dữ liệu cá nhân qua không gian vector toán học."
+    },
+    {
+      "id": 5,
+      "question": "Thành phần nào được coi là bộ nhớ dài hạn (Long-term Memory) của Agent, nằm ngoài giới hạn Context Window và được truy xuất khi có yêu cầu phù hợp?",
+      "options": {
+        "A": "Cơ sở dữ liệu Vector (Vector Store) lưu trữ kho tri thức tích lũy.",
+        "B": "Lịch sử hội thoại (Chat History) gần nhất nằm trong bộ nhớ đệm prompt.",
+        "C": "Các biến trạng thái tạm thời được lưu trong RAM của máy chủ chạy.",
+        "D": "System Prompt chứa các chỉ dẫn thiết lập vai trò mặc định ban đầu."
+      },
+      "answer": "A",
+      "explanation": "Vector Store lưu trữ tri thức dài hạn ngoài Context Window và chỉ được truy xuất khi cần thiết. Lịch sử hội thoại ngắn hạn nằm trực tiếp trong Context Window."
+    },
+    {
+      "id": 6,
+      "question": "Theo khuyến nghị về phân bổ ngân sách Token hợp lý cho một Agent, phần trăm Token dành cho dữ liệu tri thức được truy xuất (Retrieved Context) nên chiếm khoảng bao nhiêu?",
+      "options": {
+        "A": "Khoảng 15% tổng ngân sách Token của hệ thống.",
+        "B": "Khoảng 25% tổng ngân sách Token của hệ thống.",
+        "C": "Khoảng 35% tổng ngân sách Token của hệ thống.",
+        "D": "Khoảng 50% tổng ngân sách Token của hệ thống."
+      },
+      "answer": "C",
+      "explanation": "Ngân sách Token hợp lý khuyến nghị khoảng 35% cho Retrieved Context, 25% cho Generation, 25% cho Chat History (ngắn hạn) và 15% cho System Prompt để tránh nhiễu và lãng phí."
+    },
+    {
+      "id": 7,
+      "question": "Trong không gian vector ngữ nghĩa, phép đo Cosine Similarity cho kết quả bằng 0.0 giữa hai đoạn văn bản thể hiện mối quan hệ nào giữa chúng?",
+      "options": {
+        "A": "Hai đoạn văn bản vuông góc và không liên quan đến nhau.",
+        "B": "Hai đoạn văn bản có ý nghĩa hoàn toàn giống nhau.",
+        "C": "Hai đoạn văn bản có ý nghĩa hoàn toàn trái ngược nhau.",
+        "D": "Hai đoạn văn bản có cùng độ dài ký tự vật lý."
+      },
+      "answer": "A",
+      "explanation": "Trong Cosine Similarity, 1.0 biểu thị sự trùng khớp ngữ nghĩa hoàn toàn, 0.0 biểu thị sự độc lập/vuông góc (không liên quan) và -1.0 biểu thị sự trái ngược ý nghĩa."
+    },
+    {
+      "id": 8,
+      "question": "Metadata (như nguồn tài liệu, thời gian tạo, quyền hạn) được lưu trữ cùng với vector trong Vector Store nhằm mục đích chính nào dưới đây?",
+      "options": {
+        "A": "Tăng tốc độ tính toán khoảng cách Cosine Similarity giữa các vector.",
+        "B": "Tự động sửa lỗi chính tả và định dạng trong đoạn văn bản gốc.",
+        "C": "Giảm thiểu số chiều của vector nhúng để tiết kiệm bộ nhớ lưu.",
+        "D": "Hỗ trợ lọc dữ liệu chính xác trước khi tìm kiếm ngữ nghĩa."
+      },
+      "answer": "D",
+      "explanation": "Metadata giúp lọc dữ liệu thô trước khi thực hiện tìm kiếm ngữ nghĩa, ngăn chặn hiện tượng lấy sai ngữ cảnh và giới hạn phạm vi tìm kiếm chính xác hơn."
+    },
+    {
+      "id": 9,
+      "question": "Khi thiết kế pipeline chia nhỏ tài liệu (Chunking), tại sao việc thiết lập độ gối đầu (Overlap) khoảng 10-20% giữa các chunk liên tiếp lại cực kỳ quan trọng?",
+      "options": {
+        "A": "Để giảm thiểu chi phí lưu trữ và số lượng vector cần nhúng.",
+        "B": "Để đảm bảo tất cả các chunk có độ dài ký tự bằng nhau.",
+        "C": "Để tránh hiện tượng đứt gãy ngữ cảnh tại các ranh giới chia.",
+        "D": "Để tối ưu hóa tốc độ tìm kiếm tuyến tính của Vector Database."
+      },
+      "answer": "C",
+      "explanation": "Độ gối đầu (Overlap) từ 10-20% giúp bảo toàn tính liên kết ngữ nghĩa giữa các chunk kế tiếp, tránh làm đứt gãy thông tin quan trọng nằm ở ranh giới phân chia."
+    },
+    {
+      "id": 10,
+      "question": "Một kỹ sư AI thiết kế một chunking pipeline với kích thước chunk cố định là 500 ký tự cho mọi loại tài liệu (từ hợp đồng, code đến FAQ). Thiết kế này vi phạm nguyên tắc nào?",
+      "options": {
+        "A": "Chia chunk dựa trên cấu trúc tự nhiên của tài liệu thay vì đếm ký tự cố định.",
+        "B": "Giới hạn kích thước chunk tối đa luôn phải dưới 100 ký tự để tránh gây nhiễu.",
+        "C": "Luôn phải giữ kích thước chunk bằng đúng độ dài Context Window của mô hình.",
+        "D": "Sử dụng mô hình nhúng mã nguồn mở thay vì các API dịch vụ trả phí."
+      },
+      "answer": "A",
+      "explanation": "Việc chia nhỏ tài liệu (chunking) tốt nhất nên dựa theo cấu trúc tự nhiên (như Section, Heading) thay vì đếm ký tự cố định, nhằm tránh phá vỡ ngữ cảnh hoàn chỉnh của câu."
+    }
+  ]
+}

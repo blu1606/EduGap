@@ -127,6 +127,14 @@
       "title": "Phần 1: Trải nghiệm trước Hackathon Day",
       "description": "Luyện tập các từ khóa cốt lõi về lộ trình sản phẩm mẫu (Prototype), tài liệu đặc tả (SPEC) và thuyết trình (Demo) cho ngày Hackathon.",
       "difficulty": "dễ"
+    },
+    {
+      "id": "day7-basics",
+      "parent_id": "day7",
+      "topic_title": "Day 7: Data Foundations - Embedding & Vector Store",
+      "title": "Phần 1: Nền tảng Embedding & Vector Store",
+      "description": "Nắm vững kiến thức nền tảng về chiến lược dữ liệu, kiến trúc bộ nhớ Agent, Embedding và Vector Store.",
+      "difficulty": "dễ"
     }
   ]
 }
