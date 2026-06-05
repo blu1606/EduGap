@@ -1,0 +1,130 @@
+{
+  "id": "day2-model-selection",
+  "parent_id": "day2",
+  "topic_title": "Day 2: Xác định Bài toán cho AI",
+  "title": "Phần 2: Lựa chọn Mô hình & Đánh giá",
+  "description": "Nắm vững chiến lược Build vs Buy, so sánh mô hình Open-source & Commercial API, và các hệ thống Benchmark như MMLU, GSM8k.",
+  "difficulty": "bình thường",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Chiến lược \"Buy\" (sử dụng API trả phí của OpenAI/Google) có ưu điểm lớn nhất là gì?",
+      "options": {
+        "A": "Triển khai nhanh chóng và giảm thiểu rủi ro kỹ thuật.",
+        "B": "Kiểm soát hoàn toàn mã nguồn huấn luyện của mô hình.",
+        "C": "Chi phí vận hành lâu dài luôn rẻ hơn tự cài đặt.",
+        "D": "Bảo mật tuyệt đối dữ liệu nội bộ không lo rò rỉ."
+      },
+      "answer": "A",
+      "explanation": "Sử dụng API thương mại giúp doanh nghiệp đưa tính năng AI vào sản phẩm nhanh nhất mà không cần lo lắng về hạ tầng GPU hay nhân sự vận hành mô hình phức tạp."
+    },
+    {
+      "id": 2,
+      "question": "Khi nào doanh nghiệp nên chọn chiến lược \"Build\" (tự huấn luyện mô hình mã nguồn mở)?",
+      "options": {
+        "A": "Khi muốn đưa sản phẩm ra thị trường nhanh trong vài ngày.",
+        "B": "Khi doanh nghiệp không có đội ngũ kỹ sư dữ liệu giỏi.",
+        "C": "Khi ngân sách đầu tư ban đầu của dự án bằng không.",
+        "D": "Khi cần bảo mật dữ liệu và tùy biến sâu mô hình."
+      },
+      "answer": "D",
+      "explanation": "Tự xây dựng trên nền tảng open-source (Build) cho phép doanh nghiệp làm chủ hoàn toàn dữ liệu, mô hình, chạy offline trong mạng nội bộ và tinh chỉnh sâu cho bài toán ngách."
+    },
+    {
+      "id": 3,
+      "question": "Điểm hạn chế lớn nhất của mô hình ngôn ngữ lớn có tham số khổng lồ khi chạy thực tế là gì?",
+      "options": {
+        "A": "Độ chính xác toán học của kết quả bị giảm sút.",
+        "B": "Khả năng hiểu ngữ cảnh dài của mô hình kém đi.",
+        "C": "Độ trễ phản hồi (latency) cao và tốn kém tài nguyên.",
+        "D": "Không thể tích hợp được vào các thiết bị di động."
+      },
+      "answer": "C",
+      "explanation": "Mô hình càng lớn thì thời gian sinh token càng lâu (độ trễ cao) và chi phí thuê hạ tầng phần cứng GPU chạy suy luận (inference) càng đắt đỏ."
+    },
+    {
+      "id": 4,
+      "question": "Hệ thống benchmark GSM8k thường được dùng để đánh giá năng lực nào của LLM?",
+      "options": {
+        "A": "Khả năng dịch thuật đa ngôn ngữ giữa tiếng Anh-Việt.",
+        "B": "Khả năng giải toán tiểu học và suy luận logic.",
+        "C": "Khả năng viết mã nguồn Python chuẩn không có lỗi.",
+        "D": "Khả năng nhận diện cảm xúc tích cực hay tiêu cực."
+      },
+      "answer": "B",
+      "explanation": "GSM8k là tập dữ liệu gồm các bài toán đố cấp tiểu học đòi hỏi mô hình phải thực hiện suy luận chuỗi các bước (multi-step reasoning) để tìm ra đáp án số."
+    },
+    {
+      "id": 5,
+      "question": "Khi lựa chọn mô hình cho bài toán xử lý hóa đơn tự động, tiêu chí nào là quan trọng nhất?",
+      "options": {
+        "A": "Độ chính xác thông tin trích xuất từ văn bản gốc.",
+        "B": "Số lượng ngôn ngữ mà mô hình hỗ trợ dịch thuật.",
+        "C": "Độ sáng tạo nghệ thuật trong nội dung câu trả lời.",
+        "D": "Khả năng viết code lập trình của mô hình ngôn ngữ."
+      },
+      "answer": "A",
+      "explanation": "Đối với nghiệp vụ kế toán tài chính như hóa đơn, tính chính xác và trung thực của dữ liệu trích xuất (extraction accuracy) là tối quan trọng, tránh hoàn toàn ảo giác."
+    },
+    {
+      "id": 6,
+      "question": "Bạn thiết kế ứng dụng dịch máy thời gian thực trên điện thoại. Yêu cầu quan trọng nhất là độ trễ dưới 200ms và không cần mạng. Bạn chọn giải pháp nào?",
+      "options": {
+        "A": "Gửi request gọi API của GPT-4 qua mạng internet.",
+        "B": "Tự thiết lập cụm máy chủ chạy mô hình Llama lớn.",
+        "C": "Chạy mô hình Claude 3 Opus thông qua dịch vụ cloud.",
+        "D": "Nén và nhúng mô hình nhỏ chạy trực tiếp offline."
+      },
+      "answer": "D",
+      "explanation": "Để đáp ứng độ trễ cực thấp (< 200ms) và hoạt động offline (không cần mạng), việc sử dụng mô hình nhỏ đã được nén và chạy trực tiếp trên phần cứng điện thoại (on-device AI) là phương án duy nhất."
+    },
+    {
+      "id": 7,
+      "question": "Một startup tài chính muốn đánh giá năng lực suy luận toán học của các LLM mã nguồn mở để chọn ra mô hình làm nhân cho trợ lý ảo. Họ nên tham chiếu benchmark nào?",
+      "options": {
+        "A": "MMLU để đánh giá kiến thức đa ngành của mô hình.",
+        "B": "HumanEval để đo khả năng sinh mã nguồn Python tự động.",
+        "C": "MATH hoặc GSM8k để kiểm tra năng lực suy luận toán.",
+        "D": "Chatbot Arena để xem bình chọn thực tế từ người dùng."
+      },
+      "answer": "C",
+      "explanation": "MATH và GSM8k là hai bộ benchmark chuẩn hóa được dùng rộng rãi để đánh giá chuyên sâu năng lực giải toán và suy luận logic chuỗi của các mô hình ngôn ngữ lớn."
+    },
+    {
+      "id": 8,
+      "question": "Khi so sánh hiệu năng chạy API, tại sao giá của Completion tokens thường đắt hơn Input tokens trong biểu phí của OpenAI?",
+      "options": {
+        "A": "Vì Input tokens đòi hỏi tài nguyên GPU rất lớn.",
+        "B": "Vì sinh Completion tokens cần chạy tuần tự sinh từ.",
+        "C": "Vì kích thước dữ liệu đầu vào thường rất nhỏ.",
+        "D": "Vì mô hình phải thực hiện giải thuật tuần tự."
+      },
+      "answer": "B",
+      "explanation": "Quá trình sinh (Completion) diễn ra tự hồi quy tuần tự từng token một, tốn nhiều chu kỳ tính toán và đọc/ghi VRAM GPU hơn nhiều so với việc xử lý song song toàn bộ prompt đầu vào (Input)."
+    },
+    {
+      "id": 9,
+      "question": "Tại sao điểm benchmark cao của một LLM trên các bộ kiểm thử chuẩn (như MMLU) đôi khi không phản ánh đúng hiệu quả thực tế trong doanh nghiệp?",
+      "options": {
+        "A": "Do hiện tượng rò rỉ dữ liệu vào tập huấn luyện.",
+        "B": "Do các bộ đề kiểm thử đã quá lỗi thời rồi.",
+        "C": "Do mô hình chỉ được chạy trên môi trường đám mây.",
+        "D": "Do doanh nghiệp sử dụng sai bộ tách từ của hãng."
+      },
+      "answer": "A",
+      "explanation": "Hiện tượng rò rỉ dữ liệu (data contamination) xảy ra khi dữ liệu kiểm thử vô tình nằm trong tập dữ liệu huấn luyện của mô hình, khiến mô hình đạt điểm cao nhờ học thuộc lòng chứ không phải do năng lực thực tế."
+    },
+    {
+      "id": 10,
+      "question": "Bạn cần triển khai một chatbot nội bộ hỗ trợ tra cứu văn bản pháp luật chứa nhiều thông tin nhạy cảm của tập đoàn. Mô hình nào sau đây là phù hợp nhất về mặt an toàn thông tin?",
+      "options": {
+        "A": "Gọi trực tiếp API của mô hình thương mại lớn nhất cloud.",
+        "B": "Triển khai mô hình mã nguồn mở trên máy chủ nội bộ.",
+        "C": "Sử dụng một công cụ chatbot no-code miễn phí trực tuyến.",
+        "D": "Thuê bên thứ ba xây dựng và quản trị toàn bộ hệ thống."
+      },
+      "answer": "B",
+      "explanation": "Triển khai mô hình mã nguồn mở trên hạ tầng máy chủ của chính doanh nghiệp (on-premise) đảm bảo dữ liệu nhạy cảm không bao giờ rời khỏi ranh giới mạng nội bộ, đáp ứng tiêu chuẩn an toàn cao nhất."
+    }
+  ]
+}

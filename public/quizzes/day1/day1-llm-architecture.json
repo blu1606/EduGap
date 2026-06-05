@@ -1,0 +1,130 @@
+{
+  "id": "day1-llm-architecture",
+  "parent_id": "day1",
+  "topic_title": "Day 1: AI & LLM Foundation",
+  "title": "Phần 3: Kiến trúc LLM & Quản lý Ngữ cảnh",
+  "description": "Nghiên cứu kiến trúc Decoder-only, cơ chế nén KV Cache, mã hóa vị trí tương đối RoPE và các giới hạn về Context Window.",
+  "difficulty": "khó",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Các mô hình ngôn ngữ lớn phổ biến hiện nay như GPT và Llama sử dụng kiến trúc nào?",
+      "options": {
+        "A": "Kiến trúc mạng nơ-ron hồi quy có hướng.",
+        "B": "Kiến trúc Encoder-only dựa trên mô hình BERT.",
+        "C": "Kiến trúc Encoder-Decoder dựa trên mô hình T5.",
+        "D": "Kiến trúc Decoder-only hoạt động theo kiểu tự hồi quy."
+      },
+      "answer": "D",
+      "explanation": "Các LLM hiện đại chủ yếu sử dụng kiến trúc Decoder-only tự hồi quy (autoregressive), dự đoán token tiếp theo chỉ dựa trên các token đã xuất hiện trước đó."
+    },
+    {
+      "id": 2,
+      "question": "Kiến trúc Encoder-Decoder (như T5) thường phù hợp nhất với loại tác vụ nào dưới đây?",
+      "options": {
+        "A": "Trò chuyện tự do và sinh mã nguồn liên tục.",
+        "B": "Phân tích cảm xúc văn bản dựa trên từ khóa.",
+        "C": "Dịch thuật song ngữ và tóm tắt văn bản thô.",
+        "D": "Tìm kiếm thông tin ngữ nghĩa trong cơ sở dữ liệu."
+      },
+      "answer": "C",
+      "explanation": "Kiến trúc Encoder-Decoder rất mạnh trong các tác vụ biến đổi chuỗi nguồn sang chuỗi đích (sequence-to-sequence) như dịch thuật hoặc tóm tắt nội dung văn bản."
+    },
+    {
+      "id": 3,
+      "question": "Mục đích chính của kỹ thuật KV Cache (Key-Value Cache) trong suy luận LLM là gì?",
+      "options": {
+        "A": "Tránh việc tính toán lại vectơ K và V cũ.",
+        "B": "Giảm kích thước bộ nhớ GPU cần dùng khi chạy.",
+        "C": "Tự động mở rộng Context Window của mô hình lên.",
+        "D": "Nâng cao độ chính xác toán học của kết quả."
+      },
+      "answer": "A",
+      "explanation": "Trong quá trình suy luận tự hồi quy, các token trước đó không thay đổi ngữ nghĩa. KV Cache lưu trữ các vectơ K và V của chúng để tránh việc tính toán lại từ đầu tại mỗi bước sinh từ mới."
+    },
+    {
+      "id": 4,
+      "question": "Rotary Positional Embedding (RoPE) mã hóa thông tin vị trí vào mô hình bằng cách nào?",
+      "options": {
+        "A": "Cộng trực tiếp vector vị trí vào embedding từ đầu.",
+        "B": "Thực hiện phép quay các vectơ Query và Key.",
+        "C": "Nhân ma trận trọng số Attention với một hằng số.",
+        "D": "Cấu hình ma trận mask để che đi vị trí sau."
+      },
+      "answer": "B",
+      "explanation": "RoPE sử dụng phép nhân ma trận quay để mã hóa thông tin vị trí tương đối trực tiếp vào vectơ Query và Key, giúp mô hình nắm bắt khoảng cách tương đối giữa các token hiệu quả hơn."
+    },
+    {
+      "id": 5,
+      "question": "Điều gì xảy ra khi độ dài đầu vào vượt quá giới hạn Context Window của một LLM?",
+      "options": {
+        "A": "Mô hình sẽ tự động tăng kích thước vector nhúng.",
+        "B": "Mô hình sẽ chạy nhanh hơn nhờ bỏ qua từ cũ.",
+        "C": "Mô hình sẽ báo lỗi biên dịch hệ thống ngay lập tức.",
+        "D": "Mô hình sẽ bị quên hoặc mất thông tin ban đầu."
+      },
+      "answer": "D",
+      "explanation": "Khi vượt quá kích thước cửa sổ ngữ cảnh vật lý của mô hình, phần thông tin vượt quá sẽ bị cắt bỏ hoặc trôi ra khỏi bộ nhớ đệm chú ý, làm mô hình không thể nhớ các chỉ dẫn ban đầu."
+    },
+    {
+      "id": 6,
+      "question": "Một máy chủ chạy LLM bị tràn bộ nhớ VRAM của GPU khi độ dài hội thoại tăng lên, mặc dù kích thước mô hình tĩnh không đổi. Nguyên nhân chính do đâu?",
+      "options": {
+        "A": "Kích thước từ điển của Tokenizer tự động phình to.",
+        "B": "Lớp Layer Normalization sinh ra các giá trị rất lớn.",
+        "C": "Bộ nhớ KV Cache tích lũy liên tục theo chiều dài.",
+        "D": "Hệ số scale của cơ chế Self-Attention tăng quá mức."
+      },
+      "answer": "C",
+      "explanation": "Bộ nhớ dành cho KV Cache phình to tuyến tính theo chiều dài chuỗi hội thoại đầu vào và số lượng câu sinh ra, dẫn đến hiện tượng tràn VRAM trên GPU khi hội thoại quá dài."
+    },
+    {
+      "id": 7,
+      "question": "Bạn muốn xây dựng một hệ thống chatbot chăm sóc khách hàng có khả năng nhớ lịch sử hội thoại dài. Phương pháp mở rộng ngữ cảnh nào ít tốn chi phí huấn luyện lại nhất?",
+      "options": {
+        "A": "Áp dụng phương pháp ngoại suy vị trí dựa trên RoPE.",
+        "B": "Tăng kích thước chiều của vector nhúng lên gấp đôi.",
+        "C": "Huấn luyện lại mô hình từ đầu với câu cực dài.",
+        "D": "Thay thế hoàn toàn cơ chế Self-Attention bằng mạng RNN."
+      },
+      "answer": "A",
+      "explanation": "Mã hóa vị trí RoPE hỗ trợ tốt khả năng ngoại suy độ dài (extrapolation). Các kỹ thuật như RoPE Scaling cho phép mở rộng ngữ cảnh của mô hình mà không cần huấn luyện lại từ đầu."
+    },
+    {
+      "id": 8,
+      "question": "Khi so sánh chi phí bộ nhớ KV Cache, phương pháp Multi-Query Attention (MQA) giúp giảm tải bộ nhớ so với Multi-Head Attention (MHA) gốc bằng cách nào?",
+      "options": {
+        "A": "Sử dụng một vector Value duy nhất cho tất cả token.",
+        "B": "Dùng chung một đầu Key và Value cho các head.",
+        "C": "Loại bỏ hoàn toàn ma trận Query khỏi quá trình sinh.",
+        "D": "Giảm số lượng tham số huấn luyện của lớp feed-forward."
+      },
+      "answer": "B",
+      "explanation": "MQA tối ưu KV Cache bằng cách giữ nguyên số đầu Query (M head) nhưng chỉ sử dụng duy nhất 1 đầu Key và 1 đầu Value dùng chung cho tất cả các head, giúp tiết kiệm dung lượng cache VRAM."
+    },
+    {
+      "id": 9,
+      "question": "Tại sao việc mã hóa vị trí tương đối (như RoPE) lại ưu việt hơn mã hóa vị trí tuyệt đối (như trong Transformer gốc)?",
+      "options": {
+        "A": "Nó giúp giảm số lượng ma trận trọng số cần học.",
+        "B": "Nó cho phép mô hình chạy song song hóa tốt hơn.",
+        "C": "Nó loại bỏ hoàn toàn sự cần thiết của hàm Softmax.",
+        "D": "Nó giúp mô hình suy luận tốt với chuỗi cực dài."
+      },
+      "answer": "D",
+      "explanation": "Mã hóa vị trí tương đối giữ nguyên cấu trúc ngữ nghĩa khoảng cách giữa các token độc lập với vị trí tuyệt đối của chúng trong câu, hỗ trợ mô hình xử lý tốt và ngoại suy các chuỗi dài hơn."
+    },
+    {
+      "id": 10,
+      "question": "Bạn đang thiết kế một ứng dụng RAG và nhận thấy mô hình Decoder-only hoạt động kém hiệu quả khi thông tin tìm kiếm nằm ở giữa context window dài. Hiện tượng này được gọi là gì?",
+      "options": {
+        "A": "Hiện tượng gradient biến mất trong chuỗi dài liên tục.",
+        "B": "Hiện tượng Lost in the Middle của phân phối attention.",
+        "C": "Hiện tượng suy giảm tính đa dạng của tokenizer subword.",
+        "D": "Hiện tượng lệch phân phối dữ liệu huấn luyện ban đầu."
+      },
+      "answer": "B",
+      "explanation": "Nghiên cứu chỉ ra các mô hình ngôn ngữ Decoder-only thường chú ý tốt nhất ở phần đầu (chỉ dẫn) và phần cuối (câu hỏi) của ngữ cảnh, trong khi bỏ sót hoặc chú ý kém ở phần giữa (Lost in the Middle)."
+    }
+  ]
+}

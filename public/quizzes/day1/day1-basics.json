@@ -3,19 +3,128 @@
   "parent_id": "day1",
   "topic_title": "Day 1: AI & LLM Foundation",
   "title": "Phần 1: Khái niệm cơ bản LLM",
-  "description": "Lý thuyết nền tảng về Transformer, Tokenization và mô hình ngôn ngữ lớn.",
+  "description": "Nắm nền tảng về Transformer, tokenization và cách mô hình ngôn ngữ lớn xử lý ngữ cảnh.",
+  "difficulty": "dễ",
   "questions": [
     {
       "id": 1,
-      "question": "Kiến trúc nền tảng đứng sau sự bùng nổ của các Đại mô hình ngôn ngữ (LLM) hiện nay là gì?",
+      "question": "Kiến trúc Transformer giới thiệu cơ chế nào giúp xử lý song song thay thế RNN?",
       "options": {
-        "A": "Kiến trúc mạng nơ-ron tích chập (CNN).",
-        "B": "Kiến trúc mạng nơ-ron hồi quy (RNN).",
-        "C": "Kiến trúc Transformer giới thiệu cơ chế Self-Attention.",
-        "D": "Kiến trúc mạng bộ nhớ dài-ngắn (LSTM)."
+        "A": "Cơ chế Convolutional Pooling.",
+        "B": "Cơ chế Recurrent Gate.",
+        "C": "Cơ chế Self Attention.",
+        "D": "Cơ chế Feed Forward."
       },
       "answer": "C",
-      "explanation": "Kiến trúc Transformer giới thiệu cơ chế Self-Attention năm 2017 là nền móng cốt lõi cho các mô hình GPT, Claude, Gemini ngày nay nhờ khả năng xử lý song song và học ngữ cảnh vượt trội."
+      "explanation": "Cơ chế Self Attention cho phép các token trong chuỗi tương tác đồng thời với nhau, loại bỏ tính tuần tự của RNN/LSTM và tăng tốc độ tính toán song song."
+    },
+    {
+      "id": 2,
+      "question": "Trong Scaled Dot-Product Attention, ba ma trận vectơ chính được sinh ra là gì?",
+      "options": {
+        "A": "Query, Key và Value.",
+        "B": "Input, Hidden và Output.",
+        "C": "Encoder, Decoder và Latent.",
+        "D": "Weights, Biases và Activations."
+      },
+      "answer": "A",
+      "explanation": "Query (truy vấn), Key (khóa) và Value (giá trị) là ba vectơ được tạo ra cho mỗi token nhằm tính toán mối liên hệ ngữ nghĩa trong attention."
+    },
+    {
+      "id": 3,
+      "question": "Tại sao công thức Self-Attention lại chia cho hệ số tỷ lệ căn bậc hai của d_k?",
+      "options": {
+        "A": "Để giảm bớt số lượng tham số cần huấn luyện.",
+        "B": "Để tránh hiện tượng gradient bị triệt tiêu khi d_k lớn.",
+        "C": "Để tăng tốc độ nhân hai ma trận Q và K.",
+        "D": "Để chuyển đổi giá trị đầu ra trực tiếp thành xác suất."
+      },
+      "answer": "B",
+      "explanation": "Khi số chiều d_k của Key quá lớn, phép nhân vô hướng QK^T sẽ tạo ra các giá trị cực lớn, làm cho hàm softmax có gradient rất nhỏ (triệt tiêu gradient). Phép chia giúp làm ổn định giá trị này."
+    },
+    {
+      "id": 4,
+      "question": "Cơ chế Multi-Head Attention trong Transformer được thiết kế nhằm mục đích chính nào?",
+      "options": {
+        "A": "Tăng gấp đôi dung lượng cửa sổ ngữ cảnh đầu vào.",
+        "B": "Cho phép chạy mô hình trên nhiều GPU song song.",
+        "C": "Giảm thiểu thời gian tính toán tại các lớp mạng.",
+        "D": "Cho phép chú ý đồng thời vào nhiều vị trí."
+      },
+      "answer": "D",
+      "explanation": "Bằng cách chia nhỏ vector biểu diễn thành nhiều head riêng biệt, Multi-Head Attention giúp mô hình học được nhiều mối quan hệ ngữ cảnh và ngữ pháp khác nhau cùng lúc."
+    },
+    {
+      "id": 5,
+      "question": "Trong khối Transformer, chức năng chính của lớp Layer Normalization là gì?",
+      "options": {
+        "A": "Ổn định quá trình huấn luyện và tối ưu hóa gradient.",
+        "B": "Thay thế hoàn toàn cho các hàm kích hoạt phi tuyến.",
+        "C": "Chuyển đổi các từ đầu vào thành các vectơ embedding.",
+        "D": "Tính toán trọng số liên kết giữa các token xa nhau."
+      },
+      "answer": "A",
+      "explanation": "Layer Normalization chuẩn hóa đầu ra của mỗi lớp con, giúp phân phối đặc trưng ổn định hơn, từ đó tăng tốc độ hội tụ và giảm thiểu biến động gradient trong quá trình huấn luyện."
+    },
+    {
+      "id": 6,
+      "question": "Phần Encoder của Transformer gốc xử lý chuỗi đầu vào theo cơ chế chú ý nào?",
+      "options": {
+        "A": "Cơ chế Masked Attention ẩn đi các token phía sau.",
+        "B": "Cơ chế Causal Attention dự đoán các từ tiếp theo.",
+        "C": "Cơ chế Bidirectional Attention giúp nhìn được cả hai hướng.",
+        "D": "Cơ chế Cross Attention kết hợp thông tin giải mã."
+      },
+      "answer": "C",
+      "explanation": "Encoder trong Transformer xử lý toàn bộ ngữ cảnh đầu vào cùng một lúc, cho phép mỗi token chú ý đến tất cả các token khác nằm trước và sau nó (bidirectional)."
+    },
+    {
+      "id": 7,
+      "question": "Một mô hình Transformer gặp hiện tượng mất ổn định gradient khi huấn luyện với vector embedding rất lớn (d_k > 1024). Lỗi này thường do việc thiếu bước nào trong attention?",
+      "options": {
+        "A": "Thiếu lớp Residual Connection kết nối giữa các khối mạng.",
+        "B": "Thiếu phép chia cho căn bậc hai số chiều d_k.",
+        "C": "Thiếu hàm kích hoạt phi tuyến tại các lớp mạng.",
+        "D": "Thiếu cơ chế Masked Attention tại phần Decoder mô hình."
+      },
+      "answer": "B",
+      "explanation": "Nếu thiếu phép chia scale theo căn bậc hai của d_k, giá trị dot product sẽ cực kỳ lớn khiến hàm softmax bị bão hòa, dẫn đến gradient cực nhỏ ở các lớp dưới và gây mất ổn định huấn luyện."
+    },
+    {
+      "id": 8,
+      "question": "Cơ chế Residual Connection (Kết nối tắt) trong khối Transformer có tác dụng gì?",
+      "options": {
+        "A": "Giảm số lượng tham số huấn luyện của mô hình.",
+        "B": "Tự động điều chỉnh kích thước của Context Window thô.",
+        "C": "Loại bỏ hoàn toàn sự cần thiết của Position Embedding.",
+        "D": "Giúp truyền gradient hiệu quả qua các lớp mạng sâu."
+      },
+      "answer": "D",
+      "explanation": "Residual Connection cộng trực tiếp đầu vào của một khối vào đầu ra của nó, tạo ra một đường truyền gradient không bị suy giảm trực tiếp về các lớp dưới, giúp huấn luyện mô hình rất sâu."
+    },
+    {
+      "id": 9,
+      "question": "Khi phân tích ma trận trọng số Attention của một câu, bạn thấy từ \"nó\" có trọng số liên kết rất cao với từ \"con chó\" đứng cách đó 10 từ. Cơ chế nào đã trực tiếp thực hiện việc này?",
+      "options": {
+        "A": "Cơ chế Self-Attention tính toán độ tương đồng ngữ nghĩa.",
+        "B": "Cơ chế Layer Normalization chuẩn hóa biên độ vectơ từ.",
+        "C": "Lớp Feed-Forward Network biến đổi phi tuyến các đặc trưng.",
+        "D": "Cơ chế Masked Attention lọc bỏ các từ đứng sau nó."
+      },
+      "answer": "A",
+      "explanation": "Cơ chế Self-Attention tính toán dot product giữa Query của từ 'nó' và Key của từ 'con chó', xác định độ tương đồng ngữ nghĩa cao và tập trung phân bổ trọng số vào đó."
+    },
+    {
+      "id": 10,
+      "question": "Trong khối Decoder của kiến trúc Transformer gốc, tại sao cần sử dụng Masked Self-Attention thay vì Self-Attention thông thường?",
+      "options": {
+        "A": "Để ngăn chặn việc mô hình chạy song song trên GPU.",
+        "B": "Để ngăn Decoder nhìn thấy trước các token ở tương lai.",
+        "C": "Để giảm thiểu số lượng phép nhân ma trận trọng số.",
+        "D": "Để loại bỏ sự phụ thuộc vào lớp Cross-Attention kết nối."
+      },
+      "answer": "B",
+      "explanation": "Trong quá trình sinh văn bản tự hồi quy, mô hình chỉ được phép biết các token đã sinh ra ở phía trước. Lớp mặt nạ (mask) che các token tương lai để đảm bảo tính nhân quả."
     }
   ]
 }

@@ -1,0 +1,130 @@
+{
+  "id": "day1-inference-decoding",
+  "parent_id": "day1",
+  "topic_title": "Day 1: AI & LLM Foundation",
+  "title": "Phần 4: Tham số giải mã & Inference Dynamics",
+  "description": "Tìm hiểu về cơ chế tính Logits, lấy mẫu với Temperature, Top-k, Top-p, tối ưu hóa qua Penalty và tầm quan trọng của System Prompt.",
+  "difficulty": "khó",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Trong quá trình suy luận, giá trị raw đầu ra từ lớp cuối cùng của LLM trước khi qua Softmax được gọi là gì?",
+      "options": {
+        "A": "Các giá trị Logits đại diện cho điểm số.",
+        "B": "Các giá trị Embeddings đại diện cho từ ghép.",
+        "C": "Các giá trị Attentions đại diện cho ngữ cảnh câu.",
+        "D": "Các giá trị Normalizations đại diện cho phân phối số."
+      },
+      "answer": "A",
+      "explanation": "Logits là các giá trị điểm số thô chưa được chuẩn hóa được mô hình tính toán cho từng token trong từ điển trước khi đưa qua hàm softmax để chuyển đổi thành phân phối xác suất."
+    },
+    {
+      "id": 2,
+      "question": "Khi đặt tham số Temperature bằng 0, mô hình sẽ sinh văn bản theo cách nào?",
+      "options": {
+        "A": "Lấy mẫu hoàn toàn ngẫu nhiên từ phân phối xác suất.",
+        "B": "Luôn chọn từ có xác suất cao nhất tại mỗi bước.",
+        "C": "Tự động loại bỏ tất cả các token đặc biệt đầu ra.",
+        "D": "Tạo ra văn bản có độ sáng tạo và bất ngờ lớn."
+      },
+      "answer": "B",
+      "explanation": "Đặt Temperature bằng 0 chuyển mô hình sang trạng thái Greedy Decoding (giải mã tham lam), tức là luôn chọn token có xác suất cao nhất tại mỗi bước, kết quả sinh ra sẽ hoàn toàn ổn định và lặp lại được."
+    },
+    {
+      "id": 3,
+      "question": "Tham số Top-k hoạt động như thế nào trong bước lấy mẫu (sampling) của LLM?",
+      "options": {
+        "A": "Chỉ giữ lại các từ xuất hiện trong k đoạn văn.",
+        "B": "Lọc các từ có số ký tự vật lý nhỏ hơn k.",
+        "C": "Tính toán lại ma trận attention cho k token cũ.",
+        "D": "Giới hạn lựa chọn trong k token có xác suất cao nhất."
+      },
+      "answer": "D",
+      "explanation": "Top-k lọc phân phối xác suất để chỉ giữ lại k token có điểm số cao nhất, sau đó phân phối lại xác suất của k từ này để tiến hành lấy mẫu tiếp theo, loại bỏ các từ vô nghĩa hoặc ngoại lai."
+    },
+    {
+      "id": 4,
+      "question": "Tham số Top-p (hay Nucleus Sampling) lọc danh sách token dựa trên tiêu chí nào?",
+      "options": {
+        "A": "Chọn cố định p phần trăm số từ trong từ điển.",
+        "B": "Chọn các từ có độ dài vector nhúng lớn hơn p.",
+        "C": "Chọn nhóm từ có tổng xác suất tích lũy đạt mức p.",
+        "D": "Loại bỏ các từ xuất hiện ít hơn p lần trong câu."
+      },
+      "answer": "C",
+      "explanation": "Top-p chọn tập hợp các token có xác suất lớn nhất sao cho tổng xác suất của chúng vừa đủ vượt qua ngưỡng p (ví dụ 0.90), giúp linh hoạt điều chỉnh số lượng token được chọn tùy vào độ tự tin của mô hình."
+    },
+    {
+      "id": 5,
+      "question": "Tác động chính của việc tăng tham số Temperature (> 1.0) lên đầu ra của LLM là gì?",
+      "options": {
+        "A": "Làm phẳng phân phối xác suất và tăng độ đa dạng.",
+        "B": "Tăng độ dài tối đa của câu được sinh ra.",
+        "C": "Giúp mô hình chạy nhanh hơn bằng cách giảm tính toán.",
+        "D": "Loại bỏ hoàn toàn lỗi ngữ pháp trong câu trả lời."
+      },
+      "answer": "A",
+      "explanation": "Tăng Temperature làm phẳng phân phối xác suất của logits, khiến sự chênh lệch xác suất giữa các từ giảm đi. Điều này tăng khả năng các từ ít phổ biến được chọn, làm câu trả lời sáng tạo và đa dạng hơn."
+    },
+    {
+      "id": 6,
+      "question": "Bạn đang viết code gọi API của GPT để trích xuất thông tin JSON từ văn bản. Thiết lập tham số giải mã nào là phù hợp nhất?",
+      "options": {
+        "A": "Đặt giá trị Temperature cao và đặt Top p bằng một.",
+        "B": "Đặt giá trị Temperature gần không và dùng Greedy Decoding.",
+        "C": "Đặt giá trị Top k lớn và tắt bộ lọc này.",
+        "D": "Không truyền bất kỳ tham số cấu hình hệ thống nào."
+      },
+      "answer": "B",
+      "explanation": "Khi trích xuất dữ liệu có định dạng cố định (như JSON) đòi hỏi độ chính xác và tính nhất quán cao nhất, ta nên đặt Temperature về sát 0 để mô hình chọn các từ chắc chắn và logic nhất."
+    },
+    {
+      "id": 7,
+      "question": "Tại sao nhiều hướng dẫn khuyến nghị không nên đồng thời thay đổi cả Temperature và Top-p khi gọi API của LLM?",
+      "options": {
+        "A": "Vì sẽ gây lỗi biên dịch mã nguồn của ứng dụng.",
+        "B": "Vì sẽ làm tăng gấp đôi thời gian phản hồi của API.",
+        "C": "Vì chúng sẽ tự động triệt tiêu lẫn nhau hoàn toàn.",
+        "D": "Vì khó kiểm soát được chất lượng và tính ổn định."
+      },
+      "answer": "D",
+      "explanation": "Cả hai tham số đều thay đổi phân phối xác suất lấy mẫu. Điều chỉnh đồng thời cả hai làm thay đổi không kiểm soát được quá trình sinh văn bản và gây khó khăn khi tinh chỉnh hành vi của mô hình."
+    },
+    {
+      "id": 8,
+      "question": "Một chatbot viết truyện ngắn sáng tạo đôi khi sinh ra các câu bị lặp từ liên tục. Bạn nên làm thế nào để khắc phục lỗi này?",
+      "options": {
+        "A": "Giảm giới hạn context window của mô hình xuống thấp.",
+        "B": "Tắt hoàn toàn tham số Top-k và Top-p của hệ thống.",
+        "C": "Tăng giá trị tham số Frequency Penalty hoặc Presence Penalty.",
+        "D": "Chuyển sang sử dụng hàm kích hoạt khác trong mạng."
+      },
+      "answer": "C",
+      "explanation": "Frequency Penalty phạt trực tiếp vào các từ xuất hiện nhiều lần, còn Presence Penalty phạt các từ đã xuất hiện trong câu, giúp khuyến khích mô hình sinh ra các từ mới lạ hơn và hạn chế lặp từ."
+    },
+    {
+      "id": 9,
+      "question": "Bạn cấu hình System Prompt để đóng vai một chuyên gia tư vấn tài chính. Tại sao System Prompt lại có ảnh hưởng mạnh mẽ xuyên suốt cuộc hội thoại?",
+      "options": {
+        "A": "Nó được tiêm vào vị trí đầu tiên trong context window.",
+        "B": "Nó tự động tăng độ ưu tiên xác suất của mọi từ.",
+        "C": "Nó chạy trực tiếp qua bộ nhớ đệm KV Cache riêng.",
+        "D": "Nó thay thế hoàn toàn các chỉ dẫn từ phía người dùng."
+      },
+      "answer": "A",
+      "explanation": "Do cơ chế Attention trong Decoder-only, các từ sau chú ý vào các từ trước. System Prompt nằm ở vị trí đầu tiên của Context Window, đóng vai trò định hướng ngữ cảnh cho mọi token sinh ra sau đó."
+    },
+    {
+      "id": 10,
+      "question": "Trong quá trình Auto-regressive decoding, tại sao việc sinh token mới bắt buộc phải thực hiện tuần tự từng bước một?",
+      "options": {
+        "A": "Vì kích thước mô hình quá lớn để chạy song song.",
+        "B": "Vì token tiếp theo cần dựa vào token vừa sinh ra.",
+        "C": "Vì lớp Layer Normalization giới hạn tốc độ truyền tin.",
+        "D": "Vì các giá trị logits của từ điển cần được xếp hạng."
+      },
+      "answer": "B",
+      "explanation": "Auto-regressive decoding (giải mã tự hồi quy) hoạt động bằng cách dự đoán token thứ N dựa trên chuỗi có sẵn N-1 token. Do đó, mô hình bắt buộc phải sinh tuần tự từng từ một chứ không thể chạy song song."
+    }
+  ]
+}

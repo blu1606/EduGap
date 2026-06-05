@@ -1,0 +1,130 @@
+{
+  "id": "day2-metrics-evaluation",
+  "parent_id": "day2",
+  "topic_title": "Day 2: Xác định Bài toán cho AI",
+  "title": "Phần 4: Đo lường chất lượng & Đánh giá",
+  "description": "Tìm hiểu về Precision, Recall, F1-score, xây dựng Golden Dataset và đánh giá mô hình bằng kỹ thuật LLM-as-a-judge.",
+  "difficulty": "khó",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Trong bài toán phát hiện giao dịch gian lận, chỉ số nào cho biết tỉ lệ giao dịch bị mô hình gắn nhãn gian lận là thực sự gian lận?",
+      "options": {
+        "A": "Chỉ số Precision (Độ chính xác trên kết quả dự đoán).",
+        "B": "Chỉ số Recall (Độ phủ trên toàn bộ thực tế mẫu).",
+        "C": "Chỉ số Accuracy (Độ chính xác trên toàn bộ mẫu chạy).",
+        "D": "Chỉ số F1-score (Trung bình điều hòa giữa hai chỉ số)."
+      },
+      "answer": "A",
+      "explanation": "Precision (Độ chính xác) đo lường tỉ lệ số điểm dự đoán tích cực là đúng thật sự, giúp giảm thiểu báo động giả (false positive) trong phát hiện gian lận."
+    },
+    {
+      "id": 2,
+      "question": "Golden Dataset trong đánh giá hệ thống AI là gì?",
+      "options": {
+        "A": "Bộ dữ liệu có kích thước tệp lớn nhất của dự án.",
+        "B": "Bộ dữ liệu chuẩn được con người thẩm định và gán nhãn.",
+        "C": "Bộ dữ liệu tự động tạo ra bởi mô hình ngôn ngữ khác.",
+        "D": "Bộ dữ liệu chứa toàn bộ mã nguồn lập trình của hệ."
+      },
+      "answer": "B",
+      "explanation": "Golden Dataset là bộ dữ liệu chuẩn vàng được dán nhãn chính xác bởi con người hoặc các chuyên gia để dùng làm thước đo đánh giá độ chuẩn xác của mô hình AI."
+    },
+    {
+      "id": 3,
+      "question": "Phương pháp đánh giá \"LLM-as-a-judge\" hoạt động như thế nào?",
+      "options": {
+        "A": "Thu thập ý kiến đánh giá trực tiếp từ phía người dùng.",
+        "B": "Viết code Python tự động kiểm tra cú pháp của câu trả.",
+        "C": "Thuê một đội ngũ chuyên gia tài chính chấm điểm câu trả.",
+        "D": "Sử dụng một LLM mạnh mẽ hơn để đánh giá câu trả."
+      },
+      "answer": "D",
+      "explanation": "Kỹ thuật này sử dụng một LLM mạnh mẽ và có khả năng suy luận tốt (như GPT-4) đóng vai trò ban giám khảo để cho điểm và đánh giá chất lượng câu trả lời của LLM khác dựa trên rubric cụ thể."
+    },
+    {
+      "id": 4,
+      "question": "Khi nào Accuracy (Độ chính xác tổng thể) trở thành một chỉ số gây hiểu lầm nghiêm trọng?",
+      "options": {
+        "A": "Khi tập dữ liệu thử nghiệm có kích thước quá nhỏ gọn.",
+        "B": "Khi mô hình được huấn luyện trên hệ máy chủ phân tán.",
+        "C": "Khi tập dữ liệu thử nghiệm bị mất cân bằng lớp trầm trọng.",
+        "D": "Khi mô hình sử dụng tokenizer dạng subword thay vì ký tự."
+      },
+      "answer": "C",
+      "explanation": "Nếu 99% dữ liệu là không gian lận, mô hình chỉ cần dự đoán tất cả đều 'không gian lận' đã đạt Accuracy 99% dù thực tế nó không phát hiện được bất kỳ trường hợp gian lận nào."
+    },
+    {
+      "id": 5,
+      "question": "Tác động của hiện tượng lệch phân phối dữ liệu (Data Drift) sau khi triển khai mô hình là gì?",
+      "options": {
+        "A": "Hiệu năng thực tế của mô hình suy giảm theo thời gian.",
+        "B": "Tốc độ phản hồi của API tự động tăng lên nhanh hơn.",
+        "C": "Kích thước của tệp weights mô hình tự động phình ra.",
+        "D": "Bộ nhớ đệm KV Cache của mô hình tự động bị xóa."
+      },
+      "answer": "A",
+      "explanation": "Data Drift xảy ra khi dữ liệu người dùng thực tế gửi lên dần lệch đi so với phân phối của dữ liệu huấn luyện, làm giảm sút chất lượng dự đoán của mô hình theo thời gian."
+    },
+    {
+      "id": 6,
+      "question": "Bạn xây dựng mô hình phát hiện bệnh hiểm nghèo từ ảnh chụp X-quang. Yêu cầu bắt buộc là không được bỏ sót bất kỳ bệnh nhân thực tế nào. Chỉ số đo lường nào cần được ưu tiên tối đa?",
+      "options": {
+        "A": "Tối ưu hóa chỉ số Precision để giảm chẩn đoán sai.",
+        "B": "Tối ưu hóa chỉ số Recall để giảm bỏ sót bệnh nhân.",
+        "C": "Tối ưu hóa chỉ số Accuracy tổng thể trên toàn bộ mẫu.",
+        "D": "Tối ưu hóa F1-score để cân bằng giữa hai chỉ số."
+      },
+      "answer": "B",
+      "explanation": "Recall (Độ phủ) đo lường tỉ lệ phát hiện đúng trên toàn bộ các ca bệnh thực tế. Ưu tiên Recall cao giúp giảm tối đa tỉ lệ âm tính giả (bỏ sót bệnh nhân hiểm nghèo)."
+    },
+    {
+      "id": 7,
+      "question": "Doanh nghiệp của bạn triển khai chatbot và muốn đánh giá chất lượng câu trả lời bằng phương pháp LLM-as-a-judge. Để đảm bảo tính khách quan và giảm thiên kiến (bias), thiết kế nào sau đây là tốt nhất?",
+      "options": {
+        "A": "Sử dụng chính chatbot đó tự đánh giá câu trả lời.",
+        "B": "Hạn chế cung cấp chỉ dẫn đánh giá cho mô hình này.",
+        "C": "Luôn giữ cố định vị trí câu trả lời cần so.",
+        "D": "Dùng mô hình giám khảo mạnh độc lập kèm rubric này."
+      },
+      "answer": "D",
+      "explanation": "Sử dụng mô hình độc lập, mạnh mẽ hơn kết hợp với bộ hướng dẫn đánh giá (rubric) chi tiết và kiểm soát thứ tự hiển thị đáp án giúp đánh giá chính xác và khách quan nhất."
+    },
+    {
+      "id": 8,
+      "question": "Nhóm phát triển AI đo lường độ chính xác của hệ thống trích xuất thông tin trên tập test gồm 100 văn bản và đạt Accuracy 95%. Để đánh giá độ tin cậy thực tế, bước tiếp theo tốt nhất là gì?",
+      "options": {
+        "A": "Công bố kết quả và dừng dự án tại thời điểm này.",
+        "B": "Thay đổi toàn bộ các tham số giải mã của mô hình.",
+        "C": "Thực hiện đánh giá chéo bằng con người trên mẫu ngẫu nhiên.",
+        "D": "Tăng dung lượng bộ nhớ KV Cache lên mức tối đa."
+      },
+      "answer": "C",
+      "explanation": "Đánh giá lại ngẫu nhiên bằng con người (human evaluation) giúp kiểm chứng xem mô hình có bị overfitting trên tập test hoặc phát hiện các lỗi trích xuất tinh vi mà bộ kiểm thử chưa quét tới."
+    },
+    {
+      "id": 9,
+      "question": "Chatbot chăm sóc khách hàng của một ngân hàng bắt đầu đưa ra câu trả lời sai lệch sau một tháng vận hành ổn định. Nguyên nhân nào sau đây có khả năng cao nhất?",
+      "options": {
+        "A": "Sự thay đổi phân phối câu hỏi của người dùng thực tế.",
+        "B": "Kích thước của tệp weights tự động thay đổi trên cloud.",
+        "C": "Lớp Layer Normalization kém hiệu quả dần theo thời gian.",
+        "D": "Tham số Temperature tự động tăng lên sau một tháng chạy."
+      },
+      "answer": "A",
+      "explanation": "Phân phối câu hỏi của khách hàng thực tế thay đổi theo thời gian (ví dụ có chính sách mới, ngày lễ) tạo ra sự lệch phân phối đầu vào, khiến chatbot trả lời không còn chính xác."
+    },
+    {
+      "id": 10,
+      "question": "Chỉ số F1-score có ý nghĩa gì và tại sao nó được ưa chuộng hơn Accuracy trong các bài toán phân loại nhị phân mất cân bằng?",
+      "options": {
+        "A": "F1-score đo tốc độ phản hồi của API mô hình AI.",
+        "B": "F1-score là trung bình điều hòa của Precision và Recall.",
+        "C": "F1-score đo lường độ sáng tạo nghệ thuật của câu trả.",
+        "D": "F1-score đo lường dung lượng RAM cần dùng của mô hình."
+      },
+      "answer": "B",
+      "explanation": "F1-score là trung bình điều hòa của Precision và Recall. Chỉ số này phản ánh sự cân bằng giữa việc nhận dạng đúng và không bỏ sót, cực kỳ hữu ích khi tập dữ liệu mất cân bằng."
+    }
+  ]
+}

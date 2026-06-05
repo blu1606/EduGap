@@ -1,0 +1,130 @@
+{
+  "id": "day1-tokenization",
+  "parent_id": "day1",
+  "topic_title": "Day 1: AI & LLM Foundation",
+  "title": "Phần 2: Tokenization & Kỹ thuật Embeddings",
+  "description": "Tìm hiểu thuật toán cắt từ BPE, WordPiece, SentencePiece, các Special Tokens và nguyên lý chuyển từ sang không gian Vector.",
+  "difficulty": "bình thường",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Tokenizer có nhiệm vụ chính nào trong quá trình xử lý ngôn ngữ đầu vào của LLM?",
+      "options": {
+        "A": "Chuyển đổi các token đầu vào trực tiếp thành vector nhúng.",
+        "B": "Chia nhỏ văn bản thô thành các đơn vị token con.",
+        "C": "Tính toán điểm tương đồng ngữ nghĩa giữa các câu văn.",
+        "D": "Chuẩn hóa biên độ giá trị của các vector đặc trưng."
+      },
+      "answer": "B",
+      "explanation": "Tokenizer chuyển đổi văn bản thô dạng chuỗi ký tự thành một chuỗi các token con (từ hoặc cụm từ con) và ánh xạ chúng thành các ID tương ứng trong từ điển."
+    },
+    {
+      "id": 2,
+      "question": "Tại sao các LLM hiện đại thường dùng Subword Tokenization thay vì tách theo từng từ nguyên vẹn?",
+      "options": {
+        "A": "Để giảm bớt số lượng GPU cần dùng khi suy luận.",
+        "B": "Để tăng kích thước của Context Window lên tối đa.",
+        "C": "Để loại bỏ hoàn toàn các ký tự đặc biệt đầu vào.",
+        "D": "Để xử lý từ chưa biết và tối ưu hóa từ vựng."
+      },
+      "answer": "D",
+      "explanation": "Subword Tokenization giúp xử lý tốt các từ hiếm hoặc từ mới chưa từng xuất hiện (Out-of-Vocabulary) bằng cách ghép các mảnh từ con, đồng thời giữ kích thước từ điển nhỏ gọn."
+    },
+    {
+      "id": 3,
+      "question": "Thuật toán Byte-Pair Encoding (BPE) bắt đầu quá trình huấn luyện bằng cách nào?",
+      "options": {
+        "A": "Khởi tạo từ điển chứa các ký tự đơn lẻ.",
+        "B": "Tách văn bản thô dựa trên các khoảng trắng.",
+        "C": "Hợp nhất các từ có cùng ý nghĩa ngữ nghĩa.",
+        "D": "Đếm tần suất xuất hiện của các từ nguyên vẹn."
+      },
+      "answer": "A",
+      "explanation": "BPE khởi đầu bằng cách coi mỗi ký tự đơn lẻ là một token, sau đó lặp đi lặp lại việc ghép cặp hai token kề nhau xuất hiện nhiều nhất trong văn bản thành một token mới."
+    },
+    {
+      "id": 4,
+      "question": "Điểm khác biệt lớn nhất giúp SentencePiece xử lý tốt đa ngôn ngữ hơn BPE truyền thống là gì?",
+      "options": {
+        "A": "Khả năng tự động sửa lỗi chính tả trong văn bản.",
+        "B": "Tốc độ mã hóa nhanh hơn nhờ cấu trúc mạng nơ-ron.",
+        "C": "Coi khoảng trắng là một ký tự và không tiền xử lý.",
+        "D": "Giới hạn kích thước từ điển nhỏ dưới 1000 từ."
+      },
+      "answer": "C",
+      "explanation": "SentencePiece coi toàn bộ văn bản là chuỗi ký tự thô và thay khoảng trắng bằng ký tự đặc biệt (như '_'). Nó không cần bước tiền tách từ bằng khoảng cách, phù hợp cho tiếng Trung/Nhật."
+    },
+    {
+      "id": 5,
+      "question": "Trong từ điển của Tokenizer, các token như <BOS>, <EOS> được dùng để làm gì?",
+      "options": {
+        "A": "Đại diện cho các từ bị thiếu trong quá trình nhúng.",
+        "B": "Đánh dấu điểm bắt đầu và kết thúc của một chuỗi.",
+        "C": "Tăng tốc độ tính toán ma trận Attention của Decoder.",
+        "D": "Phân chia các đoạn văn bản có độ dài khác nhau."
+      },
+      "answer": "B",
+      "explanation": "Token đặc biệt <BOS> (Begin of Sequence) và <EOS> (End of Sequence) giúp mô hình biết được ranh giới bắt đầu và kết thúc của một đoạn văn bản trong quá trình sinh hoặc huấn luyện."
+    },
+    {
+      "id": 6,
+      "question": "Một kỹ sư AI phát hiện mô hình sinh ra lỗi khi gặp ký tự lạ \"¶\". Kỹ thuật nào giúp tránh lỗi từ lạ (Out-Of-Vocabulary) này?",
+      "options": {
+        "A": "Chuyển đổi toàn bộ ký tự lạ thành các dấu cách.",
+        "B": "Thiết lập giá trị mặc định cho lớp Layer Normalization.",
+        "C": "Tăng kích thước từ điển của mô hình lên gấp đôi.",
+        "D": "Phân rã từ lạ thành các byte ký tự cơ bản."
+      },
+      "answer": "D",
+      "explanation": "Các tokenizer hiện đại (như Byte-level BPE của GPT) phân rã các ký tự Unicode lạ thành dạng byte cơ bản, giúp mô hình luôn biểu diễn được mọi ký tự lạ mà không bị lỗi OOV."
+    },
+    {
+      "id": 7,
+      "question": "Khi một đoạn văn bản được đưa vào lớp Embedding, mỗi token sẽ được chuyển đổi thành gì?",
+      "options": {
+        "A": "Một vectơ số thực có kích thước cố định trước.",
+        "B": "Một ma trận chứa các chỉ số token trong từ điển.",
+        "C": "Một giá trị xác suất duy nhất nằm từ 0 đến 1.",
+        "D": "Một chuỗi các byte nhị phân để máy tính đọc."
+      },
+      "answer": "A",
+      "explanation": "Lớp Embedding ánh xạ ID của token thành một vectơ số thực nhiều chiều (ví dụ 4096 chiều trong Llama), biểu diễn ngữ nghĩa của từ trong không gian vector toán học."
+    },
+    {
+      "id": 8,
+      "question": "Tại sao trong tiếng Việt, cụm từ \"học sinh\" đôi khi bị Tokenizer tách thành các token rời rạc như \"học\" và \" sinh\"?",
+      "options": {
+        "A": "Do lớp Embedding không nhận dạng được ngôn ngữ tiếng Việt.",
+        "B": "Do thuật toán BPE bắt buộc phải loại bỏ các dấu tiếng Việt.",
+        "C": "Do từ điển huấn luyện của Tokenizer chưa học từ ghép này.",
+        "D": "Do khoảng trắng giữa hai từ làm đứt gãy ma trận Attention."
+      },
+      "answer": "C",
+      "explanation": "If dữ liệu huấn luyện Tokenizer không chứa đủ số lần xuất hiện ghép của hai từ này, thuật toán sẽ không gộp chúng lại làm một token và giữ chúng ở dạng các subwords đơn lẻ."
+    },
+    {
+      "id": 9,
+      "question": "Bạn ước lượng token cho một tài liệu tiếng Việt dài 1000 từ. Tỉ lệ số lượng token so với số từ thực tế thường là bao nhiêu?",
+      "options": {
+        "A": "Số lượng token bằng khoảng 50% số từ thực tế.",
+        "B": "Số lượng token bằng khoảng 120% đến 150% số từ.",
+        "C": "Số lượng token luôn bằng chính xác số từ thực tế.",
+        "D": "Số lượng token bằng khoảng 300% trở lên số từ."
+      },
+      "answer": "B",
+      "explanation": "Với tiếng Việt, do đặc thù nhiều từ ghép và dấu thanh, tokenizer của các mô hình đa ngôn ngữ thường phân rã các từ thành nhiều subwords, dẫn đến tỉ lệ token thường bằng 1.2 đến 1.5 lần số từ."
+    },
+    {
+      "id": 10,
+      "question": "Trong thuật toán WordPiece, tiêu chí để quyết định hợp nhất (merge) hai subword A và B thành AB là gì?",
+      "options": {
+        "A": "Tối đa hóa khả năng xuất hiện của tập dữ liệu.",
+        "B": "Tổng tần suất xuất hiện của cả hai subword đó.",
+        "C": "Khoảng cách ngữ nghĩa giữa hai vectơ embedding của chúng.",
+        "D": "Độ dài ký tự vật lý của từ sau ghép."
+      },
+      "answer": "A",
+      "explanation": "WordPiece lựa chọn cặp ghép giúp tối đa hóa khả năng (likelihood) của tập dữ liệu huấn luyện dựa trên mô hình ngôn ngữ (xác suất xuất hiện của AB lớn nhất so với xác suất đơn lẻ của A và B)."
+    }
+  ]
+}
