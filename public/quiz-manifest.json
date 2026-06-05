@@ -183,6 +183,30 @@
       "title": "Phần 1: Nền tảng Embedding & Vector Store",
       "description": "Nắm vững kiến thức nền tảng về chiến lược dữ liệu, kiến trúc bộ nhớ Agent, Embedding và Vector Store.",
       "difficulty": "dễ"
+    },
+    {
+      "id": "day7-pipeline",
+      "parent_id": "day7",
+      "topic_title": "Day 7: Data Foundations - Embedding & Vector Store",
+      "title": "Phần 2: Thiết lập Pipeline & Thực hành RAG",
+      "description": "Đánh giá khả năng xây dựng và tối ưu hóa quy trình truy xuất dữ liệu (chunking, metadata, ChromaDB, OpenAI API, sửa lỗi RAG).",
+      "difficulty": "trung bình"
+    },
+    {
+      "id": "day7-advanced",
+      "parent_id": "day7",
+      "topic_title": "Day 7: Data Foundations - Embedding & Vector Store",
+      "title": "Phần 3: Kỹ thuật Nâng cao & Đánh giá Retrieval",
+      "description": "Đánh giá chuyên sâu về các thuật toán Indexing (HNSW, IVF, PQ), các độ đo tương đồng, Vector DB và chỉ số đo lường (Precision, Recall, MRR, NDCG).",
+      "difficulty": "khó"
+    },
+    {
+      "id": "day7-short-answer",
+      "parent_id": "day7",
+      "topic_title": "Day 7: Data Foundations - Embedding & Vector Store",
+      "title": "Tự Luận: Chiến lược Dữ liệu & Tối ưu hóa Vector Store",
+      "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào chiến lược dữ liệu, ẩn danh PII, thiết kế chunking và đánh giá chất lượng truy xuất RAG.",
+      "difficulty": "khó"
     }
   ]
 }

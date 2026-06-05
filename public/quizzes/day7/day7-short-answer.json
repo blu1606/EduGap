@@ -1,0 +1,87 @@
+{
+  "id": "day7-short-answer",
+  "parent_id": "day7",
+  "topic_title": "Day 7: Data Foundations - Embedding & Vector Store",
+  "title": "Tự Luận: Chiến lược Dữ liệu & Tối ưu hóa Vector Store",
+  "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào chiến lược dữ liệu, ẩn danh PII, thiết kế chunking và đánh giá chất lượng truy xuất RAG.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Một doanh nghiệp tài chính muốn tích hợp tài liệu hướng dẫn xử lý khiếu nại khách hàng chứa nhiều thông tin nhạy cảm (PII) như tên khách hàng, số điện thoại và số tài khoản vào Vector Database để làm RAG Agent. Hãy thiết kế một quy trình xử lý dữ liệu (PII Masking pipeline) trước khi đưa vào mô hình nhúng nhằm đảm bảo an toàn thông tin và tính năng tìm kiếm ngữ nghĩa vẫn hoạt động chính xác.",
+      "expected_answer": "Sử dụng Regex hoặc mô hình NLP nhẹ (NER) để phát hiện thông tin nhạy cảm. Thực hiện ẩn danh hóa: thay tên cụ thể bằng nhãn chung như [CUSTOMER_NAME], hash số tài khoản, và thay đổi số điện thoại thành dạng bị che (masking). Chỉ lưu văn bản đã ẩn danh và vector nhúng của nó vào Vector Database công khai, giữ bảng đối chiếu (lookup table) bảo mật riêng biệt nếu cần dịch ngược lại cho các tác vụ được phân quyền.",
+      "evaluation_points": [
+        "Nhận diện được việc dùng Regex/NLP (NER) để phân loại và định danh PII.",
+        "Áp dụng các mức độ che giấu khác nhau (nhãn chung cho tên, hash/mask cho số tài khoản/SĐT).",
+        "Tách biệt lưu trữ giữa Vector DB đã làm sạch và bảng lookup bảo mật.",
+        "Đảm bảo giữ cấu trúc văn bản gốc để không làm hỏng chất lượng vector nhúng."
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Design secure and privacy-compliant data preprocessing pipelines for embedding stores"
+    },
+    {
+      "id": 2,
+      "question": "Một AI Agent hỗ trợ lập trình cần đọc một kho mã nguồn lớn chứa cả tài liệu đặc tả hệ thống dạng Markdown (.md) và file code Python (.py). Nếu áp dụng phương pháp chia đoạn cố định (Fixed-size character chunking) sẽ gây ra những lỗi gì? Hãy đề xuất phương pháp phân chia chunk tối ưu cho từng loại tài liệu trên.",
+      "expected_answer": "Fixed-size chunking sẽ làm cắt đôi hàm/lớp code khiến Agent không hiểu được logic, và chia cắt các tiêu đề khỏi nội dung trong Markdown làm mất liên kết chủ đề. Giải pháp: Sử dụng MarkdownHeaderTextSplitter cho file đặc tả để nhóm theo tiêu đề H1-H3, và sử dụng PythonCodeTextSplitter cho file Python để chia theo cấu trúc class/method/function.",
+      "evaluation_points": [
+        "Chỉ ra được lỗi cắt đôi logic của code và mất liên kết header-content của Markdown.",
+        "Đề xuất giải pháp chuyên biệt: MarkdownHeaderTextSplitter (hoặc theo cấu trúc Markdown).",
+        "Đề xuất giải pháp chuyên biệt: PythonCodeTextSplitter (hoặc chia theo class/function).",
+        "Nhắc đến việc thiết lập độ gối đầu (overlap) hợp lý ở ranh giới các chunk."
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Design domain-specific chunking strategies for mixed structured and unstructured resources"
+    },
+    {
+      "id": 3,
+      "question": "Hệ thống chăm sóc khách hàng của một ngân hàng sử dụng RAG. Khi người dùng nhập câu hỏi sử dụng từ lóng hoặc viết tắt như 'muốn đổi pin thẻ ATM do bị khóa' hay 'cách kích hoạt thẻ credit card', Vector DB trả về các đoạn tài liệu không liên quan vì tài liệu chính thức chỉ dùng từ ngữ chuẩn hóa như 'thay đổi mã số định danh cá nhân' và 'phát hành thẻ tín dụng'. Hãy chẩn đoán nguyên nhân và đề xuất giải pháp xử lý ở tầng truy xuất (Retrieval).",
+      "expected_answer": "Nguyên nhân là do mô hình nhúng không khớp được từ lóng/viết tắt với thuật ngữ chuyên ngành trong tài liệu chính thức (sự lệch pha từ vựng ngữ nghĩa). Giải pháp: Thiết lập bước Query Rewriting hoặc Query Expansion bằng LLM trước khi truy vấn Vector Store để dịch từ lóng sang thuật ngữ chuẩn hóa, hoặc triển khai tìm kiếm lai (Hybrid Search) kết hợp từ điển đồng nghĩa (synonyms).",
+      "evaluation_points": [
+        "Chẩn đoán đúng do sự lệch pha từ vựng (vocabulary mismatch) hoặc giới hạn của embedding model đối với từ viết tắt/từ lóng cục bộ.",
+        "Đề xuất Query Rewriting hoặc Query Expansion (LLM-based rewriting).",
+        "Đề xuất Hybrid Search (BM25 + Vector) hoặc tích hợp Synonyms mapping.",
+        "Nhắc đến việc đánh giá độ trễ (latency) tăng thêm khi có bước gọi LLM phụ trợ."
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Diagnose semantic search gaps and implement query processing techniques to align user intent"
+    },
+    {
+      "id": 4,
+      "question": "Một startup công nghệ phát triển Agent xử lý hồ sơ pháp lý lớn với hơn 10 triệu trang tài liệu và 500 yêu cầu truy vấn mỗi giây. Hãy so sánh việc sử dụng giải pháp tự quản lý Chroma chạy local (Self-managed Chroma local) với việc thuê dịch vụ đám mây Pinecone Serverless (Hosted Pinecone Serverless). Đưa ra khuyến nghị thiết kế phù hợp kèm theo giải pháp giảm thiểu chi phí API nhúng.",
+      "expected_answer": "Chroma local tốn RAM vật lý, không tự động co giãn và khó chịu tải cao. Pinecone Serverless quản lý hoàn toàn, tự động co giãn tốt nhưng chi phí API tăng theo lượng dùng. Khuyến nghị: Chọn Pinecone Serverless cho quy mô lớn. Tối ưu chi phí nhúng bằng cách sử dụng bộ nhớ đệm (Semantic Caching) và lọc trùng lặp dữ liệu trước khi nhúng.",
+      "evaluation_points": [
+        "Phân tích rõ nhược điểm của Chroma local về khả năng co giãn và quản lý RAM ở quy mô lớn.",
+        "Phân tích rõ ưu điểm của Pinecone Serverless về tính chịu tải và tự động scaling.",
+        "Đưa ra lựa chọn/khuyến nghị phù hợp với quy mô bài toán pháp lý lớn.",
+        "Đề xuất các giải pháp tối ưu chi phí: Semantic/Exact Caching, Deduplication hoặc chọn mô hình nhúng giá rẻ."
+      ],
+      "sfia_level": "SFIA L5",
+      "competency": "Ensure enterprise-grade retrieval storage design and cost-performance trade-offs"
+    },
+    {
+      "id": 5,
+      "question": "Một lập trình viên AI cấu hình hệ thống RAG đưa trực tiếp top-15 kết quả (mỗi kết quả là một chunk dài 1000 ký tự) từ Vector Database vào prompt của mô hình GPT-4o-mini vốn có context window lớn. Quyết định thiết kế này dẫn đến những vấn đề gì về hiệu năng và chi phí của hệ thống? Hãy đề xuất cách khắc phục cụ thể.",
+      "expected_answer": "Gây ra vấn đề 'Lost in the Middle' (LLM bỏ sót thông tin quan trọng ở giữa prompt), gây nhiễu ngữ cảnh làm tăng tỷ lệ ảo giác, tăng chi phí API đáng kể và tăng độ trễ phản hồi (latency). Cách khắc phục: Giảm số lượng k xuống khoảng 3-5 kết quả chất lượng nhất, áp dụng reranking (như Cohere Rerank) để chọn lọc lại các chunk có độ liên quan thực tế cao nhất, và giảm kích thước chunk xuống 400-500 ký tự kết hợp overlap hợp lý.",
+      "evaluation_points": [
+        "Chỉ ra được lỗi 'Lost in the Middle' và hiện tượng nhiễu ngữ cảnh (context pollution).",
+        "Phân tích rủi ro tăng chi phí API và độ trễ do xử lý quá nhiều token thừa.",
+        "Đề xuất giảm k và điều chỉnh kích thước chunk tối ưu hơn.",
+        "Đề xuất giải pháp Reranker (như Cohere Rerank) để cải thiện chất lượng context trước khi tiêm vào prompt."
+      ],
+      "sfia_level": "SFIA L3-L4",
+      "competency": "Apply context budget optimization and mitigate retrieval noise under token constraints"
+    },
+    {
+      "id": 6,
+      "question": "Bạn được giao nhiệm vụ đánh giá và nghiệm thu hệ thống RAG nội bộ của doanh nghiệp. Đội kỹ thuật báo cáo rằng 'tỷ lệ câu trả lời làm hài lòng khách hàng đạt 90%'. Hãy giải thích tại sao con số này chưa đủ để đánh giá hệ thống và đề xuất quy trình đo lường chất lượng truy xuất (Retrieval quality) độc lập với bước sinh câu trả lời (Generation), nêu rõ các chỉ số cần đo.",
+      "expected_answer": "Sự hài lòng của khách hàng là chỉ số tổng hợp bị ảnh hưởng bởi khả năng sinh của LLM (có thể che giấu lỗi truy xuất do ảo giác). Cần chuẩn bị tập dữ liệu kiểm thử (ground truth query-document pairs) để đánh giá độc lập Retrieval. Các chỉ số cần đo: Precision@k (độ nhiễu), Recall@k (độ bao phủ), và MRR/NDCG (độ chính xác xếp hạng của kết quả trả về).",
+      "evaluation_points": [
+        "Giải thích rõ tại sao đánh giá sinh văn bản (Generation) che lấp lỗi truy xuất (Retrieval) thông qua tính trôi chảy/ảo giác của LLM.",
+        "Đề xuất tạo tập dữ liệu kiểm thử (ground truth query-document pairs).",
+        "Kể tên và giải thích ít nhất 2 chỉ số cụ thể: Precision@k, Recall@k, MRR, NDCG.",
+        "Nhấn mạnh sự cần thiết của việc tối ưu hóa độc lập tầng Retrieval trước khi cải tiến tầng Generator."
+      ],
+      "sfia_level": "SFIA L5",
+      "competency": "Ensure systematic retrieval evaluation methodologies independent of text generation performance"
+    }
+  ]
+}
