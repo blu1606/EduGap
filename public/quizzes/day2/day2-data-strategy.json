@@ -1,0 +1,130 @@
+{
+  "id": "day2-data-strategy",
+  "parent_id": "day2",
+  "topic_title": "Day 2: Xác định Bài toán cho AI",
+  "title": "Phần 3: Chiến lược dữ liệu & Grounding",
+  "description": "Nghiên cứu cấu trúc dữ liệu, kỹ thuật lọc nhiễu Deduplication, bảo mật thông tin PII và vai trò của Grounding tri thức thực tế.",
+  "difficulty": "bình thường",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Loại dữ liệu nào sau đây thuộc nhóm dữ liệu phi cấu trúc (Unstructured Data) trong doanh nghiệp?",
+      "options": {
+        "A": "Các bảng dữ liệu khách hàng lưu trong cơ sở SQL.",
+        "B": "Bảng danh mục sản phẩm lưu ở định dạng file CSV.",
+        "C": "Các tài liệu SOP định dạng PDF và file ghi âm cuộc gọi.",
+        "D": "Dữ liệu giao dịch tài chính lưu dưới dạng tệp JSON."
+      },
+      "answer": "C",
+      "explanation": "Dữ liệu phi cấu trúc không tuân theo một mô hình dữ liệu định sẵn, ví dụ như tài liệu văn bản tự do PDF, hình ảnh, video, âm thanh ghi âm."
+    },
+    {
+      "id": 2,
+      "question": "Trong chuẩn bị dữ liệu cho AI, quy trình loại bỏ dữ liệu trùng lặp (Deduplication) giúp giải quyết vấn đề gì?",
+      "options": {
+        "A": "Tiết kiệm tài nguyên và tránh lệch phân phối dữ liệu.",
+        "B": "Tăng kích thước của vectơ nhúng lên mức tối đa nhất.",
+        "C": "Tự động dịch chuyển dữ liệu sang ngôn ngữ tiếng Anh.",
+        "D": "Loại bỏ hoàn toàn yêu cầu gán nhãn cho dữ liệu."
+      },
+      "answer": "A",
+      "explanation": "Loại bỏ trùng lặp dữ liệu giúp tiết kiệm dung lượng lưu trữ, tránh lãng phí chi phí tính toán khi nhúng (embedding) và ngăn ngừa việc thiên lệch mô hình vào các mẫu lặp lại."
+    },
+    {
+      "id": 3,
+      "question": "Tại sao việc ẩn danh hóa (masking) thông tin PII trước khi đưa vào RAG là cực kỳ quan trọng?",
+      "options": {
+        "A": "Để tăng tốc độ tìm kiếm tương đồng vector trong db.",
+        "B": "Để ngăn ngừa rủi ro rò rỉ dữ liệu cá nhân nhạy cảm.",
+        "C": "Để tiết kiệm chi phí tính toán embeddings của mô hình.",
+        "D": "Để chuyển đổi dữ liệu sang định dạng chuẩn nén zip."
+      },
+      "answer": "B",
+      "explanation": "Thông tin nhận dạng cá nhân (PII) như căn cước công dân, số điện thoại cần được che/ẩn danh trước khi nhúng để tránh việc mô hình vô tình rò rỉ chúng qua câu trả lời cho người dùng khác."
+    },
+    {
+      "id": 4,
+      "question": "Kỹ thuật Grounding trong các ứng dụng Generative AI có vai trò gì?",
+      "options": {
+        "A": "Tự động dịch chuyển toàn bộ mô hình xuống thiết bị.",
+        "B": "Tạo thêm các nhãn dữ liệu nhân tạo cho cấu hình.",
+        "C": "Tăng tốc độ huấn luyện mô hình bằng cách song song.",
+        "D": "Liên kết câu trả lời của AI với nguồn tri thức thực."
+      },
+      "answer": "D",
+      "explanation": "Grounding là việc cung cấp dữ liệu thực tế đáng tin cậy vào prompt của mô hình để mô hình trả lời dựa trên kho thông tin đó, hạn chế hiện tượng ảo giác (hallucination)."
+    },
+    {
+      "id": 5,
+      "question": "Hiện tượng \"Garbage In, Garbage Out\" trong xây dựng hệ thống AI nhấn mạnh điều gì?",
+      "options": {
+        "A": "Chất lượng của dữ liệu quyết định chất lượng của mô hình.",
+        "B": "Các mô hình cũ lỗi thời cần phải được loại bỏ đi.",
+        "C": "Chi phí của phần cứng máy chủ quyết định độ chính xác.",
+        "D": "Kích thước của từ điển tokenizer quyết định tốc độ chạy."
+      },
+      "answer": "A",
+      "explanation": "Nguyên lý này khẳng định rằng dù thuật toán hay mô hình AI có thông minh đến đâu, nếu dữ liệu đầu vào thu thập bị lỗi, nhiễu hoặc sai lệch thì kết quả đầu ra cũng sẽ không có giá trị."
+    },
+    {
+      "id": 6,
+      "question": "Bạn xây dựng chatbot tư vấn sản phẩm từ file PDF hướng dẫn sử dụng dài 500 trang. Bước tiền xử lý dữ liệu nào sau đây là quan trọng nhất trước khi nạp vào vector store?",
+      "options": {
+        "A": "Nén file PDF thành định dạng file zip để lưu trữ.",
+        "B": "Dịch toàn bộ nội dung của tài liệu sang tiếng Anh.",
+        "C": "Chia nhỏ tài liệu thành các đoạn văn ngắn hợp lý.",
+        "D": "Sử dụng mô hình học sâu để tự động gắn nhãn."
+      },
+      "answer": "C",
+      "explanation": "Chia nhỏ văn bản (chunking) thành các phần phù hợp giúp bảo toàn ngữ cảnh cục bộ tốt hơn khi chuyển đổi sang không gian vectơ và tối ưu hóa lượng token gửi lên prompt RAG."
+    },
+    {
+      "id": 7,
+      "question": "Hệ thống AI của bạn gặp lỗi dự đoán sai nghiêm trọng do dữ liệu huấn luyện thu thập được chứa quá nhiều giá trị ngoại lai (outliers) và dữ liệu nhiễu. Bạn nên làm thế nào?",
+      "options": {
+        "A": "Huấn luyện lại mô hình đó với số epoch lớn hơn.",
+        "B": "Lọc sạch và loại bỏ nhiễu trước khi tái huấn luyện.",
+        "C": "Tăng số lượng tham số của mô hình lên gấp đôi.",
+        "D": "Chuyển sang chạy mô hình trên hạ tầng đám mây khác."
+      },
+      "answer": "B",
+      "explanation": "Dữ liệu nhiễu và ngoại lai làm mô hình học sai xu hướng chung. Việc làm sạch dữ liệu (data cleaning) trước khi huấn luyện luôn mang lại hiệu năng cải thiện tốt nhất."
+    },
+    {
+      "id": 8,
+      "question": "Một doanh nghiệp muốn xây dựng mô hình AI tự động trả lời câu hỏi của cổ đông dựa trên báo cáo tài chính hàng năm. Nguồn dữ liệu nào sau đây là phù hợp nhất để làm tri thức nguồn (knowledge base)?",
+      "options": {
+        "A": "Các cuộc trò chuyện tự do trên mạng xã hội Facebook.",
+        "B": "Các bài báo phân tích tài chính của bên thứ ba.",
+        "C": "Các câu hỏi phỏng vấn tuyển dụng của doanh nghiệp đó.",
+        "D": "Báo cáo tài chính đã kiểm toán được công bố chính thức."
+      },
+      "answer": "D",
+      "explanation": "Đối với nghiệp vụ liên quan đến tài chính pháp lý của cổ đông, dữ liệu nguồn bắt buộc phải có tính xác thực và tin cậy cao nhất, đó là báo cáo tài chính chính thức đã được kiểm toán."
+    },
+    {
+      "id": 9,
+      "question": "Tại sao dữ liệu có nhãn (Labeled Data) chất lượng cao lại là thách thức lớn nhất của hầu hết các dự án học có giám sát?",
+      "options": {
+        "A": "Việc gán nhãn thủ công đòi hỏi chi phí và thời gian.",
+        "B": "Dữ liệu có nhãn không thể lưu vào cơ sở dữ liệu.",
+        "C": "Các mô hình AI hiện đại không chấp nhận dữ liệu nhãn.",
+        "D": "Việc gán nhãn làm giảm hiệu năng tính toán của GPU."
+      },
+      "answer": "A",
+      "explanation": "Gán nhãn dữ liệu chất lượng cao đòi hỏi sự tham gia của con người (đặc biệt là các chuyên gia trong ngành y tế, tài chính), tốn nhiều thời gian và chi phí vận hành."
+    },
+    {
+      "id": 10,
+      "question": "Bạn muốn thiết kế một chatbot y khoa tư vấn sức khỏe. Nguồn dữ liệu huấn luyện của bạn lấy trực tiếp từ các diễn đàn tự do trực tuyến. Rủi ro dữ liệu nào là lớn nhất ở đây?",
+      "options": {
+        "A": "Kích thước file dữ liệu tải xuống quá lớn cho máy.",
+        "B": "Dữ liệu chứa thông tin y khoa sai lệch hoặc độc hại.",
+        "C": "Tốc độ truy vấn của cơ sở dữ liệu diễn đàn chậm.",
+        "D": "Các bài viết trên diễn đàn không có định dạng JSON."
+      },
+      "answer": "B",
+      "explanation": "Dữ liệu lấy từ các diễn đàn tự do không được kiểm duyệt chuyên môn y tế dễ chứa các lời khuyên y khoa sai lệch, mê tín hoặc gây hại nghiêm trọng cho sức khỏe người bệnh."
+    }
+  ]
+}

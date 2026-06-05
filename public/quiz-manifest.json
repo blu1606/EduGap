@@ -9,12 +9,60 @@
       "difficulty": "dễ"
     },
     {
+      "id": "day1-tokenization",
+      "parent_id": "day1",
+      "topic_title": "Day 1: AI & LLM Foundation",
+      "title": "Phần 2: Tokenization & Kỹ thuật Embeddings",
+      "description": "Tìm hiểu thuật toán cắt từ BPE, WordPiece, SentencePiece, các Special Tokens và nguyên lý chuyển từ sang không gian Vector.",
+      "difficulty": "bình thường"
+    },
+    {
+      "id": "day1-llm-architecture",
+      "parent_id": "day1",
+      "topic_title": "Day 1: AI & LLM Foundation",
+      "title": "Phần 3: Kiến trúc LLM & Quản lý Ngữ cảnh",
+      "description": "Nghiên cứu kiến trúc Decoder-only, cơ chế nén KV Cache, mã hóa vị trí tương đối RoPE và các giới hạn về Context Window.",
+      "difficulty": "khó"
+    },
+    {
+      "id": "day1-inference-decoding",
+      "parent_id": "day1",
+      "topic_title": "Day 1: AI & LLM Foundation",
+      "title": "Phần 4: Tham số giải mã & Inference Dynamics",
+      "description": "Tìm hiểu về cơ chế tính Logits, lấy mẫu với Temperature, Top-k, Top-p, tối ưu hóa qua Penalty và tầm quan trọng của System Prompt.",
+      "difficulty": "khó"
+    },
+    {
       "id": "day2-basics",
       "parent_id": "day2",
       "topic_title": "Day 2: Xác định Bài toán cho AI",
-      "title": "Phần 1: Định hình bài toán",
-      "description": "Luyện cách đánh giá tính khả thi, dữ liệu đầu vào và lựa chọn mô hình phù hợp cho bài toán AI.",
+      "title": "Phần 1: Định hình bài toán & Tính khả thi",
+      "description": "Tìm hiểu cách phân tích tính khả thi kỹ thuật, tài chính, vận hành và phân biệt Automation vs Augmentation.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "day2-model-selection",
+      "parent_id": "day2",
+      "topic_title": "Day 2: Xác định Bài toán cho AI",
+      "title": "Phần 2: Lựa chọn Mô hình & Đánh giá",
+      "description": "Nắm vững chiến lược Build vs Buy, so sánh mô hình Open-source & Commercial API, và các hệ thống Benchmark như MMLU, GSM8k.",
       "difficulty": "bình thường"
+    },
+    {
+      "id": "day2-data-strategy",
+      "parent_id": "day2",
+      "topic_title": "Day 2: Xác định Bài toán cho AI",
+      "title": "Phần 3: Chiến lược dữ liệu & Grounding",
+      "description": "Nghiên cứu cấu trúc dữ liệu, kỹ thuật lọc nhiễu Deduplication, bảo mật thông tin PII và vai trò của Grounding tri thức thực tế.",
+      "difficulty": "bình thường"
+    },
+    {
+      "id": "day2-metrics-evaluation",
+      "parent_id": "day2",
+      "topic_title": "Day 2: Xác định Bài toán cho AI",
+      "title": "Phần 4: Đo lường chất lượng & Đánh giá",
+      "description": "Tìm hiểu về Precision, Recall, F1-score, xây dựng Golden Dataset và đánh giá mô hình bằng kỹ thuật LLM-as-a-judge.",
+      "difficulty": "khó"
     },
     {
       "id": "react-loop-basics",
