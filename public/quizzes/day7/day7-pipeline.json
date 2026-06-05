@@ -1,0 +1,130 @@
+{
+  "id": "day7-pipeline",
+  "parent_id": "day7",
+  "topic_title": "Day 7: Data Foundations - Embedding & Vector Store",
+  "title": "Phần 2: Thiết lập Pipeline & Thực hành RAG",
+  "description": "Đánh giá khả năng xây dựng và tối ưu hóa quy trình truy xuất dữ liệu (chunking, metadata, ChromaDB, OpenAI API, sửa lỗi RAG).",
+  "difficulty": "trung bình",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Khi thiết kế kích thước chunk cho hệ thống RAG, việc lựa chọn chunk quá lớn sẽ dẫn đến hậu quả trực tiếp nào dưới đây?",
+      "options": {
+        "A": "Làm đứt gãy các câu văn hoàn chỉnh và làm mất đi ngữ nghĩa cốt lõi của tài liệu.",
+        "B": "Tăng số lượng vector nhúng cần lưu trữ và làm chậm tốc độ truy vấn của Vector DB.",
+        "C": "Đưa nhiều thông tin gây nhiễu vào ngữ cảnh và làm lãng phí ngân sách token của LLM.",
+        "D": "Khiến mô hình nhúng không thể xử lý do vượt quá giới hạn chiều của không gian vector."
+      },
+      "answer": "C",
+      "explanation": "Chunk quá lớn sẽ kéo theo các thông tin không liên quan vào prompt, gây nhiễu cho mô hình ngôn ngữ lớn (LLM) và lãng phí token."
+    },
+    {
+      "id": 2,
+      "question": "Khi khởi tạo một collection trong thư viện ChromaDB chạy ở chế độ local thông qua câu lệnh `client.get_or_create_collection(name=\"edu_gap_kb\")`, hành vi nào sau đây sẽ xảy ra?",
+      "options": {
+        "A": "Tạo collection mới nếu tên chưa tồn tại hoặc lấy collection cũ nếu đã tồn tại trước đó.",
+        "B": "Xóa toàn bộ dữ liệu của collection cũ trùng tên để khởi tạo một collection hoàn toàn trống.",
+        "C": "Gửi yêu cầu API lên cloud server của Chroma để cấp phát vùng lưu trữ vector từ xa.",
+        "D": "Tự động tải mô hình nhúng mặc định của OpenAI về máy để chuẩn bị cho việc vector hóa."
+      },
+      "answer": "A",
+      "explanation": "Phương thức `get_or_create_collection` giúp bảo toàn dữ liệu cũ nếu trùng tên và chỉ tạo mới khi chưa có collection tương ứng."
+    },
+    {
+      "id": 3,
+      "question": "Tại sao phương pháp Recursive Character Chunking thường được ưu tiên sử dụng hơn phương pháp Fixed-size Chunking trong thực tế?",
+      "options": {
+        "A": "Vì nó chạy nhanh hơn do không cần tính toán độ dài ký tự của các đoạn văn bản.",
+        "B": "Vì nó linh hoạt phân tách theo cấu trúc tự nhiên để giữ các câu cùng chủ đề gần nhau.",
+        "C": "Vì nó tự động liên kết các tag metadata vào từng đoạn văn bản sau khi chia nhỏ.",
+        "D": "Vì nó sử dụng mô hình học sâu để xác định điểm thay đổi ngữ nghĩa giữa các câu."
+      },
+      "answer": "B",
+      "explanation": "Recursive Character Chunking cố gắng chia văn bản bằng các ký tự ngắt đoạn tự nhiên (`\\n\\n`, `\\n`, ` `, v.v.) từ lớn đến nhỏ để giữ trọn vẹn ngữ cảnh."
+    },
+    {
+      "id": 4,
+      "question": "Khi cấu hình độ gối đầu (Overlap) giữa các chunk, việc đặt tỷ lệ overlap quá cao (ví dụ: trên 40% kích thước chunk) sẽ gây ra vấn đề gì?",
+      "options": {
+        "A": "Làm mất đi sự liên kết ngữ nghĩa giữa các phần kế cận trong tài liệu nguồn.",
+        "B": "Khiến mô hình nhúng trả về các vector có số chiều lớn hơn thiết lập tiêu chuẩn.",
+        "C": "Khiến thuật toán tìm kiếm Cosine Similarity không thể tính toán chính xác khoảng cách giữa các vector.",
+        "D": "Gây trùng lặp thông tin lớn giữa các chunk, làm lãng phí bộ nhớ và token ngữ cảnh."
+      },
+      "answer": "D",
+      "explanation": "Độ gối đầu (overlap) quá cao làm tăng đáng kể lượng thông tin trùng lặp giữa các chunk liền kề, dẫn đến lãng phí không gian lưu trữ và token khi gửi lên LLM."
+    },
+    {
+      "id": 5,
+      "question": "Một hệ thống Agent gặp lỗi trả lời đúng logic nhưng dựa trên thông tin chính sách cũ đã hết hạn. Cách khắc phục tốt nhất là gì?",
+      "options": {
+        "A": "Tăng nhiệt độ (temperature) của mô hình để tăng khả năng suy luận ra chính sách mới.",
+        "B": "Thực hiện cập nhật (re-index) cơ sở dữ liệu vector định kỳ và gắn metadata version/timestamp.",
+        "C": "Chuyển đổi toàn bộ Vector Database từ chạy local sang phiên bản quản lý cloud hoàn toàn.",
+        "D": "Thêm vào System Prompt của Agent yêu cầu không được tin vào các tài liệu cũ trong DB."
+      },
+      "answer": "B",
+      "explanation": "Để giải quyết dữ liệu cũ (stale data), cần re-index dữ liệu định kỳ và sử dụng metadata lọc theo thời gian hoặc phiên bản hoạt động."
+    },
+    {
+      "id": 6,
+      "question": "Trong RAG, hiện tượng cắt cụt ranh giới thông tin (ví dụ: bảng so sánh bị chia đôi sang hai chunk khác nhau) thường do nguyên nhân nào?",
+      "options": {
+        "A": "Cấu hình kích thước chunk cố định theo ký tự thay vì dựa theo cấu trúc tự nhiên.",
+        "B": "Sử dụng các mô hình nhúng có chiều kích thước không gian vector nhỏ như text-embedding-3-small.",
+        "C": "Đặt ngưỡng điểm tương đồng (score threshold) quá cao khi hệ thống thực hiện truy xuất.",
+        "D": "Lưu trữ tài liệu dưới dạng file văn bản thô thay vì cấu trúc hóa bằng file HTML."
+      },
+      "answer": "A",
+      "explanation": "Chia chunk cố định theo số lượng ký tự/token (fixed-size chunking) không quan tâm đến cấu trúc tài liệu, dễ làm đứt gãy thông tin liên tục hoặc các bảng dữ liệu."
+    },
+    {
+      "id": 7,
+      "question": "Trong thư viện LangChain, thứ tự mặc định của các ký tự phân tách (separators) trong `RecursiveCharacterTextSplitter` là gì?",
+      "options": {
+        "A": "`[\"\", \" \", \"\\n\", \"\\n\\n\"]`",
+        "B": "`[\"\\n\", \"\\n\\n\", \" \", \"\"]`",
+        "C": "`[\"\\n\\n\", \"\\n\", \" \", \"\"]`",
+        "D": "`[\" \", \"\\n\", \"\\n\\n\", \"\"]`"
+      },
+      "answer": "C",
+      "explanation": "Thứ tự mặc định là `[\"\\n\\n\", \"\\n\", \" \", \"\"]`, nghĩa là splitter sẽ thử chia nhỏ bằng đoạn văn (`\\n\\n`) trước, sau đó là xuống dòng (`\\n`), khoảng trắng (` `), và cuối cùng là ký tự rỗng."
+    },
+    {
+      "id": 8,
+      "question": "Khi gọi API nhúng văn bản bằng thư viện OpenAI Python, tham số nào xác định mô hình nhúng cụ thể được sử dụng?",
+      "options": {
+        "A": "Tham số `engine` truyền vào phương thức `client.embeddings.create()`.",
+        "B": "Tham số `embedding` truyền vào phương thức `client.embeddings.create()`.",
+        "C": "Tham số `type` truyền vào phương thức `client.embeddings.create()`.",
+        "D": "Tham số `model` truyền vào phương thức `client.embeddings.create()`."
+      },
+      "answer": "D",
+      "explanation": "Để xác định mô hình nhúng trong OpenAI API mới, chúng ta sử dụng tham số `model` (ví dụ: `model=\"text-embedding-3-small\"`)."
+    },
+    {
+      "id": 9,
+      "question": "Trong ChromaDB, để thực hiện tìm kiếm ngữ nghĩa kết hợp lọc siêu dữ liệu (metadata filtering) nhằm giới hạn phạm vi tìm kiếm, cú pháp nào sau đây là đúng?",
+      "options": {
+        "A": "Sử dụng tham số `filter={\"category\": \"support\"}` trong phương thức `collection.query()`.",
+        "B": "Sử dụng tham số `where={\"category\": \"support\"}` trong phương thức `collection.query()`.",
+        "C": "Sử dụng tham số `metadata={\"category\": \"support\"}` trong phương thức `collection.query()`.",
+        "D": "Sử dụng tham số `query_filter={\"category\": \"support\"}` trong phương thức `collection.query()`."
+      },
+      "answer": "B",
+      "explanation": "ChromaDB sử dụng tham số `where` để thực hiện lọc metadata khi thực hiện truy vấn thông qua phương thức `query()`."
+    },
+    {
+      "id": 10,
+      "question": "Khi dữ liệu trả về từ RAG chứa nội dung độc hại từ bên thứ ba (ví dụ: hướng dẫn bỏ qua system prompt), giải pháp nào giúp hạn chế rủi ro bảo mật tốt nhất?",
+      "options": {
+        "A": "Xem dữ liệu truy xuất là văn bản không tin cậy và áp dụng các bộ lọc kiểm duyệt đầu ra.",
+        "B": "Đưa toàn bộ tài liệu thô vào context để LLM tự đối chiếu và phát hiện nội dung độc hại.",
+        "C": "Tăng giới hạn số lượng chunk trả về (top-k) để làm loãng thông tin độc hại nhận được.",
+        "D": "Cấm hoàn toàn việc truy xuất thông tin từ bên ngoài đối với các câu hỏi nhạy cảm."
+      },
+      "answer": "A",
+      "explanation": "Cần xử lý mọi ngữ cảnh truy xuất như dữ liệu không tin cậy (untrusted data) bằng cách áp dụng các cơ chế kiểm duyệt nội dung (content moderation/filtering) trước khi đưa vào LLM."
+    }
+  ]
+}

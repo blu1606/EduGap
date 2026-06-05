@@ -1,0 +1,130 @@
+{
+  "id": "day7-advanced",
+  "parent_id": "day7",
+  "topic_title": "Day 7: Data Foundations - Embedding & Vector Store",
+  "title": "Phần 3: Kỹ thuật Nâng cao & Đánh giá Retrieval",
+  "description": "Đánh giá chuyên sâu về các thuật toán Indexing (HNSW, IVF, PQ), các độ đo tương đồng, Vector DB và chỉ số đo lường (Precision, Recall, MRR, NDCG).",
+  "difficulty": "khó",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Khi vector nhúng chưa được chuẩn hóa (normalized), phép đo độ tương đồng nào dưới đây không phụ thuộc vào độ dài vật lý của các vector?",
+      "options": {
+        "A": "Dot Product (Tích vô hướng giữa hai vector).",
+        "B": "Euclidean Distance (Khoảng cách hình học L2).",
+        "C": "Cosine Similarity (Độ tương đồng góc Cosin).",
+        "D": "Manhattan Distance (Khoảng cách hình học L1)."
+      },
+      "answer": "C",
+      "explanation": "Cosine Similarity chỉ đo góc giữa hai vector nên hoàn toàn không bị ảnh hưởng bởi độ dài (độ lớn) của các vector nhúng."
+    },
+    {
+      "id": 2,
+      "question": "Thuật toán lập chỉ mục HNSW (Hierarchical Navigable Small World) cải thiện tốc độ tìm kiếm vector dựa trên cơ chế nào dưới đây?",
+      "options": {
+        "A": "Phân cụm không gian thành các cluster nhỏ rồi tìm kiếm tuần tự trên cụm gần nhất.",
+        "B": "Xây dựng cấu trúc đồ thị đa tầng cho phép tìm kiếm nhanh qua các liên kết xa-gần.",
+        "C": "Nén dữ liệu vector gốc thành các mã số nhị phân để giảm kích thước lưu trữ trong RAM.",
+        "D": "Chia nhỏ không gian tìm kiếm thành các lưới trực giao và thực hiện quét song song."
+      },
+      "answer": "B",
+      "explanation": "HNSW sử dụng kiến trúc đồ thị đa tầng tương tự như danh sách liên kết đa cấp (skip list), giúp tăng tốc độ tìm kiếm vector tiệm cận mức O(log N)."
+    },
+    {
+      "id": 3,
+      "question": "Khi áp dụng kỹ thuật Product Quantization (PQ) trong Vector Database, doanh nghiệp phải chấp nhận sự đánh đổi nào dưới đây?",
+      "options": {
+        "A": "Tăng chi phí phần cứng CPU để đổi lấy thời gian truy vấn vector cực kỳ nhanh.",
+        "B": "Tăng độ dài vector nhúng để đổi lấy khả năng bảo mật thông tin tốt hơn trong DB.",
+        "C": "Giảm tốc độ lập chỉ mục dữ liệu ban đầu để đổi lấy độ chính xác tìm kiếm tuyệt đối.",
+        "D": "Giảm một phần độ chính xác tìm kiếm để đổi lấy việc tiết kiệm bộ nhớ RAM rất lớn."
+      },
+      "answer": "D",
+      "explanation": "Product Quantization (PQ) nén các vector nhúng thành các biểu diễn ngắn gọn, giúp tiết kiệm đáng kể bộ nhớ RAM nhưng làm giảm nhẹ độ chính xác tìm kiếm."
+    },
+    {
+      "id": 4,
+      "question": "Chỉ số đánh giá MRR (Mean Reciprocal Rank) là độ đo tối ưu nhất đối với bài toán RAG nào sau đây?",
+      "options": {
+        "A": "Agent cần tìm duy nhất một câu trả lời chính xác nằm ở vị trí cao nhất có thể.",
+        "B": "Agent cần trích xuất tối đa các tài liệu liên quan không được bỏ sót bất kỳ nguồn nào.",
+        "C": "Agent cần kiểm tra tính đa dạng của thông tin được đưa vào trong Context Window.",
+        "D": "Agent cần sắp xếp tất cả các tài liệu theo thứ tự giảm dần của độ dài văn bản gốc."
+      },
+      "answer": "A",
+      "explanation": "MRR tập trung vào vị trí của kết quả chính xác đầu tiên trong danh sách trả về, do đó cực kỳ phù hợp cho các tác vụ tìm kiếm một kết quả đúng duy nhất (như FAQ)."
+    },
+    {
+      "id": 5,
+      "question": "Trong đánh giá hệ thống retrieval, chỉ số NDCG (Normalized Discounted Cumulative Gain) khác biệt với Precision@k ở điểm cốt lõi nào?",
+      "options": {
+        "A": "NDCG chỉ quan tâm đến tốc độ tìm kiếm thay vì tính đến chất lượng tài liệu.",
+        "B": "NDCG chỉ đo lường tỷ lệ tài liệu bị bỏ sót trong toàn bộ cơ sở dữ liệu.",
+        "C": "NDCG tính đến thứ tự sắp xếp và mức độ liên quan nhiều cấp độ của tài liệu.",
+        "D": "NDCG yêu cầu kích thước của các vector nhúng phải được chuẩn hóa trước khi so sánh."
+      },
+      "answer": "C",
+      "explanation": "NDCG đánh giá chất lượng xếp hạng (ranking quality) bằng cách phạt các tài liệu liên quan cao nếu chúng bị xếp ở các vị trí thấp trong danh sách trả về."
+    },
+    {
+      "id": 6,
+      "question": "Mô hình nhúng đa phương thức (Multi-modal Embeddings) như CLIP có khả năng đặc biệt nào sau đây?",
+      "options": {
+        "A": "Chuyển đổi mã nguồn của các ngôn ngữ lập trình khác nhau về cùng một định dạng.",
+        "B": "Biểu diễn hình ảnh và văn bản vào chung một không gian vector để tìm kiếm chéo.",
+        "C": "Tự động dịch thuật văn bản qua lại giữa nhiều ngôn ngữ tự nhiên khác nhau.",
+        "D": "Nhận diện giọng nói và tự động chuyển đổi thành văn bản với độ chính xác cao."
+      },
+      "answer": "B",
+      "explanation": "Các mô hình như CLIP nhúng cả ảnh và chữ vào cùng một không gian vector, cho phép thực hiện tìm kiếm ảnh bằng văn bản (text-to-image) và ngược lại."
+    },
+    {
+      "id": 7,
+      "question": "Khi cấu hình chỉ mục IVF (Inverted File Index) trong một Vector Store lớn, tham số số lượng phân cụm (centroids) ảnh hưởng thế nào đến hệ thống?",
+      "options": {
+        "A": "Số centroid càng lớn thì thời gian lập chỉ mục càng nhanh và độ chính xác càng cao.",
+        "B": "Số centroid càng lớn thì lượng bộ nhớ RAM tiêu thụ càng giảm và truy vấn càng nhanh.",
+        "C": "Số centroid lớn giúp tăng tốc độ truy vấn nhưng làm tăng thời gian lập chỉ mục ban đầu.",
+        "D": "Số centroid lớn làm giảm độ chính xác tìm kiếm và làm tăng dung lượng file vector nhúng."
+      },
+      "answer": "C",
+      "explanation": "Nhiều centroids (cụm) hơn giúp thu hẹp vùng tìm kiếm ở mỗi truy vấn (truy vấn nhanh hơn) nhưng đòi hỏi tính toán phân cụm ban đầu lâu hơn (lập chỉ mục chậm hơn)."
+    },
+    {
+      "id": 8,
+      "question": "Một hệ thống Agent thường xuyên bỏ sót các tài liệu quan trọng trong cơ sở dữ liệu dù chúng tồn tại. Để tăng Recall@k, giải pháp kỹ thuật nào là phù hợp nhất?",
+      "options": {
+        "A": "Tăng giá trị của k (số lượng kết quả trả về) kết hợp tinh chỉnh mô hình nhúng.",
+        "B": "Tăng mức độ nén vector nhúng bằng thuật toán Product Quantization (PQ) trong database hệ thống.",
+        "C": "Giảm độ gối đầu (overlap) giữa các chunk khi chia nhỏ văn bản nguồn xuống dưới mức 5%.",
+        "D": "Sử dụng phép đo khoảng cách Euclidean thay thế cho Cosine Similarity mặc định của hệ thống."
+      },
+      "answer": "A",
+      "explanation": "Để tăng Recall (giảm tỷ lệ bỏ sót), giải pháp trực tiếp là tăng số lượng tài liệu lấy ra (k) và tối ưu hóa chất lượng mô hình nhúng để các tài liệu đúng nằm trong top k."
+    },
+    {
+      "id": 9,
+      "question": "Thư viện FAISS (Facebook AI Similarity Search) phù hợp nhất cho tình huống thiết kế hệ thống nào sau đây?",
+      "options": {
+        "A": "Hệ thống sản xuất quy mô lớn yêu cầu cập nhật vector theo thời gian thực liên tục.",
+        "B": "Ứng dụng doanh nghiệp cần phân quyền truy cập nghiêm ngặt ở mức dữ liệu siêu dòng.",
+        "C": "Hệ thống chạy trên đám mây đòi hỏi tích hợp sẵn tìm kiếm lai (Hybrid Search) phức tạp.",
+        "D": "Bài toán nghiên cứu hoặc chạy offline cần tính toán khoảng cách vector thô tốc độ cao."
+      },
+      "answer": "D",
+      "explanation": "FAISS là thư viện tính toán độ tương đồng vector hiệu năng cao trên RAM/GPU, rất mạnh cho tìm kiếm vector tĩnh offline nhưng không hỗ trợ các tính năng quản lý DB như metadata filtering động hoặc ACID."
+    },
+    {
+      "id": 10,
+      "question": "Khi toàn bộ các vector trong cơ sở dữ liệu đã được chuẩn hóa về độ dài bằng 1 (L2 normalized), việc chuyển từ tính toán Cosine Similarity sang Dot Product mang lại lợi ích gì?",
+      "options": {
+        "A": "Giảm kích thước file dữ liệu vector nhúng lưu trữ trên đĩa cứng hệ thống.",
+        "B": "Tăng tốc độ tính toán truy vấn do giảm số lượng phép toán chia độ dài vector.",
+        "C": "Tăng độ nhạy bén ngữ nghĩa của mô hình đối với các từ đồng nghĩa trong câu.",
+        "D": "Ngăn chặn triệt để nguy cơ xảy ra hiện tượng ảo giác thông tin của mô hình."
+      },
+      "answer": "B",
+      "explanation": "Khi vector đã chuẩn hóa, Dot Product bằng đúng Cosine Similarity nhưng tính toán nhanh hơn nhiều vì công thức Dot Product không cần thực hiện phép chia căn bậc hai độ dài vector ở mẫu số."
+    }
+  ]
+}
