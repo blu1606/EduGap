@@ -703,7 +703,7 @@ export default function QuizApp() {
         {/* Left Sidebar or Mobile Dropdown overlay */}
         <section 
           id="quiz-sidebar-container" 
-          className={`md:col-span-3 space-y-4 ${mobileMenuOpen ? 'block' : 'hidden md:block'}`}
+          className={`md:col-span-3 space-y-4 ${mobileMenuOpen ? 'block' : 'hidden md:block'} md:sticky md:top-10 md:max-h-[calc(100vh-6rem)] md:overflow-y-auto pr-1 custom-scrollbar`}
         >
           {/* Box selecting set */}
           <div id="set-selector-box" className="p-4 rounded-xl bg-white/80 backdrop-blur-md border border-amber-100/80 shadow-md shadow-amber-955/[0.02] space-y-3">
@@ -1191,7 +1191,7 @@ export default function QuizApp() {
                   {/* Header question status info */}
                   <div className="flex justify-between items-center border-b border-amber-100/40 pb-3">
                     <span className="px-3 py-1 bg-amber-500/10 border border-amber-400/30 text-amber-800 font-mono text-xs rounded-full font-semibold">
-                      Câu Hỏi Số {currentQuestionIdx + 1} / {totalQuestions}
+                      Q{currentQuestionIdx + 1} / {totalQuestions}
                     </span>
                     
                     <div className="flex items-center gap-2">
@@ -1458,7 +1458,7 @@ export default function QuizApp() {
                   )}
 
                   {/* Bottom interactive navigation row */}
-                  <div className="sticky bottom-0 md:static -mx-5 -mb-5 md:mx-0 md:mb-0 bg-[#FDFBF7]/95 md:bg-transparent p-4 md:p-0 md:pt-3 border-t border-amber-100/40 rounded-b-2xl md:rounded-none z-10 flex flex-col sm:flex-row gap-3 justify-between items-center backdrop-blur-md md:backdrop-blur-none">
+                  <div className="sticky bottom-5 md:static mx-0 mb-0 md:mx-0 md:mb-0 bg-white/95 md:bg-transparent p-3.5 md:p-0 md:pt-3 border border-amber-200/60 md:border-0 md:border-t md:border-amber-100/40 rounded-2xl md:rounded-none z-10 flex flex-col sm:flex-row gap-3 justify-between items-center shadow-lg shadow-amber-900/5 md:shadow-none backdrop-blur-md md:backdrop-blur-none">
                     <div className="hidden md:block text-[11px] text-stone-500 font-mono font-medium text-center sm:text-left">
                       {!currentQuestion.options ? (
                         !isSubmitted 
