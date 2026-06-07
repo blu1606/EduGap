@@ -1,0 +1,130 @@
+{
+  "id": "week1-day4",
+  "parent_id": "week1",
+  "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+  "title": "Day 4: Prompt Engineering & Tool Calling",
+  "description": "10 câu trắc nghiệm lý thuyết trọng tâm về Prompt Engineering, quản lý Context, Token Budget, JIT context và vệ sinh kết quả Tool.",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Để tối ưu chi phí và hiệu năng khi chạy các Agent dài hạn, việc quản lý Token Budget (ngân sách token) tập trung vào hoạt động nào?",
+      "options": {
+        "A": "Cắt bớt hoặc tóm tắt phần lịch sử chat và các Observation cũ không còn dùng.",
+        "B": "Tăng tối đa số lượng ví dụ Few-shot trong System Prompt.",
+        "C": "Hạn chế không cho phép Agent gọi các công cụ tìm kiếm dữ liệu.",
+        "D": "Huấn luyện lại mô hình để giảm kích thước vector embedding."
+      },
+      "answer": "A",
+      "explanation": "Quản lý Token Budget yêu cầu cắt tỉa hoặc nén ngữ cảnh định kỳ (như tóm tắt các Observation cũ) để ngăn ngữ cảnh phình to làm tăng chi phí và giảm độ chú ý của LLM."
+    },
+    {
+      "id": 2,
+      "question": "Hiện tượng 'Context Rot' (suy giảm chất lượng ngữ cảnh) xảy ra trong kịch bản nào sau đây?",
+      "options": {
+        "A": "Khi mô hình ngôn ngữ lớn bị sập nguồn do quá tải phần cứng GPU.",
+        "B": "Khi dữ liệu lưu trong cơ sở dữ liệu Vector DB bị nhiễm mã độc.",
+        "C": "Khi prompt chứa quá nhiều thông tin nhiễu hoặc hướng dẫn mâu thuẫn khiến LLM bị loạn.",
+        "D": "Khi người dùng nhập câu hỏi bằng nhiều ngôn ngữ khác nhau cùng lúc."
+      },
+      "answer": "C",
+      "explanation": "Context Rot xảy ra khi đưa quá nhiều thông tin không liên quan, rác hoặc các chỉ thị chồng chéo vào prompt, làm loãng khả năng chú ý và suy luận của LLM."
+    },
+    {
+      "id": 3,
+      "question": "Kỹ thuật JIT (Just-In-Time) Context Injection hoạt động theo nguyên lý nào?",
+      "options": {
+        "A": "Nạp toàn bộ tài liệu của doanh nghiệp vào prompt ngay từ khi bắt đầu.",
+        "B": "Chỉ truy xuất và chèn tài liệu liên quan vào prompt tại thời điểm Agent cần xử lý câu hỏi cụ thể.",
+        "C": "Tự động dịch câu hỏi của người dùng sang tiếng Anh trước khi gửi.",
+        "D": "Chạy song song nhiều Agent để so sánh kết quả trả về."
+      },
+      "answer": "B",
+      "explanation": "JIT Context giúp tối ưu token bằng cách chỉ chèn các tài liệu liên quan (truy xuất động qua Vector DB) đúng lúc Agent cần dùng để trả lời câu hỏi."
+    },
+    {
+      "id": 4,
+      "question": "Trong quản lý bộ nhớ của Agent, hoạt động Context Compaction (nén ngữ cảnh) nhằm giải quyết vấn đề gì?",
+      "options": {
+        "A": "Giúp tăng tốc độ kết nối internet của các công cụ ngoại vi.",
+        "B": "Loại bỏ hoàn toàn các lớp Layer Normalization trong mô hình.",
+        "C": "Tự động mã hóa các thông tin nhạy cảm của người dùng thành mã băm.",
+        "D": "Tóm tắt các bước lập luận và kết quả cũ để nhường chỗ cho thông tin mới."
+      },
+      "answer": "D",
+      "explanation": "Compaction nén thông tin lịch sử trò chuyện hoặc lập luận dài thành các bản tóm tắt súc tích, giữ lại ý chính giúp tiết kiệm token cho các bước tiếp theo."
+    },
+    {
+      "id": 5,
+      "question": "Kiến trúc Sub-agent (Tác nhân phụ) thường được thiết lập nhằm giải quyết bài toán nào?",
+      "options": {
+        "A": "Phân rã một tác vụ phức tạp thành các nhiệm vụ nhỏ giao cho các Agent chuyên biệt.",
+        "B": "Tăng tốc độ sinh token của mô hình nền tảng lên gấp nhiều lần.",
+        "C": "Thay thế hoàn toàn cho việc sử dụng cơ sở dữ liệu Vector DB.",
+        "D": "Tự động phân bổ lại vị trí lưu trữ KV Cache trên RAM hệ thống."
+      },
+      "answer": "A",
+      "explanation": "Kiến trúc Sub-agent giao việc chuyên biệt (như viết code, cào web, kiểm tra lỗi) cho các tác nhân nhỏ hơn, giúp giảm tải độ phức tạp và tăng độ chính xác."
+    },
+    {
+      "id": 6,
+      "question": "Lý do quan trọng nhất để thực hiện vệ sinh kết quả Tool (Tool Result Sanitization) trước khi chèn vào Observation là gì?",
+      "options": {
+        "A": "Để mô hình dễ dàng phát hiện các lỗi cú pháp code Python.",
+        "B": "Để loại bỏ các định dạng HTML/CSS rác nhằm tiết kiệm token và tránh làm nhiễu LLM.",
+        "C": "Để tự động chuyển kết quả trả về thành các biểu thức chính quy.",
+        "D": "Để mô hình tự động cập nhật thêm trọng số mới thông qua API."
+      },
+      "answer": "B",
+      "explanation": "Kết quả thô từ cào web hay API chứa nhiều code rác không mang thông tin hữu ích nhưng tốn token. Việc sanitization loại bỏ rác này giúp mô hình trích xuất tin tốt hơn."
+    },
+    {
+      "id": 7,
+      "question": "Tại sao việc sử dụng các thẻ đóng/mở XML (như <content>...</content>) lại rất phổ biến trong Prompt Engineering?",
+      "options": {
+        "A": "Để mô hình tự động chuyển đổi văn bản sang định dạng code Java.",
+        "B": "Để tăng tốc độ biên dịch của mô hình ngôn ngữ trên GPU.",
+        "C": "Để phân định rõ ràng các vùng dữ liệu khác nhau giúp LLM dễ phân tách cấu trúc.",
+        "D": "Để loại bỏ hoàn toàn giới hạn kích thước cửa sổ ngữ cảnh."
+      },
+      "answer": "C",
+      "explanation": "Mô hình ngôn ngữ lớn được học rất tốt cấu trúc thẻ. Sử dụng XML tags giúp mô hình phân định ranh giới giữa chỉ thị hệ thống, tài liệu grounding và câu hỏi người dùng."
+    },
+    {
+      "id": 8,
+      "question": "Khi LLM liên tục bỏ qua định dạng JSON yêu cầu, cách xử lý hiệu quả nhất trong Prompt Engineering là gì?",
+      "options": {
+        "A": "Cung cấp cấu trúc schema JSON mong đợi kèm 1-2 ví dụ Few-shot mẫu trong prompt.",
+        "B": "Chỉ cần viết hoa từ khóa 'JSON' nhiều lần trong nội dung prompt.",
+        "C": "Thiết lập tham số Temperature lên cao nhất để tăng tính linh hoạt.",
+        "D": "Yêu cầu Agent tự viết code Python để tự sinh ra định dạng JSON."
+      },
+      "answer": "A",
+      "explanation": "Hướng dẫn cấu trúc rõ ràng kết hợp với ví dụ minh họa (Few-shot) là phương pháp tốt nhất để LLM hiểu và mô phỏng chính xác định dạng đầu ra mong muốn."
+    },
+    {
+      "id": 9,
+      "question": "Kỹ thuật Dynamic Few-shot Retrieval hoạt động theo nguyên lý nào?",
+      "options": {
+        "A": "Cố định 5 ví dụ mẫu trong prompt và không bao giờ thay đổi.",
+        "B": "Tự động sinh ví dụ ngẫu nhiên tại mỗi lượt chạy câu hỏi.",
+        "C": "Yêu cầu người dùng tự chọn ví dụ mẫu trước khi chat với Agent.",
+        "D": "Tìm kiếm ngữ nghĩa để lấy ra các ví dụ Few-shot giống nhất với câu hỏi hiện tại."
+      },
+      "answer": "D",
+      "explanation": "Thay vì nạp cứng các ví dụ, hệ thống sử dụng Vector DB tìm kiếm các cặp câu hỏi-đáp án mẫu tương tự với câu hỏi hiện tại để nạp làm ví dụ Few-shot động."
+    },
+    {
+      "id": 10,
+      "question": "Ranh giới tin cậy (Trust Boundary) trong gọi công cụ của Agent được hiểu là gì?",
+      "options": {
+        "A": "Giới hạn thời gian kết nối tối đa của đường truyền mạng API.",
+        "B": "Điểm phân chia giữa dữ liệu an toàn bên trong và dữ liệu không tin cậy bên ngoài.",
+        "C": "Mức độ tin tưởng của người dùng đối với câu trả lời của Agent.",
+        "D": "Tổng số lượng token tối đa mà Agent được phép gọi trong ngày."
+      },
+      "answer": "B",
+      "explanation": "Ranh giới tin cậy phân biệt vùng hệ thống kiểm soát được với các nguồn dữ liệu bên ngoài không an toàn. Mọi dữ liệu đi qua ranh giới này cần được kiểm duyệt và làm sạch."
+    }
+  ]
+}

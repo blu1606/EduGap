@@ -1,0 +1,130 @@
+{
+  "id": "week1-day3",
+  "parent_id": "week1",
+  "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+  "title": "Day 3: Design Pattern ReAct",
+  "description": "10 câu trắc nghiệm lý thuyết trọng tâm về vòng lặp ReAct, Function Schema, an ninh Agent (Guardrails) và trace debugging.",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Mẫu thiết kế ReAct (Reasoning and Acting) kết hợp hai khả năng nào của mô hình ngôn ngữ lớn?",
+      "options": {
+        "A": "Khả năng tóm tắt văn bản và khả năng dịch thuật tự động.",
+        "B": "Khả năng sinh lập luận suy nghĩ và khả năng gọi công cụ ngoại vi.",
+        "C": "Khả năng viết mã nguồn và khả năng kiểm thử phần mềm.",
+        "D": "Khả năng ghi nhớ thông tin cũ và khả năng dự đoán từ tiếp theo."
+      },
+      "answer": "B",
+      "explanation": "ReAct kết hợp khả năng tư duy lập luận (Reasoning) và hành động (Acting) bằng cách sinh ra các chuỗi suy nghĩ đan xen với việc gọi các API ngoại vi."
+    },
+    {
+      "id": 2,
+      "question": "Thứ tự các bước lặp lại trong một chu kỳ của mẫu thiết kế đại lý ReAct là gì?",
+      "options": {
+        "A": "Action -> Thought -> Observation.",
+        "B": "Thought -> Action -> Observation.",
+        "C": "Observation -> Action -> Thought.",
+        "D": "Thought -> Observation -> Action."
+      },
+      "answer": "B",
+      "explanation": "Quy trình chuẩn của ReAct là: Agent suy nghĩ (Thought) -> quyết định hành động gọi công cụ (Action) -> nhận phản hồi từ môi trường (Observation) rồi tiếp tục vòng lặp."
+    },
+    {
+      "id": 3,
+      "question": "Điểm khác biệt cốt lõi giữa một Agent (Đại lý AI) và một Chatbot thông thường là gì?",
+      "options": {
+        "A": "Agent có thể tự lên kế hoạch và tương tác chủ động với môi trường ngoại vi.",
+        "B": "Chatbot có dung lượng bộ nhớ cửa sổ ngữ cảnh lớn hơn Agent nhiều lần.",
+        "C": "Agent chỉ hoạt động trên dòng lệnh chứ không có giao diện người dùng đồ họa.",
+        "D": "Chatbot bắt buộc phải dùng các mô hình ngôn ngữ thương mại có trả phí."
+      },
+      "answer": "A",
+      "explanation": "Agent sở hữu khả năng tự động phân rã nhiệm vụ, lên kế hoạch từng bước và kích hoạt công cụ để tự hoàn thành mục tiêu mà không cần con người chỉ dẫn từng câu."
+    },
+    {
+      "id": 4,
+      "question": "Trong Function Schema mô tả công cụ cho Agent, phần mô tả (Description) của tham số đóng vai trò gì?",
+      "options": {
+        "A": "Chỉ dùng để hiển thị chú thích cho người dùng đọc hiểu.",
+        "B": "Giúp LLM hiểu ý nghĩa và định dạng dữ liệu cần truyền vào tham số.",
+        "C": "Là mã thực thi của công cụ khi Agent gọi hàm này.",
+        "D": "Để cấu hình giới hạn số lượng token mà công cụ được phép dùng."
+      },
+      "answer": "B",
+      "explanation": "LLM đọc phần Description trong schema để nhận diện công cụ nào phù hợp với yêu cầu hiện tại và biết cách trích xuất tham số đúng định dạng."
+    },
+    {
+      "id": 5,
+      "question": "Trong vòng lặp ReAct, bước Observation (Quan sát) được thu thập từ nguồn nào?",
+      "options": {
+        "A": "Do mô hình tự suy luận và tự tạo ra từ bộ nhớ của mình.",
+        "B": "Các chỉ dẫn cố định nằm trong tệp cấu hình hệ thống.",
+        "C": "Kết quả trả về từ việc thực thi hệ thống hoặc gọi API của Tool.",
+        "D": "Từ các câu hỏi tiếp theo được nhập vào bởi người dùng."
+      },
+      "answer": "C",
+      "explanation": "Observation là kết quả thực tế thu được sau khi chạy hành động (Action), ví dụ kết quả truy vấn cơ sở dữ liệu, nội dung trang web được cào."
+    },
+    {
+      "id": 6,
+      "question": "Tấn công Prompt Injection vào hệ thống Agent được định nghĩa là gì?",
+      "options": {
+        "A": "Việc gửi quá nhiều request cùng lúc làm sập máy chủ chứa mô hình.",
+        "B": "Việc chèn mã độc vào tệp tin thực thi của công cụ ngoại vi.",
+        "C": "Việc chèn các câu lệnh hoặc chỉ dẫn độc hại vào dữ liệu đầu vào.",
+        "D": "Việc đánh cắp mã khóa API key thông qua việc nghe lén đường truyền mạng."
+      },
+      "answer": "C",
+      "explanation": "Prompt Injection xảy ra khi dữ liệu nhập chứa các câu lệnh đánh lừa LLM bỏ qua System Prompt ban đầu để làm theo chỉ dẫn mới."
+    },
+    {
+      "id": 7,
+      "question": "Khái niệm Guardrails trong hệ thống ứng dụng AI dùng để chỉ điều gì?",
+      "options": {
+        "A": "Các bộ lọc và quy tắc kiểm soát an toàn cho cả đầu vào và đầu ra.",
+        "B": "Các máy chủ vật lý được thiết lập làm tường lửa bảo vệ GPU.",
+        "C": "Các thuật toán nén kích thước mô hình để chạy trên thiết bị di động.",
+        "D": "Bộ tài liệu hướng dẫn sử dụng phần mềm dành cho khách hàng."
+      },
+      "answer": "A",
+      "explanation": "Guardrails là các lớp kiểm duyệt độc lập để phát hiện và ngăn chặn nội dung không an toàn trước khi gửi đến LLM hoặc trả về cho user."
+    },
+    {
+      "id": 8,
+      "question": "Cơ chế 'Human-in-the-loop' được tích hợp vào hệ thống Agent nhằm mục đích an ninh nào?",
+      "options": {
+        "A": "Tự động gửi email báo cáo tiến độ cho lập trình viên hàng ngày.",
+        "B": "Dùng con người làm máy chủ tính toán các token khó của mô hình.",
+        "C": "Để con người giám sát nhiệt độ hoạt động của các thiết bị phần cứng.",
+        "D": "Yêu cầu sự phê duyệt từ con người trước khi thực hiện hành động nhạy cảm."
+      },
+      "answer": "D",
+      "explanation": "Human-in-the-loop đảm bảo các hành động có rủi ro cao (như chuyển tiền, xóa cơ sở dữ liệu) bắt buộc phải có xác nhận thủ công từ người dùng."
+    },
+    {
+      "id": 9,
+      "question": "Trong giám sát Agent, Agent Trace Logs (Nhật ký Trace) cung cấp thông tin gì cho nhà phát triển?",
+      "options": {
+        "A": "Lịch sử nạp tiền và hạn mức chi tiêu API của tài khoản.",
+        "B": "Mã nguồn Python chi tiết của các thư viện bên thứ ba.",
+        "C": "Chuỗi các bước lập luận, gọi công cụ và kết quả chi tiết trong vòng lặp.",
+        "D": "Thông số phần cứng chi tiết của máy chủ chạy mô hình ngôn ngữ."
+      },
+      "answer": "C",
+      "explanation": "Trace logs ghi lại chi tiết từng bước Thought, Action, và Observation giúp nhà phát triển theo dõi và gỡ lỗi hành vi của Agent khi xử lý một nhiệm vụ."
+    },
+    {
+      "id": 10,
+      "question": "Nguyên nhân phổ biến nhất dẫn đến hiện tượng vòng lặp vô hạn (Infinite Loop) của Agent trong ReAct là gì?",
+      "options": {
+        "A": "Do tốc độ mạng Internet quá chậm không thể tải được kết quả công cụ.",
+        "B": "Do mô hình bị hết dung lượng bộ nhớ đệm KV Cache trong quá trình suy luận.",
+        "C": "Do người dùng tắt cửa sổ trình duyệt khi Agent đang thực hiện nhiệm vụ.",
+        "D": "Do Agent liên tục nhận được kết quả lỗi giống nhau từ một Tool mà không có hướng xử lý."
+      },
+      "answer": "D",
+      "explanation": "Nếu gọi Tool bị lỗi mà Agent không biết cách tự sửa prompt hay chuyển hướng hành động, nó sẽ tiếp tục gọi lại Tool đó với tham số tương tự, tạo ra vòng lặp vô hạn."
+    }
+  ]
+}

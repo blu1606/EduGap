@@ -1,0 +1,130 @@
+{
+  "id": "week1-day2",
+  "parent_id": "week1",
+  "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+  "title": "Day 2: Xác Định Bài Toán Cho AI",
+  "description": "10 câu trắc nghiệm lý thuyết trọng tâm về bài toán Build vs Buy, chiến lược dữ liệu, grounding và hệ thống đánh giá metrics.",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Trong chiến lược phát triển ứng dụng AI, ưu điểm chính của phương án sử dụng Commercial API (như OpenAI) so với tự host open-source model là gì?",
+      "options": {
+        "A": "Khả năng bảo mật và kiểm soát dữ liệu tuyệt đối.",
+        "B": "Thời gian triển khai nhanh và không tốn chi phí hạ tầng.",
+        "C": "Tự do chỉnh sửa mã nguồn của mô hình ngôn ngữ.",
+        "D": "Chi phí vận hành cố định không phụ thuộc lưu lượng."
+      },
+      "answer": "B",
+      "explanation": "Sử dụng Commercial API giúp doanh nghiệp tích hợp ngay lập tức các mô hình mạnh mẽ mà không cần đầu tư mua hoặc thuê phần cứng GPU đắt đỏ."
+    },
+    {
+      "id": 2,
+      "question": "Khi so sánh mô hình Open-source (mã nguồn mở) và Commercial API, nhận định nào sau đây là chính xác?",
+      "options": {
+        "A": "Mô hình Open-source không thể được fine-tune bởi doanh nghiệp.",
+        "B": "Mô hình Commercial API luôn rẻ hơn trong mọi kịch bản sử dụng.",
+        "C": "Mô hình Open-source cho phép kiểm soát dữ liệu lưu trữ nội bộ.",
+        "D": "Mô hình Commercial API không giới hạn số lượng request gọi."
+      },
+      "answer": "C",
+      "explanation": "Doanh nghiệp có thể cài đặt mô hình Open-source trực tiếp trên hạ tầng riêng của mình, đảm bảo dữ liệu không bao giờ bị gửi ra bên ngoài."
+    },
+    {
+      "id": 3,
+      "question": "Trong bước xử lý dữ liệu (Data Cleaning), hoạt động Deduplication nhằm giải quyết vấn đề gì?",
+      "options": {
+        "A": "Loại bỏ các văn bản trùng lặp hoặc gần trùng lặp.",
+        "B": "Sửa các lỗi chính tả và định dạng văn bản bị lỗi.",
+        "C": "Mã hóa các thông tin nhạy cảm của người dùng cuối.",
+        "D": "Dịch toàn bộ văn bản nguồn sang ngôn ngữ tiếng Anh."
+      },
+      "answer": "A",
+      "explanation": "Deduplication (loại bỏ trùng lặp) giúp làm sạch tập huấn luyện/ngữ cảnh, ngăn mô hình bị thiên lệch hoặc lãng phí tài nguyên xử lý dữ liệu thừa."
+    },
+    {
+      "id": 4,
+      "question": "Mục đích quan trọng nhất của việc loại bỏ hoặc ẩn danh dữ liệu PII (Personally Identifiable Information) trước khi đưa vào LLM là gì?",
+      "options": {
+        "A": "Tăng tốc độ xử lý mã hóa của mô hình ngôn ngữ.",
+        "B": "Giảm số lượng token tiêu thụ của mỗi câu truy vấn.",
+        "C": "Đảm bảo mô hình không sinh ra câu trả lời sai lệch.",
+        "D": "Bảo vệ thông tin cá nhân và tuân thủ pháp luật."
+      },
+      "answer": "D",
+      "explanation": "Ẩn danh PII (như email, số điện thoại, số định danh) ngăn chặn rò rỉ dữ liệu nhạy cảm ra ngoài biên hệ thống hoặc vào dữ liệu huấn luyện."
+    },
+    {
+      "id": 5,
+      "question": "Khái niệm Grounding trong xây dựng hệ thống LLM được hiểu là gì?",
+      "options": {
+        "A": "Việc giới hạn thời gian chạy tối đa của mô hình ngôn ngữ.",
+        "B": "Việc liên kết câu trả lời của mô hình với tri thức thực tế đáng tin cậy.",
+        "C": "Việc huấn luyện mô hình từ đầu bằng các siêu máy tính.",
+        "D": "Việc ép kiểu dữ liệu đầu ra của mô hình thành dạng JSON."
+      },
+      "answer": "B",
+      "explanation": "Grounding là kỹ thuật cung cấp thông tin thực tế xác thực (thông qua tài liệu, cơ sở dữ liệu) làm cơ sở để LLM sinh câu trả lời chính xác, giảm ảo giác."
+    },
+    {
+      "id": 6,
+      "question": "Golden Dataset trong quy trình đánh giá hệ thống AI được định nghĩa là gì?",
+      "options": {
+        "A": "Tập dữ liệu chuẩn hóa chất lượng cao đã được con người kiểm định.",
+        "B": "Tập dữ liệu thô lớn nhất được thu thập tự động từ Internet.",
+        "C": "Tập dữ liệu chứa các câu trả lời sai của mô hình ngôn ngữ.",
+        "D": "Tập dữ liệu được sinh ra hoàn toàn bởi các API trả phí."
+      },
+      "answer": "A",
+      "explanation": "Golden Dataset là bộ dữ liệu mẫu gồm các đầu vào tiêu chuẩn và các đáp án đúng chuẩn xác do chuyên gia biên soạn để làm thước đo đánh giá mô hình."
+    },
+    {
+      "id": 7,
+      "question": "Chỉ số Precision (Độ chính xác) trong đánh giá phân loại của mô hình AI đo lường điều gì?",
+      "options": {
+        "A": "Tỷ lệ dự đoán đúng trong số tất cả các dự đoán dương tính.",
+        "B": "Tỷ lệ dự đoán đúng trong số các trường hợp thực tế dương tính.",
+        "C": "Thời gian trung bình để mô hình đưa ra một câu trả lời.",
+        "D": "Số lượng token trung bình được tạo ra trong mỗi giây."
+      },
+      "answer": "A",
+      "explanation": "Precision đo lường mức độ tin cậy của các kết quả được phân loại là dương tính (True Positives / (True Positives + False Positives))."
+    },
+    {
+      "id": 8,
+      "question": "Chỉ số F1-Score là đại diện cho phép tính toán nào giữa hai chỉ số Precision và Recall?",
+      "options": {
+        "A": "Trung bình cộng đơn giản của Precision và Recall.",
+        "B": "Trung bình điều hòa (Harmonic Mean) của Precision và Recall.",
+        "C": "Phép nhân tích lũy giữa hai giá trị Precision và Recall.",
+        "D": "Hiệu số tuyệt đối giữa hai giá trị Precision và Recall."
+      },
+      "answer": "B",
+      "explanation": "F1-Score là trung bình điều hòa của Precision và Recall, giúp đánh giá cân bằng khi tập dữ liệu bị mất cân đối lớp."
+    },
+    {
+      "id": 9,
+      "question": "Mục tiêu đánh giá chính của bộ tiêu chuẩn kiểm định MMLU (Massive Multitask Language Understanding) là gì?",
+      "options": {
+        "A": "Đo lường khả năng lập luận toán học nhiều bước phức tạp.",
+        "B": "Đo lường tốc độ tạo token trên mỗi giây của card đồ họa.",
+        "C": "Đo lường độ an toàn của mô hình trước tấn công tiêm nhiễm.",
+        "D": "Đo lường tri thức đa ngành và khả năng hiểu ngôn ngữ chung."
+      },
+      "answer": "D",
+      "explanation": "MMLU đánh giá khả năng hiểu ngôn ngữ của mô hình qua hàng loạt câu hỏi trắc nghiệm thuộc nhiều lĩnh vực khoa học, nhân văn và xã hội."
+    },
+    {
+      "id": 10,
+      "question": "Kỹ thuật đánh giá 'LLM-as-a-judge' hoạt động theo phương thức nào?",
+      "options": {
+        "A": "Dùng con người chấm điểm thủ công từng câu trả lời của mô hình.",
+        "B": "Dùng các biểu thức chính quy để so khớp từ khóa chính xác.",
+        "C": "Dùng một mô hình LLM mạnh để đánh giá câu trả lời của mô hình khác.",
+        "D": "Dùng thuật toán tính khoảng cách Euclidean giữa hai câu văn."
+      },
+      "answer": "C",
+      "explanation": "LLM-as-a-judge sử dụng một mô hình ngôn ngữ lớn mạnh (như GPT-4) đóng vai trò làm giám khảo, chấm điểm câu trả lời dựa trên bộ tiêu chí hướng dẫn."
+    }
+  ]
+}

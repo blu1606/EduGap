@@ -1,0 +1,130 @@
+{
+  "id": "week1-day1",
+  "parent_id": "week1",
+  "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+  "title": "Day 1: AI & LLM Foundation",
+  "description": "10 câu trắc nghiệm lý thuyết trọng tâm về Transformer, Tokenization, Embeddings và các tham số suy luận.",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Cơ chế cốt lõi nào trong kiến trúc Transformer giúp xử lý song song toàn bộ văn bản thay vì tuần tự như RNN?",
+      "options": {
+        "A": "Cơ chế Layer Normalization chuẩn hóa gradient.",
+        "B": "Cơ chế Feed Forward Network tính toán phi tuyến.",
+        "C": "Cơ chế Self-Attention tính toán liên kết từ.",
+        "D": "Cơ chế Residual Connection truyền tín hiệu tắt."
+      },
+      "answer": "C",
+      "explanation": "Cơ chế Self-Attention cho phép mô hình tính toán mối quan hệ giữa tất cả các từ trong chuỗi đồng thời, loại bỏ tính tuần tự của RNN."
+    },
+    {
+      "id": 2,
+      "question": "Trong cơ chế Scaled Dot-Product Attention, ba ma trận vectơ nào được tính toán trực tiếp từ các token đầu vào?",
+      "options": {
+        "A": "Query, Key và Value vectors.",
+        "B": "Input, Hidden và Output vectors.",
+        "C": "Encoder, Decoder và Latent vectors.",
+        "D": "Weights, Biases và Activation vectors."
+      },
+      "answer": "A",
+      "explanation": "Query (Q), Key (K) và Value (V) là ba vectơ được tạo ra từ phép nhân ma trận trọng số với vector đại diện của mỗi token."
+    },
+    {
+      "id": 3,
+      "question": "Mục đích chính của việc chia tích vô hướng Q.K^T cho căn bậc hai số chiều d_k trong Self-Attention là gì?",
+      "options": {
+        "A": "Để giảm thiểu số lượng tham số huấn luyện.",
+        "B": "Để tránh bão hòa hàm softmax gây triệt tiêu gradient.",
+        "C": "Để tăng tốc độ nhân ma trận trên thiết bị GPU.",
+        "D": "Để chuẩn hóa giá trị đầu ra về phân phối chuẩn."
+      },
+      "answer": "B",
+      "explanation": "Khi số chiều d_k lớn, tích vô hướng Q.K^T có thể rất lớn làm hàm softmax bão hòa (gradient gần bằng 0). Phép chia giúp làm giảm biên độ."
+    },
+    {
+      "id": 4,
+      "question": "Cơ chế Multi-Head Attention trong Transformer được thiết kế nhằm mục đích chính nào?",
+      "options": {
+        "A": "Tăng gấp đôi dung lượng cửa sổ ngữ cảnh đầu vào.",
+        "B": "Cho phép chạy mô hình trên nhiều GPU song song.",
+        "C": "Giảm thiểu thời gian tính toán tại các lớp mạng.",
+        "D": "Cho phép chú ý đồng thời vào nhiều vị trí khác nhau."
+      },
+      "answer": "D",
+      "explanation": "Multi-Head Attention chia nhỏ không gian biểu diễn để mô hình có thể đồng thời chú ý vào các khía cạnh ngữ cảnh và mối quan hệ ngữ pháp khác nhau."
+    },
+    {
+      "id": 5,
+      "question": "Trong khối Transformer, chức năng chính của lớp Layer Normalization là gì?",
+      "options": {
+        "A": "Ổn định quá trình huấn luyện và tối ưu hóa gradient.",
+        "B": "Thay thế hoàn toàn cho các hàm kích hoạt phi tuyến.",
+        "C": "Chuyển đổi các từ đầu vào thành các vectơ embedding.",
+        "D": "Tính toán trọng số liên kết giữa các token xa nhau."
+      },
+      "answer": "A",
+      "explanation": "Layer Normalization chuẩn hóa đầu ra của mỗi lớp con, giúp phân phối đặc trưng ổn định hơn, từ đó tăng tốc độ hội tụ và giảm thiểu biến động gradient."
+    },
+    {
+      "id": 6,
+      "question": "Thuật toán tokenization phổ biến nào dựa trên nguyên lý ghép các cặp ký tự xuất hiện nhiều nhất để tạo từ vựng?",
+      "options": {
+        "A": "Thuật toán WordPiece Tokenizer.",
+        "B": "Thuật toán Byte Pair Encoding (BPE).",
+        "C": "Thuật toán SentencePiece Tokenizer.",
+        "D": "Thuật toán Regex-based Tokenizer."
+      },
+      "answer": "B",
+      "explanation": "BPE bắt đầu bằng cách tách các ký tự đơn lẻ, sau đó lặp đi lặp lại việc ghép cặp ký tự hoặc chuỗi ký tự xuất hiện thường xuyên nhất."
+    },
+    {
+      "id": 7,
+      "question": "Trong kỹ thuật Embeddings, giá trị của một từ ngữ được biểu diễn dưới dạng cấu trúc dữ liệu nào?",
+      "options": {
+        "A": "Một chuỗi văn bản (String) đã được chuẩn hóa.",
+        "B": "Một vectơ số thực nhiều chiều (Dense Vector).",
+        "C": "Một ma trận thưa chứa các giá trị nhị phân 0 và 1.",
+        "D": "Một cây quyết định lưu trữ thứ tự từ ngữ."
+      },
+      "answer": "B",
+      "explanation": "Embedding ánh xạ các token vào một không gian vectơ số thực liên tục nhiều chiều, phản ánh mối quan hệ ngữ nghĩa giữa các từ."
+    },
+    {
+      "id": 8,
+      "question": "Kỹ thuật KV Cache được sử dụng trong quá trình Inference (suy luận) nhằm mục đích chính nào?",
+      "options": {
+        "A": "Tăng kích thước cửa sổ ngữ cảnh lên nhiều lần.",
+        "B": "Giảm dung lượng bộ nhớ RAM cần thiết khi chạy.",
+        "C": "Tự động tinh chỉnh trọng số của mô hình ngôn ngữ.",
+        "D": "Tránh tính toán lại Key và Value của các token cũ."
+      },
+      "answer": "D",
+      "explanation": "KV Cache lưu trữ các vectơ Key và Value của các token đã xử lý để không phải tính toán lại chúng tại mỗi bước sinh token mới."
+    },
+    {
+      "id": 9,
+      "question": "Khi muốn mô hình ngôn ngữ sinh ra câu trả lời có tính sáng tạo cao, ta nên điều chỉnh tham số Temperature như thế nào?",
+      "options": {
+        "A": "Giảm Temperature về gần giá trị 0.",
+        "B": "Giữ nguyên Temperature cố định ở mức 0.5.",
+        "C": "Tăng Temperature lên mức cao hơn (ví dụ 0.8-1.0).",
+        "D": "Thiết lập Temperature về giá trị âm."
+      },
+      "answer": "C",
+      "explanation": "Temperature cao làm mượt phân phối xác suất logits, giúp các token có xác suất thấp hơn có nhiều cơ hội được chọn, tăng tính sáng tạo."
+    },
+    {
+      "id": 10,
+      "question": "Phương pháp lấy mẫu Top-p (Nucleus Sampling) hoạt động dựa trên nguyên lý cốt lõi nào?",
+      "options": {
+        "A": "Chỉ chọn ngẫu nhiên trong số p token đứng đầu.",
+        "B": "Loại bỏ hoàn toàn các token có xác suất dưới p.",
+        "C": "Chỉ lấy mẫu từ nhóm token có tổng xác suất đạt p.",
+        "D": "Giới hạn độ dài tối đa của chuỗi sinh ra là p."
+      },
+      "answer": "C",
+      "explanation": "Top-p chọn tập hợp nhỏ nhất các token có tổng xác suất tích lũy vượt quá ngưỡng p, từ đó phân phối lấy mẫu thay đổi động theo ngữ cảnh."
+    }
+  ]
+}

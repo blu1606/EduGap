@@ -97,6 +97,62 @@
       "difficulty": "khó"
     },
     {
+      "id": "week1-day1",
+      "parent_id": "week1",
+      "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+      "title": "Ôn tập Day 1: AI & LLM Foundation",
+      "description": "10 câu trắc nghiệm lý thuyết trọng tâm về Transformer, Tokenization, Embeddings và các tham số suy luận.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "week1-day2",
+      "parent_id": "week1",
+      "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+      "title": "Ôn tập Day 2: Xác Định Bài Toán Cho AI",
+      "description": "10 câu trắc nghiệm lý thuyết trọng tâm về bài toán Build vs Buy, chiến lược dữ liệu, grounding và hệ thống đánh giá metrics.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "week1-day3",
+      "parent_id": "week1",
+      "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+      "title": "Ôn tập Day 3: Design Pattern ReAct",
+      "description": "10 câu trắc nghiệm lý thuyết trọng tâm về vòng lặp ReAct, Function Schema, an ninh Agent (Guardrails) và trace debugging.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "week1-day4",
+      "parent_id": "week1",
+      "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+      "title": "Ôn tập Day 4: Prompt Engineering & Tool Calling",
+      "description": "10 câu trắc nghiệm lý thuyết trọng tâm về Prompt Engineering, quản lý Context, Token Budget, JIT context và vệ sinh kết quả Tool.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "week1-day5",
+      "parent_id": "week1",
+      "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+      "title": "Ôn tập Day 5: Thiết Kế Sản Phẩm AI Cho Sự Không Chắc Chắn",
+      "description": "10 câu trắc nghiệm lý thuyết trọng tâm về thiết kế sản phẩm AI, Augmentation vs Automation, giao diện bất định (Uncertainty UI) và tối ưu hóa ROI.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "week1-day6",
+      "parent_id": "week1",
+      "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+      "title": "Ôn tập Day 6: Hackathon Day & Prototyping",
+      "description": "10 câu trắc nghiệm lý thuyết trọng tâm về lộ trình xây dựng sản phẩm mẫu (Prototype), tài liệu đặc tả (SPEC) và kỹ năng Demo Pitch.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "week1-day7",
+      "parent_id": "week1",
+      "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+      "title": "Ôn tập Day 7: Embedding & Vector Store",
+      "description": "10 câu trắc nghiệm lý thuyết trọng tâm về Embeddings, độ đo tương đồng, Vector Indexing (HNSW, IVF) và đánh giá chất lượng Retrieval.",
+      "difficulty": "dễ"
+    },
+    {
       "id": "prompt-context-foundations",
       "parent_id": "day4",
       "topic_title": "Day 4: Prompt Engineering & Tool Calling",

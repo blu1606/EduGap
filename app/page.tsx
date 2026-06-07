@@ -97,7 +97,8 @@ const TOPICS = [
   { id: 'day4', title: 'Day 4: Prompt Engineering & Tool Calling' },
   { id: 'day5', title: 'Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn' },
   { id: 'day6', title: 'Day 6: Hackathon Day' },
-  { id: 'day7', title: 'Day 7: Data Foundations - Embedding & Vector Store' }
+  { id: 'day7', title: 'Day 7: Data Foundations - Embedding & Vector Store' },
+  { id: 'week1', title: 'Week 1: Ôn Tập Tổng Hợp' }
 ];
 
 export default function QuizApp() {

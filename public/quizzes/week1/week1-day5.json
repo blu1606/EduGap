@@ -1,0 +1,130 @@
+{
+  "id": "week1-day5",
+  "parent_id": "week1",
+  "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+  "title": "Day 5: Thiết Kế Sản Phẩm AI Cho Sự Không Chắc Chắn",
+  "description": "10 câu trắc nghiệm lý thuyết trọng tâm về thiết kế sản phẩm AI, Augmentation vs Automation, giao diện bất định (Uncertainty UI) và tối ưu hóa ROI.",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Tính chất toán học cốt lõi nào của mô hình ngôn ngữ lớn (LLM) khiến kết quả đầu ra luôn mang tính bất định (Non-deterministic)?",
+      "options": {
+        "A": "Mô hình hoạt động dựa trên xác suất dự đoán token tiếp theo.",
+        "B": "Mô hình bị giới hạn bộ nhớ đệm KV Cache trong quá trình suy luận.",
+        "C": "Mô hình sử dụng các phép toán nhân ma trận phi tuyến phức tạp.",
+        "D": "Mô hình liên tục được cập nhật trọng số mới qua internet."
+      },
+      "answer": "A",
+      "explanation": "LLM sinh văn bản bằng cách tính phân phối xác suất cho token tiếp theo, kết hợp các tham số lấy mẫu như Temperature, khiến kết quả không cố định 100%."
+    },
+    {
+      "id": 2,
+      "question": "Sự khác biệt lớn nhất giữa chiến lược Augmentation (Hỗ trợ con người) và Automation (Tự động hóa hoàn toàn) trong sản phẩm AI là gì?",
+      "options": {
+        "A": "Augmentation chỉ dùng được các mô hình ngôn ngữ lớn mã nguồn mở.",
+        "B": "Automation yêu cầu kích thước cửa sổ ngữ cảnh lớn gấp nhiều lần.",
+        "C": "Augmentation giữ con người làm trung tâm quyết định; Automation để AI tự chạy.",
+        "D": "Automation luôn có chi phí vận hành token rẻ hơn Augmentation."
+      },
+      "answer": "C",
+      "explanation": "Augmentation (tăng cường) dùng AI làm trợ lý soạn thảo, gợi ý để con người duyệt, trong khi Automation (tự động hóa) giao toàn quyền thực thi cho AI từ đầu đến cuối."
+    },
+    {
+      "id": 3,
+      "question": "Khái niệm 'Confidence UI' trong thiết kế giao diện sản phẩm AI được hiểu là gì?",
+      "options": {
+        "A": "Giao diện hiển thị tốc độ tạo token trên mỗi giây của hệ thống.",
+        "B": "Giao diện hiển thị độ tin cậy hoặc xác suất chính xác của câu trả lời.",
+        "C": "Giao diện cho phép người dùng tự chỉnh sửa mã nguồn của Agent.",
+        "D": "Giao diện tự động ẩn đi các nút bấm khi mô hình bị lỗi hệ thống."
+      },
+      "answer": "B",
+      "explanation": "Confidence UI giúp người dùng nhận biết mức độ chắc chắn của AI (ví dụ: bôi màu các đoạn trích dẫn không chắc chắn) để nâng cao tính minh bạch và lòng tin."
+    },
+    {
+      "id": 4,
+      "question": "Thiết kế giao diện dạng 'Editable Plan' (Cho phép chỉnh sửa kế hoạch) giải quyết điểm yếu nào của Agent?",
+      "options": {
+        "A": "Tối ưu hóa tốc độ truyền dữ liệu qua cổng kết nối PCIe.",
+        "B": "Bảo vệ Agent khỏi các cuộc tấn công Prompt Injection trực tiếp.",
+        "C": "Giảm dung lượng RAM cần thiết để lưu trữ dữ liệu grounding.",
+        "D": "Cho phép con người can thiệp điều chỉnh các bước sai lệch trước khi thực thi."
+      },
+      "answer": "D",
+      "explanation": "Agent tự lên kế hoạch có thể bị sai. Editable Plan hiển thị danh sách các bước dự kiến và cho phép người dùng sửa, xóa, hoặc thêm bước trước khi bấm chạy thực tế."
+    },
+    {
+      "id": 5,
+      "question": "Tại sao việc 'Showing Work' (Hiển thị quá trình xử lý) lại là một mẫu thiết kế UX quan trọng đối với các Agent chạy ngầm lâu?",
+      "options": {
+        "A": "Tăng tính minh bạch, giảm lo lắng cho người dùng khi phải chờ đợi lâu.",
+        "B": "Giúp tiết kiệm tối đa lượng token đầu vào khi gọi API hệ thống.",
+        "C": "Tự động sửa các lỗi cú pháp JSON của mô hình ngôn ngữ lớn.",
+        "D": "Giúp loại bỏ hoàn toàn các lỗi tràn bộ nhớ đệm KV Cache."
+      },
+      "answer": "A",
+      "explanation": "Khi Agent thực hiện các chuỗi tác vụ dài (ví dụ: nghiên cứu thị trường trong 5 phút), việc hiển thị tiến trình đang chạy (đang tìm từ khóa, đang đọc trang A) giúp user an tâm chờ đợi."
+    },
+    {
+      "id": 6,
+      "question": "Khi thiết kế Agent duyệt hồ sơ vay vốn tự động, việc ưu tiên Precision (Độ chính xác) cao hơn Recall đồng nghĩa với điều gì?",
+      "options": {
+        "A": "Chấp nhận bỏ sót khách hàng tốt để đảm bảo không duyệt nhầm khách hàng xấu.",
+        "B": "Chấp nhận duyệt nhầm khách hàng xấu để đảm bảo không bỏ sót khách hàng tốt.",
+        "C": "Duyệt tất cả các hồ sơ gửi lên mà không cần kiểm tra điều kiện.",
+        "D": "Dừng chạy hệ thống và yêu cầu con người duyệt thủ công 100% hồ sơ."
+      },
+      "answer": "B",
+      "explanation": "Precision cao nghĩa là khi AI nói 'đạt' thì hồ sơ đó cực kỳ chắc chắn đạt. Tuy nhiên, điều này có thể bỏ sót nhiều hồ sơ tốt khác (Recall thấp) do mô hình quá khắt khe."
+    },
+    {
+      "id": 7,
+      "question": "Thư viện Failure Mode Library (Thư viện các lỗi thường gặp) trong quản lý sản phẩm AI dùng để làm gì?",
+      "options": {
+        "A": "Lưu trữ toàn bộ mã nguồn của các mô hình ngôn ngữ lớn mã nguồn mở.",
+        "B": "Thống kê danh sách các GPU bị lỗi phần cứng trong quá trình chạy mô hình.",
+        "C": "Tổng hợp và phân loại các tình huống AI trả lời sai để lên phương án khắc phục.",
+        "D": "Bảo vệ hệ thống khỏi các cuộc tấn công từ chối dịch vụ DDoS."
+      },
+      "answer": "C",
+      "explanation": "Failure Mode Library ghi nhận các ca lỗi thực tế của LLM (ảo giác, sai định dạng, dịch sai) giúp đội ngũ phát triển xây dựng bộ lọc và test case cải tiến sản phẩm."
+    },
+    {
+      "id": 8,
+      "question": "Để xử lý hiện tượng 'Adversarial Feedback Loop' (người dùng cố tình gửi phản hồi sai lệch phá hoại bánh đà dữ liệu), hệ thống cần cơ chế nào?",
+      "options": {
+        "A": "Lọc và xác thực dữ liệu phản hồi thông qua kiểm duyệt tự động hoặc chuyên gia chấm điểm.",
+        "B": "Tự động lưu trữ toàn bộ phản hồi của tất cả người dùng vào Vector DB.",
+        "C": "Tăng tham số Temperature của mô hình lên mức tối đa khi nhận feedback.",
+        "D": "Cấm không cho phép người dùng gửi bất kỳ phản hồi nào về câu trả lời."
+      },
+      "answer": "A",
+      "explanation": "Không nên chèn trực tiếp feedback của người dùng vào tập huấn luyện hoặc RAG mà cần qua khâu thẩm định (moderation) để loại bỏ các dữ liệu phá hoại (sabotage)."
+    },
+    {
+      "id": 9,
+      "question": "Khi tính toán hiệu quả đầu tư (ROI) cho dự án ứng dụng AI doanh nghiệp, chỉ số chi phí (Cost) bắt buộc phải bao gồm yếu tố nào?",
+      "options": {
+        "A": "Chi phí mua sắm các thiết bị văn phòng cho nhân viên hỗ trợ.",
+        "B": "Chi phí đăng ký nhãn hiệu sản phẩm AI trên thị trường.",
+        "C": "Chi phí tuyển dụng các giám đốc điều hành dự án công nghệ thông tin.",
+        "D": "Chi phí token API, hạ tầng host GPU và chi phí kiểm định chất lượng."
+      },
+      "answer": "D",
+      "explanation": "ROI của dự án AI cần tính toán toàn diện: chi phí vận hành token gọi API (hoặc thuê GPU host mô hình) cùng với chi phí nhân sự tham gia dán nhãn, giám sát chất lượng."
+    },
+    {
+      "id": 10,
+      "question": "Bản chất cốt lõi của công cụ 'AI Product Canvas' dùng trong quản trị sản phẩm AI là gì?",
+      "options": {
+        "A": "Một khung vẽ sơ đồ kiến trúc các lớp mạng nơ-ron Transformer.",
+        "B": "Khung tài liệu định hình mối quan hệ giữa bài toán kinh doanh, năng lực AI và UX.",
+        "C": "Một bảng thống kê chi tiết số lượng token tiêu thụ của các mô hình.",
+        "D": "Mã nguồn cấu hình các tham số giải mã đầu ra của mô hình ngôn ngữ."
+      },
+      "answer": "B",
+      "explanation": "AI Product Canvas giúp điều phối các bên liên quan (Product, Engineering, Business) thống nhất về bài toán cần giải, giới hạn mô hình, chiến lược dữ liệu và trải nghiệm người dùng."
+    }
+  ]
+}
