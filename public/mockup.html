@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduGap AI Thực Chiến - Dashboard Ôn Luyện & Bản Đồ Năng Lực</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fdfbf7; /* Nền sáng ấm */
+      color: #1e293b; /* Chữ tối Slate */
+    }
+    h1, h2, h3, h4, .font-display {
+      font-family: 'Outfit', sans-serif;
+      color: #0f172a;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f8f6f0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #e2dcd0;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #cbd5e1;
+    }
+    /* Soft shadows */
+    .soft-shadow {
+      box-shadow: 0 4px 20px -2px rgba(139, 92, 26, 0.05), 0 2px 8px -1px rgba(139, 92, 26, 0.03);
+    }
+    .soft-shadow-lg {
+      box-shadow: 0 10px 25px -3px rgba(139, 92, 26, 0.08), 0 4px 12px -2px rgba(139, 92, 26, 0.04);
+    }
+    /* Focus Ring Styles */
+    .focus-visible-ring:focus-visible {
+      outline: 2px solid #d97706;
+      outline-offset: 2px;
+    }
+  </style>
+  <script>
+    // Tailwind Config complying with brand styles and Purple Ban
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bgBase: '#fdfbf7',     /* Nền sáng ấm chính */
+            bgSurface: '#ffffff',  /* Nền Card trắng */
+            bgSurfaceCream: '#fbf9f2', /* Nền Card phụ ấm */
+            borderAmberLight: '#f6f1e5', /* Viền ấm nhẹ */
+            brandAmber: '#d97706', /* Amber chính */
+            brandAmberLight: '#fef3c7',
+            brandAqua: '#0d9488',  /* Aqua/Teal accent cho AI/Progress */
+            brandAquaLight: '#ccfb51',
+            brandSuccess: '#059669',
+            brandError: '#dc2626',
+            textPrimary: '#1e293b',
+            textMuted: '#64748b',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen overflow-x-hidden flex flex-col">
+
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="sticky top-0 z-40 w-full border-b border-borderAmberLight bg-bgBase/95 backdrop-blur-md px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center space-x-6">
+      <!-- Logo -->
+      <div class="flex items-center space-x-3">
+        <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-brandAmber to-amber-500 flex items-center justify-center shadow-md shadow-brandAmber/10">
+          <i data-lucide="brain" class="h-5.5 w-5.5 text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-slate-900 flex items-center">
+            EduGap <span class="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-brandAmber/10 border border-brandAmber/20 text-brandAmber">AI THỰC CHIẾN</span>
+          </h1>
+          <p class="text-[9px] text-textMuted uppercase tracking-widest font-semibold">Lớp Học Thực Chiến</p>
+        </div>
+      </div>
+
+      <!-- VIEW TOGGLE TABS (Practice vs Competency Report) -->
+      <nav class="hidden md:flex items-center space-x-1 bg-bgSurfaceCream p-1 rounded-xl border border-borderAmberLight" aria-label="Menu chính">
+        <button id="nav-btn-practice" onclick="switchMainView('practice')" class="focus-visible-ring px-4 py-1.5 rounded-lg text-xs font-bold bg-brandAmber text-white transition cursor-pointer flex items-center">
+          <i data-lucide="compass" class="h-3.5 w-3.5 mr-1.5"></i> Lộ trình học
+        </button>
+        <button id="nav-btn-metrics" onclick="switchMainView('metrics')" class="focus-visible-ring px-4 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer flex items-center">
+          <i data-lucide="layout-dashboard" class="h-3.5 w-3.5 mr-1.5"></i> Dashboard & Năng lực
+        </button>
+      </nav>
+    </div>
+
+    <!-- RIGHT: USER PROFILE & STREAK -->
+    <div class="flex items-center space-x-3">
+      <!-- STREAK WIDGET -->
+      <div class="relative">
+        <button id="streak-trigger" aria-label="Xem chi tiết lịch học" class="focus-visible-ring flex items-center space-x-2 bg-brandAmber/5 border border-brandAmber/20 hover:bg-brandAmber/10 px-3 py-1.5 rounded-xl transition duration-150 cursor-pointer group">
+          <i data-lucide="flame" class="h-4.5 w-4.5 text-brandAmber fill-brandAmber transition duration-150"></i>
+          <span class="text-xs font-bold text-brandAmber font-display">5 Ngày Streak</span>
+        </button>
+
+        <!-- STREAK 30-DAY HEATMAP POPOVER -->
+        <div id="streak-popover" class="hidden absolute right-0 mt-3 w-72 p-4 rounded-2xl border border-borderAmberLight bg-bgSurface shadow-xl z-50">
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="text-xs font-bold text-slate-800 flex items-center">
+              <i data-lucide="calendar" class="h-3.5 w-3.5 mr-1.5 text-brandAmber"></i>Hoạt động 30 ngày qua
+            </h4>
+            <span class="text-[10px] bg-brandAqua/10 border border-brandAqua/20 text-brandAqua px-2 py-0.5 rounded-full font-bold">9 ngày làm bài</span>
+          </div>
+          <p class="text-[11px] text-textMuted mb-3">Tích lũy ngày ôn tập liên tiếp để củng cố kiến thức tốt hơn.</p>
+          
+          <!-- Lưới nhiệt đóng góp 30 ngày (GitHub-like) -->
+          <div class="grid grid-cols-7 gap-1 p-2 bg-bgSurfaceCream rounded-xl border border-borderAmberLight justify-center">
+            <!-- Mockup các ngày hoạt động -->
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/50 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold cursor-help" title="Làm 2 bài">5</div>
+            <div class="h-5.5 w-5.5 rounded bg-bgSurface border border-borderAmberLight flex items-center justify-center text-[9px] text-textMuted" title="Không làm bài">6</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/20 border border-brandAqua/10 flex items-center justify-center text-[9px] text-brandAqua font-semibold" title="Làm 1 bài">7</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/40 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold" title="Làm 2 bài">8</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/80 border border-brandAqua/20 flex items-center justify-center text-[9px] text-white font-extrabold" title="Làm 4 bài">9</div>
+            <div class="h-5.5 w-5.5 rounded bg-bgSurface border border-borderAmberLight flex items-center justify-center text-[9px] text-textMuted">10</div>
+            <div class="h-5.5 w-5.5 rounded bg-bgSurface border border-borderAmberLight flex items-center justify-center text-[9px] text-textMuted">11</div>
+            
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/40 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold">12</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/60 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold">13</div>
+            <div class="h-5.5 w-5.5 rounded bg-bgSurface border border-borderAmberLight flex items-center justify-center text-[9px] text-textMuted">14</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/20 border border-brandAqua/10 flex items-center justify-center text-[9px] text-brandAqua font-semibold">15</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/80 border border-brandAqua/20 flex items-center justify-center text-[9px] text-white font-extrabold">16</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/60 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold">17</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/40 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold">18</div>
+            
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/20 border border-brandAqua/10 flex items-center justify-center text-[9px] text-brandAqua font-semibold">19</div>
+            <div class="h-5.5 w-5.5 rounded bg-bgSurface border border-borderAmberLight flex items-center justify-center text-[9px] text-textMuted">20</div>
+            <div class="h-5.5 w-5.5 rounded bg-bgSurface border border-borderAmberLight flex items-center justify-center text-[9px] text-textMuted">21</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/80 border border-brandAqua/20 flex items-center justify-center text-[9px] text-white font-extrabold">22</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/60 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold">23</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/20 border border-brandAqua/10 flex items-center justify-center text-[9px] text-brandAqua font-semibold">24</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/40 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold">25</div>
+            
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/80 border border-brandAqua/20 flex items-center justify-center text-[9px] text-white font-extrabold">26</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/60 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold">27</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/20 border border-brandAqua/10 flex items-center justify-center text-[9px] text-brandAqua font-semibold">28</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/40 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold">29</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/80 border border-brandAqua/20 flex items-center justify-center text-[9px] text-white font-extrabold">30</div>
+            <div class="h-5.5 w-5.5 rounded bg-brandAqua/60 border border-brandAqua/10 flex items-center justify-center text-[9px] text-white font-bold">31</div>
+            <div class="h-5.5 w-5.5 rounded bg-bgSurface border-2 border-brandAmber flex items-center justify-center text-[9px] text-brandAmber font-black" title="Hôm nay">1</div>
+          </div>
+          <div class="flex items-center justify-between mt-2.5 text-[9px] text-textMuted uppercase font-bold tracking-wider">
+            <span>Ít làm</span>
+            <span>Năng nổ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- USER PROFILE -->
+      <div class="flex items-center space-x-2 border-l border-borderAmberLight pl-3">
+        <div class="h-8 w-8 rounded-lg bg-brandAmber/5 border border-brandAmber/20 flex items-center justify-center">
+          <i data-lucide="user" class="h-4.5 w-4.5 text-brandAmber"></i>
+        </div>
+        <div class="hidden sm:block">
+          <p class="text-xs font-bold text-slate-800 leading-tight">Hoàng Hải Đăng</p>
+          <p class="text-[9px] text-textMuted font-mono leading-none">2A202600699</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE HEADER TABS SWITCHER -->
+  <div class="md:hidden flex bg-bgSurfaceCream border-b border-borderAmberLight p-2">
+    <button onclick="switchMainView('practice')" id="mobile-nav-practice" class="flex-1 py-2 text-center text-xs font-bold bg-brandAmber text-white rounded-lg">
+      Lộ trình học
+    </button>
+    <button onclick="switchMainView('metrics')" id="mobile-nav-metrics" class="flex-1 py-2 text-center text-xs font-bold text-slate-600 rounded-lg">
+      Dashboard & Năng lực
+    </button>
+  </div>
+
+  <!-- VIEW 1: PRACTICE DASHBOARD (LỘ TRÌNH LUYỆN TẬP) -->
+  <main id="view-practice" class="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- LEFT COLUMN (20%): COMPACT TIMELINE ROADMAP -->
+    <nav id="left-sidebar-roadmap" class="lg:col-span-3 bg-bgSurface border border-borderAmberLight rounded-2xl p-4 soft-shadow flex flex-col max-h-[680px] overflow-hidden" aria-label="Lộ trình học tập">
+      <div class="mb-3.5 pb-2 border-b border-borderAmberLight">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-textMuted flex items-center">
+          <i data-lucide="compass" class="h-4.5 w-4.5 mr-2 text-brandAmber"></i>Lộ Trình Ôn Luyện
+        </h3>
+      </div>
+
+      <!-- Vertical Roadmap Stepper -->
+      <div class="flex-1 overflow-y-auto space-y-1 py-1 pr-1" id="roadmap-container">
+        <!-- Day 1 Node -->
+        <button onclick="switchDay('day1')" class="focus-visible-ring w-full flex items-start p-2.5 rounded-xl hover:bg-bgSurfaceCream transition duration-150 text-left border border-transparent cursor-pointer group" id="roadmap-day1">
+          <div class="flex flex-col items-center mr-3 relative self-stretch">
+            <div class="h-7 w-7 rounded-full bg-brandAqua/10 border-2 border-brandAqua flex items-center justify-center text-brandAqua transition">
+              <i data-lucide="check" class="h-4 w-4"></i>
+            </div>
+            <div class="w-0.5 bg-brandAqua/30 flex-1 my-1"></div>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-brandAqua">Day 1: Đã Hoàn Thành</p>
+            <h4 class="text-xs font-bold text-slate-800 mt-0.5">AI & LLM Foundation</h4>
+          </div>
+        </button>
+
+        <!-- Day 2 Node -->
+        <button onclick="switchDay('day2')" class="focus-visible-ring w-full flex items-start p-2.5 rounded-xl hover:bg-bgSurfaceCream transition duration-150 text-left border border-transparent cursor-pointer group" id="roadmap-day2">
+          <div class="flex flex-col items-center mr-3 relative self-stretch">
+            <div class="h-7 w-7 rounded-full bg-brandAqua/10 border-2 border-brandAqua flex items-center justify-center text-brandAqua transition">
+              <i data-lucide="check" class="h-4 w-4"></i>
+            </div>
+            <div class="w-0.5 bg-brandAqua/30 flex-1 my-1"></div>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-brandAqua">Day 2: Đã Hoàn Thành</p>
+            <h4 class="text-xs font-bold text-slate-800 mt-0.5">Xác Định Bài Toán Cho AI</h4>
+          </div>
+        </button>
+
+        <!-- Day 3 Node (Active) -->
+        <button onclick="switchDay('day3')" class="focus-visible-ring w-full flex items-start p-2.5 rounded-xl bg-brandAmberLight/20 border border-brandAmber/20 text-left cursor-pointer group" id="roadmap-day3">
+          <div class="flex flex-col items-center mr-3 relative self-stretch">
+            <div class="h-7 w-7 rounded-full bg-bgSurface border-2 border-brandAmber flex items-center justify-center text-brandAmber font-bold text-xs transition shadow-sm">
+              3
+            </div>
+            <div class="w-0.5 bg-slate-200 flex-1 my-1"></div>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-brandAmber uppercase tracking-wider">Day 3: Đang học</p>
+            <h4 class="text-xs font-bold text-slate-900 mt-0.5">Design Pattern ReAct</h4>
+          </div>
+        </button>
+
+        <!-- Day 4 Node (Locked) -->
+        <button onclick="switchDay('day4')" class="focus-visible-ring w-full flex items-start p-2.5 rounded-xl hover:bg-bgSurfaceCream transition duration-150 text-left border border-transparent cursor-pointer group" id="roadmap-day4">
+          <div class="flex flex-col items-center mr-3 relative self-stretch">
+            <div class="h-7 w-7 rounded-full bg-slate-100 border-2 border-slate-300 flex items-center justify-center text-textMuted text-xs transition">
+              <i data-lucide="lock" class="h-3.5 w-3.5 text-textMuted"></i>
+            </div>
+            <div class="w-0.5 bg-slate-200 flex-1 my-1"></div>
+          </div>
+          <div>
+            <p class="text-[11px] font-semibold text-textMuted">Day 4: Chưa mở</p>
+            <h4 class="text-xs font-medium text-textMuted mt-0.5">Prompt Engineering</h4>
+          </div>
+        </button>
+
+        <!-- Day 5 Node (Locked) -->
+        <button onclick="switchDay('day5')" class="focus-visible-ring w-full flex items-start p-2.5 rounded-xl hover:bg-bgSurfaceCream transition duration-150 text-left border border-transparent cursor-pointer group" id="roadmap-day5">
+          <div class="flex flex-col items-center mr-3 relative self-stretch">
+            <div class="h-7 w-7 rounded-full bg-slate-100 border-2 border-slate-300 flex items-center justify-center text-textMuted text-xs transition">
+              <i data-lucide="lock" class="h-3.5 w-3.5 text-textMuted"></i>
+            </div>
+            <div class="w-0.5 bg-slate-200 flex-1 my-1"></div>
+          </div>
+          <div>
+            <p class="text-[11px] font-semibold text-textMuted">Day 5: Chưa mở</p>
+            <h4 class="text-xs font-medium text-textMuted mt-0.5">Thiết Kế Sản Phẩm AI</h4>
+          </div>
+        </button>
+
+        <!-- Day 6 Node (Locked) -->
+        <button onclick="switchDay('day6')" class="focus-visible-ring w-full flex items-start p-2.5 rounded-xl hover:bg-bgSurfaceCream transition duration-150 text-left border border-transparent cursor-pointer group" id="roadmap-day6">
+          <div class="flex flex-col items-center mr-3 relative self-stretch">
+            <div class="h-7 w-7 rounded-full bg-slate-100 border-2 border-slate-300 flex items-center justify-center text-textMuted text-xs transition">
+              <i data-lucide="lock" class="h-3.5 w-3.5 text-textMuted"></i>
+            </div>
+            <div class="w-0.5 bg-slate-200 flex-1 my-1"></div>
+          </div>
+          <div>
+            <p class="text-[11px] font-semibold text-textMuted">Day 6: Chưa mở</p>
+            <h4 class="text-xs font-medium text-textMuted mt-0.5">Hackathon Day</h4>
+          </div>
+        </button>
+
+        <!-- Day 7 Node (Locked) -->
+        <button onclick="switchDay('day7')" class="focus-visible-ring w-full flex items-start p-2.5 rounded-xl hover:bg-bgSurfaceCream transition duration-150 text-left border border-transparent cursor-pointer group" id="roadmap-day7">
+          <div class="flex flex-col items-center mr-3 relative self-stretch">
+            <div class="h-7 w-7 rounded-full bg-slate-100 border-2 border-slate-300 flex items-center justify-center text-textMuted text-xs transition">
+              <i data-lucide="lock" class="h-3.5 w-3.5 text-textMuted"></i>
+            </div>
+          </div>
+          <div>
+            <p class="text-[11px] font-semibold text-textMuted">Day 7: Chưa mở</p>
+            <h4 class="text-xs font-medium text-textMuted mt-0.5">Embedding & Vector DB</h4>
+          </div>
+        </button>
+      </div>
+    </nav>
+
+    <!-- CENTER COLUMN (55%): KNOWLEDGE MAP, RADAR CHART, AND PRACTICE CARD LIST -->
+    <section id="center-content-section" class="lg:col-span-6 space-y-6">
+      
+      <!-- CURRENT ACTIVE DAY SUMMARY PANEL -->
+      <div id="day-summary-card" class="bg-bgSurface border border-borderAmberLight rounded-2xl p-5 soft-shadow space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-borderAmberLight">
+          <div>
+            <span class="text-[10px] font-bold text-brandAqua uppercase tracking-widest px-2.5 py-1 rounded-full bg-brandAqua/10 border border-brandAqua/20">Chủ đề chính trong ngày</span>
+            <h2 class="text-xl font-extrabold text-slate-800 mt-2" id="active-day-title">Day 3: Design Pattern ReAct</h2>
+          </div>
+          
+          <!-- Progress indicator -->
+          <div class="flex items-center space-x-2.5 bg-bgSurfaceCream border border-borderAmberLight px-3.5 py-2 rounded-xl">
+            <div class="h-7 w-7 rounded-full border-2 border-brandAqua border-t-transparent animate-spin flex items-center justify-center text-[10px] text-brandAqua font-bold" style="animation-duration: 3s;" id="day-progress-spinner">
+              80%
+            </div>
+            <div>
+              <p class="text-[9px] text-textMuted uppercase font-bold leading-none">Hoàn thành ngày</p>
+              <p class="text-xs font-bold text-slate-800 mt-0.5" id="day-progress-text">12 / 15 câu (80%)</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-600 leading-relaxed" id="active-day-desc">
+          Tìm hiểu vòng lặp tương tác đại lý AI Thought-Action-Observation. Cách định nghĩa Function Schema phục vụ Tool Calling và xây dựng Guardrails ngăn ngừa rò rỉ prompt hay tấn công tiêm nhiễm.
+        </p>
+      </div>
+
+      <!-- KNOWLEDGE & COMPETENCY VISUALIZATION MAP CARD (Bản đồ kiểm soát hành trình kiến thức) -->
+      <div id="competency-visualization-card" class="bg-bgSurface border border-borderAmberLight rounded-2xl p-5 soft-shadow space-y-4">
+        <div class="flex justify-between items-center pb-2 border-b border-borderAmberLight">
+          <h3 class="text-sm font-bold text-slate-800 flex items-center">
+            <i data-lucide="map-pin" class="h-4.5 w-4.5 mr-2 text-brandAmber"></i>Bản đồ kiểm soát hành trình kiến thức
+          </h3>
+          <span class="text-[10px] font-bold text-brandAqua uppercase tracking-widest">Đang cập nhật thực tế</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+          <!-- Radar graph (SVG) - 5 cols -->
+          <div class="md:col-span-5 flex flex-col items-center justify-center">
+            <span class="text-[10px] text-textMuted font-bold uppercase tracking-wider mb-2">Bản Đồ Năng Lực</span>
+            <div class="relative w-40 h-40">
+              <!-- SVG Radar chart with 5 competencies -->
+              <svg viewBox="0 0 100 100" class="w-full h-full">
+                <!-- Outer web rings -->
+                <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(217, 119, 6, 0.08)" stroke-width="0.5"/>
+                <circle cx="50" cy="50" r="30" fill="none" stroke="rgba(217, 119, 6, 0.08)" stroke-width="0.5"/>
+                <circle cx="50" cy="50" r="20" fill="none" stroke="rgba(217, 119, 6, 0.08)" stroke-width="0.5"/>
+                <circle cx="50" cy="50" r="10" fill="none" stroke="rgba(217, 119, 6, 0.08)" stroke-width="0.5"/>
+                
+                <!-- Axis lines -->
+                <line x1="50" y1="10" x2="50" y2="90" stroke="rgba(0, 0, 0, 0.06)" stroke-width="0.5" />
+                <line x1="10" y1="50" x2="90" y2="50" stroke="rgba(0, 0, 0, 0.06)" stroke-width="0.5" />
+                <line x1="22" y1="22" x2="78" y2="78" stroke="rgba(0, 0, 0, 0.06)" stroke-width="0.5" />
+                <line x1="22" y1="78" x2="78" y2="22" stroke="rgba(0, 0, 0, 0.06)" stroke-width="0.5" />
+                
+                <!-- Competency Area Polygon -->
+                <polygon id="radar-polygon" points="50,22 80,41 68,68 32,68 20,41" fill="rgba(13, 148, 136, 0.15)" stroke="#0d9488" stroke-width="1.5"/>
+                
+                <!-- Apex Labels -->
+                <text x="50" y="8" font-size="3" fill="#64748b" text-anchor="middle" font-weight="bold">Transformer</text>
+                <text x="88" y="52" font-size="3" fill="#64748b" text-anchor="start" font-weight="bold">Scoping</text>
+                <text x="65" y="90" font-size="3" fill="#64748b" text-anchor="middle" font-weight="bold">Agent</text>
+                <text x="35" y="90" font-size="3" fill="#64748b" text-anchor="middle" font-weight="bold">Prompt</text>
+                <text x="12" y="52" font-size="3" fill="#64748b" text-anchor="end" font-weight="bold">UX/ROI</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Description and lists - 7 cols -->
+          <div class="md:col-span-7 space-y-3">
+            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Năng lực đang rèn luyện:</h4>
+            
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-700">ReAct Loop Architecture</span>
+                <span class="font-bold text-brandAqua">85% Mastery</span>
+              </div>
+              <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-brandAqua rounded-full" style="width: 85%;"></div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-700">Tool Calling & Function Schema</span>
+                <span class="font-bold text-brandAqua">90% Mastery</span>
+              </div>
+              <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-brandAqua rounded-full" style="width: 90%;"></div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-700">Agent Security (Guardrails)</span>
+                <span class="font-bold text-brandAmber">45% Learning</span>
+              </div>
+              <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-brandAmber rounded-full" style="width: 45%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 30-Day Activity Heatmap Grid rendered directly here -->
+        <div class="border-t border-borderAmberLight/80 pt-4 space-y-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-bold text-slate-800 flex items-center">
+              <i data-lucide="calendar-days" class="h-4 w-4 mr-1.5 text-brandAqua"></i>Nhật ký đóng góp học tập
+            </span>
+            <span class="text-[10px] text-textMuted">Tần suất làm đề 30 ngày qua</span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 bg-bgSurfaceCream rounded-xl border border-borderAmberLight overflow-x-auto">
+            <div class="grid grid-flow-col grid-rows-3 gap-1 pr-4">
+              <!-- 30 heat map cells (dynamic Aqua tones) -->
+              <!-- Row 1 -->
+              <div class="h-4 w-4 rounded bg-brandAqua/60" title="Làm 2 bài"></div>
+              <div class="h-4 w-4 rounded bg-bgSurface border border-borderAmberLight" title="Không làm"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/20" title="Làm 1 bài"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/40" title="Làm 2 bài"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/80" title="Làm 4 bài"></div>
+              <div class="h-4 w-4 rounded bg-bgSurface border border-borderAmberLight"></div>
+              <div class="h-4 w-4 rounded bg-bgSurface border border-borderAmberLight"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/40"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/60"></div>
+              <div class="h-4 w-4 rounded bg-bgSurface border border-borderAmberLight"></div>
+              <!-- Row 2 -->
+              <div class="h-4 w-4 rounded bg-brandAqua/20"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/80"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/60"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/40"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/20"></div>
+              <div class="h-4 w-4 rounded bg-bgSurface border border-borderAmberLight"></div>
+              <div class="h-4 w-4 rounded bg-bgSurface border border-borderAmberLight"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/80"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/60"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/20"></div>
+              <!-- Row 3 -->
+              <div class="h-4 w-4 rounded bg-brandAqua/40"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/80"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/60"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/20"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/40"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/80"></div>
+              <div class="h-4 w-4 rounded bg-brandAqua/60"></div>
+              <div class="h-4 w-4 rounded bg-bgSurface border border-borderAmberLight"></div>
+              <div class="h-4 w-4 rounded bg-bgSurface border-2 border-brandAmber" title="Hôm nay"></div>
+              <div class="h-4 w-4 rounded bg-bgSurface border border-borderAmberLight"></div>
+            </div>
+            <div class="text-[9px] text-textMuted uppercase font-bold flex flex-col justify-between h-12 text-right">
+              <span>Ít làm</span>
+              <span>Đều đặn</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN QUIZ SETS LIST -->
+      <div class="bg-bgSurface border border-borderAmberLight rounded-2xl p-5 soft-shadow space-y-4" id="quiz-sets-section">
+        <div class="flex justify-between items-center pb-2 border-b border-borderAmberLight">
+          <h3 class="text-sm font-bold text-slate-800 flex items-center">
+            <i data-lucide="list-todo" class="h-4.5 w-4.5 mr-2 text-brandAmber"></i>Danh sách bộ đề ôn tập
+          </h3>
+          <span class="text-xs text-textMuted" id="quiz-set-count">2 bộ đề khả dụng</span>
+        </div>
+
+        <!-- Quiz cards container -->
+        <div class="space-y-4" id="quiz-cards-grid">
+          <!-- Card 1 (Finished) -->
+          <div class="p-4 rounded-xl bg-bgSurface border border-borderAmberLight hover:border-brandAmber/40 transition duration-150 flex flex-col md:flex-row justify-between md:items-center gap-4">
+            <div class="space-y-1.5 flex-1">
+              <div class="flex items-center space-x-2">
+                <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-brandAqua/10 border border-brandAqua/20 text-brandAqua">Bình thường</span>
+                <span class="text-[10px] text-textMuted">8 câu hỏi</span>
+              </div>
+              <h4 class="text-sm font-bold text-slate-800">Phần 1: Lý thuyết về Vòng lặp ReAct</h4>
+              <p class="text-xs text-textMuted leading-normal">Khảo sát chi tiết cấu trúc logic của mẫu thiết kế đại lý AI ReAct.</p>
+            </div>
+            
+            <div class="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 border-borderAmberLight/50 pt-2.5 md:pt-0">
+              <div class="text-left md:text-right">
+                <p class="text-[10px] text-textMuted uppercase font-semibold">Kết quả tốt nhất</p>
+                <p class="text-xs font-bold text-brandSuccess">8/8 câu (100%)</p>
+              </div>
+              <button onclick="startQuiz('react-p1')" class="focus-visible-ring px-4 py-2 bg-bgSurfaceCream border border-borderAmberLight hover:bg-brandAmberLight/30 text-slate-700 hover:text-brandAmber rounded-xl text-xs font-bold transition duration-150 cursor-pointer">
+                Ôn Lại
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2 (In Progress) -->
+          <div class="p-4 rounded-xl bg-bgSurface border border-borderAmberLight hover:border-brandAmber/40 transition duration-150 flex flex-col md:flex-row justify-between md:items-center gap-4">
+            <div class="space-y-1.5 flex-1">
+              <div class="flex items-center space-x-2">
+                <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-red-100 border border-red-200 text-brandError">Khó</span>
+                <span class="text-[10px] text-textMuted">7 câu hỏi</span>
+              </div>
+              <h4 class="text-sm font-bold text-slate-800">Phần 2: Tool Calling & Guardrails</h4>
+              <p class="text-xs text-textMuted leading-normal">Tự luận giải quyết xung đột Function Schema và bảo vệ Agent khỏi Prompt Injection.</p>
+            </div>
+            
+            <div class="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 border-borderAmberLight/50 pt-2.5 md:pt-0">
+              <div class="text-left md:text-right">
+                <p class="text-[10px] text-textMuted uppercase font-semibold">Tiến độ</p>
+                <p class="text-xs font-bold text-brandAmber">Đang làm (4/7 câu)</p>
+              </div>
+              <button onclick="startQuiz('react-p2')" class="focus-visible-ring px-4 py-2 bg-brandAmber text-white hover:bg-amber-600 rounded-xl text-xs font-bold transition duration-150 cursor-pointer shadow-sm shadow-brandAmber/10">
+                Làm Tiếp
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUIZ WORKING AREA (Hidden by default, shown when clicking a quiz set) -->
+      <div id="quiz-working-area" class="hidden bg-bgSurface border border-brandAmber/30 rounded-2xl p-5 soft-shadow space-y-4">
+        <div class="flex justify-between items-center border-b border-borderAmberLight pb-3">
+          <span class="text-xs font-bold text-brandAmber uppercase tracking-wider" id="active-quiz-subtitle">Lý thuyết ReAct - Câu 1</span>
+          <span class="text-xs bg-bgSurfaceCream border border-borderAmberLight px-2.5 py-1 rounded-full text-slate-600 font-semibold" id="quiz-question-number">Câu hỏi 1 / 8</span>
+        </div>
+        
+        <div class="space-y-4">
+          <h4 class="text-base font-bold text-slate-900 leading-relaxed" id="quiz-question-text">
+            Trong cấu trúc thiết kế ReAct (Reasoning and Acting), cơ chế "Observation" được sinh ra từ đâu?
+          </h4>
+          
+          <!-- MCQ Options (or text area for essay) -->
+          <div class="space-y-2.5" id="quiz-options-container">
+            <button onclick="answerOption('A')" class="focus-visible-ring w-full text-left p-3.5 rounded-xl border border-borderAmberLight bg-bgSurfaceCream hover:bg-brandAmberLight/10 hover:border-brandAmber/30 transition flex items-center justify-between group cursor-pointer">
+              <span class="text-xs text-slate-700"><span class="font-bold text-brandAmber mr-2">A.</span> Suy nghĩ độc lập (Thought) của Agent.</span>
+              <span class="text-[9px] text-textMuted border border-slate-200 px-1.5 py-0.5 rounded font-mono group-hover:border-brandAmber/30">Phím 1</span>
+            </button>
+            <button onclick="answerOption('B')" class="focus-visible-ring w-full text-left p-3.5 rounded-xl border border-brandSuccess bg-green-50/50 flex items-center justify-between group cursor-default">
+              <span class="text-xs text-brandSuccess"><span class="font-bold text-brandSuccess mr-2">B.</span> Kết quả trả về sau khi gọi Tool (Action) trên môi trường.</span>
+              <div class="flex items-center space-x-1.5">
+                <i data-lucide="check-circle-2" class="h-4.5 w-4.5 text-brandSuccess fill-green-100"></i>
+                <span class="text-[9px] text-brandSuccess/80 border border-brandSuccess/20 px-1.5 py-0.5 rounded font-mono">Đúng</span>
+              </div>
+            </button>
+            <button onclick="answerOption('C')" class="focus-visible-ring w-full text-left p-3.5 rounded-xl border border-borderAmberLight bg-bgSurfaceCream hover:bg-brandAmberLight/10 hover:border-brandAmber/30 transition flex items-center justify-between group cursor-pointer">
+              <span class="text-xs text-slate-700"><span class="font-bold text-brandAmber mr-2">C.</span> Hướng dẫn Prompt cứng từ System instruction.</span>
+              <span class="text-[9px] text-textMuted border border-slate-200 px-1.5 py-0.5 rounded font-mono group-hover:border-brandAmber/30">Phím 3</span>
+            </button>
+            <button onclick="answerOption('D')" class="focus-visible-ring w-full text-left p-3.5 rounded-xl border border-borderAmberLight bg-bgSurfaceCream hover:bg-brandAmberLight/10 hover:border-brandAmber/30 transition flex items-center justify-between group cursor-pointer">
+              <span class="text-xs text-slate-700"><span class="font-bold text-brandAmber mr-2">D.</span> Phản hồi trực tiếp từ người dùng cuối (User feedback loop).</span>
+              <span class="text-[9px] text-textMuted border border-slate-200 px-1.5 py-0.5 rounded font-mono group-hover:border-brandAmber/30">Phím 4</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Explanation panel -->
+        <div class="p-4 rounded-xl bg-green-50 border border-brandSuccess/20 text-[12px] text-slate-700 leading-relaxed space-y-1" id="quiz-explanation-panel">
+          <p class="font-bold text-brandSuccess flex items-center"><i data-lucide="info" class="h-4 w-4 mr-1.5"></i>Giải thích chi tiết:</p>
+          <p>Mô hình ReAct lặp lại chu trình Thought -> Action -> Observation. Trong đó Action là việc kích hoạt công cụ (Tool calling) và kết quả chạy công cụ đó sẽ được chuyển lại thành Observation (Quan sát) để Agent suy nghĩ (Thought) bước tiếp theo.</p>
+        </div>
+
+        <!-- Quiz actions -->
+        <div class="flex justify-between items-center border-t border-borderAmberLight/80 pt-3">
+          <button onclick="exitQuiz()" class="focus-visible-ring text-xs text-textMuted hover:text-slate-800 transition cursor-pointer">Thoát bài tập</button>
+          <button onclick="nextMockQuestion()" class="focus-visible-ring px-5 py-2.5 bg-brandAmber hover:bg-amber-600 text-white font-bold rounded-xl text-xs flex items-center justify-center transition cursor-pointer shadow-sm shadow-brandAmber/10">
+            Câu tiếp theo <i data-lucide="chevron-right" class="h-4 w-4 ml-1"></i>
+          </button>
+        </div>
+      </div>
+      
+    </section>
+
+    <!-- RIGHT COLUMN (25%): MOTIVATION, STATS, & LEADERBOARD -->
+    <aside id="right-sidebar-motivation" class="lg:col-span-3 space-y-6">
+      
+      <!-- STATS CONTAINER -->
+      <div class="bg-bgSurface border border-borderAmberLight rounded-2xl p-5 soft-shadow space-y-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-textMuted flex items-center">
+          <i data-lucide="bar-chart-2" class="h-4.5 w-4.5 mr-2 text-brandAmber"></i>Thành tích học tập
+        </h3>
+        
+        <div class="grid grid-cols-2 gap-3">
+          <div class="p-3 bg-bgSurfaceCream border border-borderAmberLight rounded-xl text-center">
+            <p class="text-[9px] text-textMuted uppercase font-bold">Tổng điểm</p>
+            <p class="text-base font-extrabold text-slate-800 mt-1">324 câu đúng</p>
+          </div>
+          <div class="p-3 bg-bgSurfaceCream border border-borderAmberLight rounded-xl text-center">
+            <p class="text-[9px] text-textMuted uppercase font-bold">Chuẩn xác</p>
+            <p class="text-base font-extrabold text-brandAqua mt-1">94.1%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEADERBOARD PANEL WITH GLOBAL/DAILY TOGGLE -->
+      <div class="bg-bgSurface border border-borderAmberLight rounded-2xl p-5 soft-shadow flex flex-col relative">
+        <div class="space-y-3.5 mb-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-textMuted flex items-center">
+            <i data-lucide="trophy" class="h-4.5 w-4.5 mr-2 text-brandAmber"></i>Bảng xếp hạng lớp học
+          </h3>
+          
+          <!-- Leaderboard toggle -->
+          <div class="flex bg-bgSurfaceCream p-1 rounded-xl border border-borderAmberLight">
+            <button id="lb-toggle-daily" onclick="toggleLeaderboard('daily')" class="focus-visible-ring flex-1 py-1 rounded-lg text-[10px] font-bold bg-brandAmber text-white transition duration-150 cursor-pointer">
+              Hôm Nay (Daily)
+            </button>
+            <button id="lb-toggle-global" onclick="toggleLeaderboard('global')" class="focus-visible-ring flex-1 py-1 rounded-lg text-[10px] font-bold text-slate-500 hover:text-slate-900 transition duration-150 cursor-pointer">
+              Chung Cuộc (Global)
+            </button>
+          </div>
+        </div>
+
+        <!-- Leaderboard rankings list -->
+        <div class="space-y-2.5 max-h-[360px] overflow-y-auto pr-1" id="leaderboard-list">
+          <!-- Rendered dynamically via JS -->
+        </div>
+
+        <!-- Sticky user row at the bottom -->
+        <div class="border-t border-borderAmberLight/85 mt-4 pt-3.5">
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-brandAmber/5 border border-brandAmber/20">
+            <div class="flex items-center space-x-2.5">
+              <span class="text-xs font-black text-brandAmber">#12</span>
+              <div class="h-7 w-7 rounded-lg bg-bgSurface border border-borderAmberLight flex items-center justify-center">
+                <i data-lucide="user" class="h-4 w-4 text-brandAmber"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-800">Bạn (Hải Đăng)</p>
+                <p class="text-[9px] text-textMuted font-mono">2A2026006**</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="text-xs font-extrabold text-slate-800" id="sticky-user-score">12 câu</p>
+              <p class="text-[9px] text-textMuted">Tỷ lệ: 86%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- VIEW 2: PERSONAL METRICS VIEW (DASHBOARD & BÁO CÁO NĂNG LỰC) -->
+  <main id="view-metrics" class="hidden flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- LEFT CONTENT (lg:col-span-8): RADAR CHART & HEATMAP -->
+    <section class="lg:col-span-8 space-y-6">
+      
+      <!-- BIỂU ĐỒ NĂNG LỰC HỌC TẬP HỌC SINH -->
+      <div class="bg-bgSurface border border-borderAmberLight rounded-2xl p-5 soft-shadow space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-borderAmberLight">
+          <div class="space-y-1">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center">
+              <i data-lucide="network" class="h-4.5 w-4.5 mr-2 text-brandAmber animate-pulse"></i>Biểu đồ năng lực học tập học sinh
+            </h3>
+            <p class="text-xs text-textMuted">Trực quan hóa mức độ nắm vững kiến thức & điểm kỹ năng của học viên.</p>
+          </div>
+          
+          <!-- Mode Toggle (Toán 12 vs AI Thực Chiến) -->
+          <div class="flex bg-bgSurfaceCream p-1 rounded-xl border border-borderAmberLight self-start">
+            <button id="db-mode-math" onclick="switchDashboardMode('math')" class="focus-visible-ring px-3 py-1 rounded-lg text-[10px] font-bold bg-brandAmber text-white transition duration-150 cursor-pointer">
+              Lớp Toán 12 (Slide)
+            </button>
+            <button id="db-mode-ai" onclick="switchDashboardMode('ai')" class="focus-visible-ring px-3 py-1 rounded-lg text-[10px] font-bold text-slate-500 hover:text-slate-900 transition duration-150 cursor-pointer">
+              Lớp AI Thực Chiến
+            </button>
+          </div>
+        </div>
+
+        <!-- Radar Chart SVG Container -->
+        <div class="flex flex-col items-center justify-center py-6 bg-gradient-to-b from-bgSurfaceCream/30 to-transparent rounded-xl border border-borderAmberLight/40">
+          <div class="relative w-full max-w-[420px] aspect-square flex items-center justify-center">
+            <svg id="dashboard-radar-svg" viewBox="0 0 240 240" class="w-full h-full">
+              <!-- Dynamically generated via JS -->
+            </svg>
+          </div>
+          <div class="flex items-center gap-6 mt-4 text-[10px] text-textMuted uppercase font-bold tracking-wider">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-brandAqua/20 border border-brandAqua"></span> Điểm đạt được</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 border-t border-dashed border-slate-300"></span> Trục tiêu chí (1-10)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NHẬT KÝ HỌC TẬP (HEATMAP) -->
+      <div class="bg-bgSurface border border-borderAmberLight rounded-2xl p-5 soft-shadow space-y-4">
+        <div class="flex justify-between items-center pb-2 border-b border-borderAmberLight">
+          <div>
+            <h3 class="text-sm font-bold text-slate-800 flex items-center">
+              <i data-lucide="calendar-range" class="h-4.5 w-4.5 mr-2 text-brandAqua"></i>Nhật ký học tập
+            </h3>
+            <p class="text-xs text-textMuted mt-1">Lịch sử chuyên cần luyện tập trong 32 tuần qua.</p>
+          </div>
+          <span class="text-[10px] bg-brandAqua/10 border border-brandAqua/20 text-brandAqua px-2.5 py-0.5 rounded-full font-bold" id="db-active-days-count">36 ngày làm bài</span>
+        </div>
+
+        <div class="space-y-3">
+          <div id="contribution-calendar-container" class="bg-bgSurfaceCream/50 border border-borderAmberLight p-4 rounded-xl overflow-x-auto select-none">
+            <!-- Dynamically generated calendar grid -->
+          </div>
+          <div class="flex items-center justify-between text-[10px] text-textMuted font-bold uppercase tracking-wider px-1">
+            <span>Ít hoạt động</span>
+            <div class="flex items-center gap-1">
+              <span class="h-3 w-3 rounded-sm bg-slate-100/60 border border-slate-200/40"></span>
+              <span class="h-3 w-3 rounded-sm bg-brandAqua/20 border border-brandAqua/10"></span>
+              <span class="h-3 w-3 rounded-sm bg-brandAqua/40 border border-brandAqua/10"></span>
+              <span class="h-3 w-3 rounded-sm bg-brandAqua/70 border border-brandAqua/20"></span>
+              <span class="h-3 w-3 rounded-sm bg-brandAqua/90 border border-brandAqua/30"></span>
+            </div>
+            <span>Năng nổ luyện đề</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT CONTENT (lg:col-span-4): RECOMMENDED PRACTICES & STATS -->
+    <aside class="lg:col-span-4 space-y-6">
+      
+      <!-- HỌC VIÊN CARD -->
+      <div class="bg-bgSurface border border-borderAmberLight rounded-2xl p-5 soft-shadow relative overflow-hidden">
+        <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-brandAmber via-amber-400 to-brandAqua"></div>
+        <div class="flex items-center space-x-3">
+          <div class="h-11 w-11 rounded-xl bg-brandAmber/5 border-2 border-brandAmber flex items-center justify-center">
+            <i data-lucide="user-check" class="h-5 w-5 text-brandAmber"></i>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-slate-800" id="db-student-name">Nguyễn Hoàng Việt</h4>
+            <p class="text-[10px] text-textMuted mt-0.5">Lớp học: <span class="font-bold text-slate-700">AI & Toán Thực Chiến</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- GỢI Ý CÁC BÀI LUYỆN -->
+      <div class="bg-bgSurface border border-borderAmberLight rounded-2xl p-5 soft-shadow space-y-4">
+        <div class="pb-2 border-b border-borderAmberLight">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-textMuted flex items-center">
+            <i data-lucide="sparkles" class="h-4 w-4 mr-2 text-brandAmber fill-brandAmber/10"></i>Gợi ý các bài luyện
+          </h3>
+        </div>
+
+        <div id="db-recommendations-list" class="space-y-3">
+          <!-- Dynamically generated recommendations list -->
+        </div>
+      </div>
+
+      <!-- THỐNG KÊ HỌC TẬP -->
+      <div class="bg-bgSurface border border-borderAmberLight rounded-2xl p-5 soft-shadow space-y-4">
+        <div class="pb-2 border-b border-borderAmberLight">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-textMuted flex items-center">
+            <i data-lucide="bar-chart-2" class="h-4 w-4 mr-2 text-brandAqua"></i>Thống kê tổng quan
+          </h3>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3" id="db-stats-grid">
+          <!-- Dynamically generated 4 cards matching the slide style -->
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="w-full border-t border-borderAmberLight bg-bgSurfaceCream/50 py-3.5 px-6 text-center text-[11px] text-textMuted flex flex-col sm:flex-row justify-between items-center gap-2">
+    <p>© 2026 EduGap Active Learning. Dành riêng cho học viên lớp AI Thực Chiến.</p>
+    <div class="flex space-x-4">
+      <a href="https://forms.gle/Np7swC5Xwzmbsxno9" target="_blank" class="hover:text-brandAmber flex items-center"><i data-lucide="external-link" class="h-3 w-3 mr-1"></i> Feedback Form</a>
+    </div>
+  </footer>
+
+  <!-- INTERACTIVE MOCKUP SCRIPT -->
+  <script>
+    const MOCK_LEADERBOARD = {
+      daily: [
+        { rank: 1, name: 'Nguyễn Văn A.', mssv: '2A2026001**', score: 15, accuracy: 100, active: true },
+        { rank: 2, name: 'Trần Thị B.', mssv: '2A2026002**', score: 14, accuracy: 93, active: false },
+        { rank: 3, name: 'Lê Hoàng C.', mssv: '2A2026003**', score: 14, accuracy: 88, active: false },
+        { rank: 4, name: 'Phạm Hồng D.', mssv: '2A2026004**', score: 13, accuracy: 87, active: false },
+        { rank: 5, name: 'Hoàng Hải Đ.', mssv: '2A2026006**', score: 12, accuracy: 86, active: true },
+      ],
+      global: [
+        { rank: 1, name: 'Trần Thị B.', mssv: '2A2026002**', score: 384, accuracy: 95, active: false },
+        { rank: 2, name: 'Nguyễn Văn A.', mssv: '2A2026001**', score: 372, accuracy: 92, active: false },
+        { rank: 3, name: 'Bùi Gia K.', mssv: '2A2026007**', score: 360, accuracy: 91, active: false },
+        { rank: 4, name: 'Lê Hoàng C.', mssv: '2A2026003**', score: 352, accuracy: 89, active: false },
+        { rank: 5, name: 'Đỗ Tiến Đ.', mssv: '2A2026009**', score: 345, accuracy: 88, active: false },
+      ]
+    };
+
+    const MOCK_DAYS = {
+      day1: {
+        title: "Day 1: AI & LLM Foundation",
+        desc: "Lý thuyết nền tảng về Transformer, Tokenization và mô hình ngôn ngữ lớn (LLM). Cơ chế Self-Attention và sự tiến hóa của GPT.",
+        progress: "15 / 15 câu (100%)",
+        competencies: ["Transformer Architecture", "Self-Attention Mechanism", "Tokenization & Vocabulary"],
+        radar: "50,15 90,41 78,78 22,78 10,41",
+        cards: [
+          { title: "Phần 1: Khái niệm cơ bản LLM", desc: "Lý thuyết nền tảng về Transformer và cơ chế attention.", difficulty: "dễ", diffClass: "bg-brandAqua/10 text-brandAqua border-brandAqua/20", qCount: 8, resultText: "Đã nộp: 8/8 câu (100%)", actionText: "Ôn Lại" },
+          { title: "Phần 2: Tokenization & Embeddings", desc: "Cách mô hình chuyển đổi văn bản thô thành số thực.", difficulty: "bình thường", diffClass: "bg-brandAmber/10 text-brandAmber border-brandAmber/20", qCount: 7, resultText: "Đã nộp: 7/7 câu (100%)", actionText: "Ôn Lại" }
+        ]
+      },
+      day2: {
+        title: "Day 2: Xác Định Bài Toán Cho AI",
+        desc: "Đánh giá tính khả thi bài toán, chuẩn bị dữ liệu đầu vào và lựa chọn mô hình nền tảng thích hợp cho doanh nghiệp.",
+        progress: "10 / 10 câu (100%)",
+        competencies: ["AI Feasibility Analysis", "Data Preprocessing & Evaluation", "Foundation Model Selection"],
+        radar: "50,30 80,41 68,68 32,68 20,41",
+        cards: [
+          { title: "Phần 1: Đánh giá khả thi bài toán", desc: "Các tiêu chuẩn để quyết định dùng AI hay thuật toán thường.", difficulty: "dễ", diffClass: "bg-brandAqua/10 text-brandAqua border-brandAqua/20", qCount: 5, resultText: "Đã nộp: 5/5 câu (100%)", actionText: "Ôn Lại" },
+          { title: "Phần 2: Chuẩn bị & Đánh giá dữ liệu", desc: "Lọc nhiễu dữ liệu và đo lường độ chính xác tập test.", difficulty: "bình thường", diffClass: "bg-brandAmber/10 text-brandAmber border-brandAmber/20", qCount: 5, resultText: "Đã nộp: 5/5 câu (100%)", actionText: "Ôn Lại" }
+        ]
+      },
+      day3: {
+        title: "Day 3: Design Pattern ReAct",
+        desc: "Tìm hiểu vòng lặp tương tác đại lý AI Thought-Action-Observation. Cách định nghĩa Function Schema phục vụ Tool Calling và xây dựng Guardrails ngăn ngừa rò rỉ prompt hay tấn công tiêm nhiễm.",
+        progress: "12 / 15 câu (80%)",
+        competencies: ["ReAct Loop (Thought-Action-Observation)", "Tool Calling (Function Calling)", "Agent Security & Guardrails"],
+        radar: "50,22 80,41 68,68 32,68 20,41",
+        cards: [
+          { title: "Phần 1: Lý thuyết về Vòng lặp ReAct", desc: "Khảo sát chi tiết cấu trúc logic của mẫu thiết kế đại lý AI ReAct.", difficulty: "bình thường", diffClass: "bg-brandAqua/10 text-brandAqua border-brandAqua/20", qCount: 8, resultText: "Đã nộp: 8/8 câu (100%)", actionText: "Ôn Lại" },
+          { title: "Phần 2: Tool Calling & Guardrails", desc: "Tự luận giải quyết xung đột Function Schema và bảo vệ Agent khỏi Prompt Injection.", difficulty: "khó", diffClass: "bg-red-50 text-brandError border-red-200", qCount: 7, resultText: "Tiến độ: Đang làm (4/7 câu)", actionText: "Làm Tiếp" }
+        ]
+      },
+      day4: {
+        title: "Day 4: Prompt Engineering",
+        desc: "Lý thuyết chưa mở.",
+        progress: "0 / 0 câu (0%)",
+        competencies: ["Chưa có dữ liệu học tập"],
+        radar: "50,50 50,50 50,50 50,50 50,50",
+        cards: []
+      },
+      day5: {
+        title: "Day 5: Thiết Kế Sản Phẩm AI",
+        desc: "Lý thuyết chưa mở.",
+        progress: "0 / 0 câu (0%)",
+        competencies: ["Chưa có dữ liệu học tập"],
+        radar: "50,50 50,50 50,50 50,50 50,50",
+        cards: []
+      },
+      day6: {
+        title: "Day 6: Hackathon Day",
+        desc: "Lý thuyết chưa mở.",
+        progress: "0 / 0 câu (0%)",
+        competencies: ["Chưa có dữ liệu học tập"],
+        radar: "50,50 50,50 50,50 50,50 50,50",
+        cards: []
+      },
+      day7: {
+        title: "Day 7: Embedding & Vector DB",
+        desc: "Lý thuyết chưa mở.",
+        progress: "0 / 0 câu (0%)",
+        competencies: ["Chưa có dữ liệu học tập"],
+        radar: "50,50 50,50 50,50 50,50 50,50",
+        cards: []
+      }
+    };
+
+    const DASHBOARD_DATA = {
+      math: {
+        student: "Nguyễn Hoàng Việt",
+        activeDays: "96 ngày làm bài",
+        radar: [
+          { label: "Phương trình mặt phẳng", score: 9.0 },
+          { label: "Tiệm cận đồ thị", score: 7.5 },
+          { label: "GTLN, GTNN hàm số", score: 8.5 },
+          { label: "Thể tích đa diện", score: 8.0 },
+          { label: "Tỉ số thể tích", score: 7.0 },
+          { label: "Cực trị hàm số", score: 6.5 },
+          { label: "Khảo sát tính đơn điệu", score: 7.0 },
+          { label: "Sự tương giao đồ thị", score: 6.0 },
+          { label: "Phương trình đường thẳng", score: 5.5 },
+          { label: "Phương trình mặt cầu", score: 6.0 },
+          { label: "Hệ trục Oxyz", score: 8.0 },
+          { label: "Tích phân & Nguyên hàm", score: 5.0 }
+        ],
+        recommendations: [
+          { topic: "PHƯƠNG TRÌNH MẶT PHẲNG", target: "8.5/10", key: "math-p1" },
+          { topic: "KHẢO SÁT TÍNH ĐƠN ĐIỆU CỦA HÀM SỐ", target: "9.0/10", key: "math-p2" },
+          { topic: "SỰ TƯƠNG GIAO ĐỒ THỊ HÀM SỐ", target: "8.5/10", key: "math-p3" },
+          { topic: "HỆ TRỤC TỌA ĐỘ TRONG KHÔNG GIAN", target: "9.0/10", key: "math-p4" },
+          { topic: "CỰC TRỊ HÀM SỐ", target: "8.0/10", key: "math-p5" }
+        ],
+        stats: [
+          { label: "Câu hỏi luyện", value: "360 câu", icon: "help-circle", color: "bg-emerald-55 text-brandSuccess border-brandSuccess/25" },
+          { label: "Thời gian học", value: "4 giờ 5 phút", icon: "clock", color: "bg-cyan-50 text-cyan-700 border-cyan-200" },
+          { label: "Số lượng đề", value: "13 đề thi", icon: "file-text", color: "bg-blue-50 text-blue-700 border-blue-200" },
+          { label: "Tốc độ giải", value: "9 câu/phút", icon: "zap", color: "bg-amber-50 text-brandAmber border-brandAmber/25" }
+        ]
+      },
+      ai: {
+        student: "Hoàng Hải Đăng",
+        activeDays: "12 ngày làm bài",
+        radar: [
+          { label: "Transformer Architecture", score: 8.5 },
+          { label: "Prompt Engineering", score: 4.5 },
+          { label: "Design Pattern ReAct", score: 8.0 },
+          { label: "Embedding & Vector DB", score: 3.5 },
+          { label: "Tool Calling & Schema", score: 9.0 },
+          { label: "Agent Security", score: 4.5 },
+          { label: "AI Product Scoping", score: 7.5 },
+          { label: "Evaluation & Test Sets", score: 6.0 }
+        ],
+        recommendations: [
+          { topic: "DESIGN PATTERN REACT", target: "9.5/10", key: "react-p1" },
+          { topic: "AGENT SECURITY & GUARDRAILS", target: "8.5/10", key: "react-p2" },
+          { topic: "PROMPT ENGINEERING", target: "9.0/10", key: "prompt-p1" },
+          { topic: "EMBEDDING & VECTOR DB", target: "8.5/10", key: "embed-p1" },
+          { topic: "EVALUATION & TEST SETS", target: "8.0/10", key: "eval-p1" }
+        ],
+        stats: [
+          { label: "Câu hỏi luyện", value: "42 câu", icon: "help-circle", color: "bg-emerald-55 text-brandSuccess border-brandSuccess/25" },
+          { label: "Thời gian học", value: "45 phút", icon: "clock", color: "bg-cyan-50 text-cyan-700 border-cyan-200" },
+          { label: "Số lượng đề", value: "3 đề thi", icon: "file-text", color: "bg-blue-50 text-blue-700 border-blue-200" },
+          { label: "Tốc độ giải", value: "5 câu/phút", icon: "zap", color: "bg-amber-50 text-brandAmber border-brandAmber/25" }
+        ]
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", function() {
+      lucide.createIcons();
+      renderLeaderboard('daily');
+
+      // Click outside streak popover to close it
+      document.addEventListener('click', function(event) {
+        const streakTrigger = document.getElementById('streak-trigger');
+        const streakPopover = document.getElementById('streak-popover');
+        
+        if (!streakTrigger.contains(event.target) && !streakPopover.contains(event.target)) {
+          streakPopover.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('streak-trigger').addEventListener('click', function(event) {
+        event.stopPropagation();
+        document.getElementById('streak-popover').classList.toggle('hidden');
+      });
+
+      // Render dashboard contents on startup
+      switchDashboardMode('math');
+      drawContributionCalendar('contribution-calendar-container');
+    });
+
+    // Draw Dynamic Radar Chart using SVG
+    function drawRadar(canvasId, items) {
+      const svg = document.getElementById(canvasId);
+      if (!svg) return;
+      
+      const N = items.length;
+      const Cx = 120;
+      const Cy = 120;
+      const R = 80;
+      
+      // Clear previous contents
+      svg.innerHTML = '';
+      
+      // Create defs
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.innerHTML = `
+        <radialGradient id="radarGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#0d9488" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="#0d9488" stop-opacity="0.02" />
+        </radialGradient>
+      `;
+      svg.appendChild(defs);
+      
+      // Concentric level circles/grids
+      const levels = [0.2, 0.4, 0.6, 0.8, 1.0];
+      levels.forEach(level => {
+        const ringRadius = R * level;
+        let points = [];
+        for (let i = 0; i < N; i++) {
+          const angle = (2 * Math.PI * i) / N - Math.PI / 2;
+          const x = Cx + ringRadius * Math.cos(angle);
+          const y = Cy + ringRadius * Math.sin(angle);
+          points.push(`${x},${y}`);
+        }
+        const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        polygon.setAttribute('points', points.join(' '));
+        polygon.setAttribute('fill', 'none');
+        polygon.setAttribute('stroke', 'rgba(217, 119, 6, 0.08)');
+        polygon.setAttribute('stroke-width', '0.5');
+        svg.appendChild(polygon);
+        
+        // Add score ticks on the 12 o'clock axis
+        const verticalAngle = -Math.PI / 2;
+        const xText = Cx + 4;
+        const yText = Cy - ringRadius + 2;
+        
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', xText);
+        text.setAttribute('y', yText);
+        text.setAttribute('font-size', '5');
+        text.setAttribute('fill', '#94a3b8');
+        text.setAttribute('font-weight', 'medium');
+        text.textContent = Math.round(level * 10);
+        svg.appendChild(text);
+      });
+      
+      // Axes and Labels
+      items.forEach((item, i) => {
+        const angle = (2 * Math.PI * i) / N - Math.PI / 2;
+        const xOuter = Cx + R * Math.cos(angle);
+        const yOuter = Cy + R * Math.sin(angle);
+        
+        // Axis line
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', Cx);
+        line.setAttribute('y1', Cy);
+        line.setAttribute('x2', xOuter);
+        line.setAttribute('y2', yOuter);
+        line.setAttribute('stroke', 'rgba(217, 119, 6, 0.12)');
+        line.setAttribute('stroke-width', '0.75');
+        svg.appendChild(line);
+        
+        // Label position
+        const labelDist = R + 14;
+        const xLabel = Cx + labelDist * Math.cos(angle);
+        const yLabel = Cy + labelDist * Math.sin(angle);
+        
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', xLabel);
+        text.setAttribute('y', yLabel + 2);
+        text.setAttribute('font-size', '6');
+        text.setAttribute('fill', '#334155');
+        text.setAttribute('font-weight', 'bold');
+        
+        // Text alignment based on angle
+        const cosVal = Math.cos(angle);
+        if (Math.abs(cosVal) < 0.15) {
+          text.setAttribute('text-anchor', 'middle');
+        } else if (cosVal > 0) {
+          text.setAttribute('text-anchor', 'start');
+        } else {
+          text.setAttribute('text-anchor', 'end');
+        }
+        
+        text.textContent = item.label;
+        svg.appendChild(text);
+      });
+      
+      // Polygon for student performance
+      let studentPoints = [];
+      items.forEach((item, i) => {
+        const angle = (2 * Math.PI * i) / N - Math.PI / 2;
+        const scoreRadius = R * (item.score / 10);
+        const x = Cx + scoreRadius * Math.cos(angle);
+        const y = Cy + scoreRadius * Math.sin(angle);
+        studentPoints.push(`${x},${y}`);
+      });
+      
+      const studentPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      studentPoly.setAttribute('points', studentPoints.join(' '));
+      studentPoly.setAttribute('fill', 'url(#radarGlow)');
+      studentPoly.setAttribute('stroke', '#0d9488');
+      studentPoly.setAttribute('stroke-width', '1.5');
+      studentPoly.setAttribute('class', 'transition-all duration-500 ease-out');
+      svg.appendChild(studentPoly);
+      
+      // Outer border circle (Reference Ring)
+      const outerRing = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      outerRing.setAttribute('cx', Cx);
+      outerRing.setAttribute('cy', Cy);
+      outerRing.setAttribute('r', R);
+      outerRing.setAttribute('fill', 'none');
+      outerRing.setAttribute('stroke', 'rgba(13, 148, 136, 0.08)');
+      outerRing.setAttribute('stroke-width', '1');
+      svg.appendChild(outerRing);
+      
+      // Marker dots on vertices
+      items.forEach((item, i) => {
+        const angle = (2 * Math.PI * i) / N - Math.PI / 2;
+        const scoreRadius = R * (item.score / 10);
+        const x = Cx + scoreRadius * Math.cos(angle);
+        const y = Cy + scoreRadius * Math.sin(angle);
+        
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        circle.setAttribute('r', '3.5');
+        circle.setAttribute('fill', '#ffffff');
+        circle.setAttribute('stroke', '#0d9488');
+        circle.setAttribute('stroke-width', '1.5');
+        circle.setAttribute('class', 'cursor-pointer hover:scale-125 transition-transform duration-100');
+        
+        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent = `${item.label}: ${item.score}/10`;
+        circle.appendChild(title);
+        
+        svg.appendChild(circle);
+      });
+    }
+
+    // Draw Dynamic GitHub-like heatmap
+    function drawContributionCalendar(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      const grid = document.createElement('div');
+      grid.className = 'grid grid-flow-col grid-rows-7 gap-1.5 p-1';
+      
+      const today = new Date();
+      // Show about 32 weeks of learning history
+      const totalDays = 224;
+      const startDate = new Date();
+      startDate.setDate(today.getDate() - totalDays);
+      
+      const startDay = startDate.getDay();
+      startDate.setDate(startDate.getDate() - startDay);
+      
+      const tempDate = new Date(startDate);
+      
+      while (tempDate <= today) {
+        const dayCell = document.createElement('div');
+        const dateStr = tempDate.toLocaleDateString('vi-VN', { day: 'numeric', month: 'numeric', year: 'numeric' });
+        
+        let activity = 0;
+        const dayOfWeek = tempDate.getDay();
+        const dateNum = tempDate.getDate();
+        
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          const hash = (tempDate.getMonth() * 7 + dateNum) % 10;
+          if (hash < 4) activity = 0;
+          else if (hash < 7) activity = 1;
+          else if (hash < 9) activity = 2;
+          else activity = 3;
+        } else {
+          if ((dateNum % 6) === 0) activity = 1;
+        }
+        
+        const diffDays = Math.ceil(Math.abs(today.getTime() - tempDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays <= 5 && diffDays > 0) {
+          activity = Math.max(activity, 2);
+        }
+        
+        const isToday = tempDate.toDateString() === today.toDateString();
+        if (isToday) {
+          activity = 3;
+        }
+        
+        let bgClass = 'bg-slate-100/60 border border-slate-200/40';
+        let titleText = `${dateStr}: Không làm bài`;
+        
+        if (activity === 1) {
+          bgClass = 'bg-brandAqua/20 border border-brandAqua/10';
+          titleText = `${dateStr}: Hoàn thành 1 đề`;
+        } else if (activity === 2) {
+          bgClass = 'bg-brandAqua/40 border border-brandAqua/10';
+          titleText = `${dateStr}: Hoàn thành 2 đề`;
+        } else if (activity === 3) {
+          bgClass = 'bg-brandAqua/75 border border-brandAqua/20';
+          titleText = `${dateStr}: Hoàn thành 3 đề trở lên`;
+        }
+        
+        dayCell.className = `h-3 w-3 rounded-sm ${bgClass} transition duration-150 cursor-pointer hover:scale-125 hover:z-10`;
+        if (isToday) {
+          dayCell.className += ' ring-2 ring-brandAmber ring-offset-1';
+          titleText += ' (Hôm nay)';
+        }
+        
+        dayCell.setAttribute('title', titleText);
+        grid.appendChild(dayCell);
+        
+        tempDate.setDate(tempDate.getDate() + 1);
+      }
+      
+      container.appendChild(grid);
+    }
+
+    // Switch between Math and AI Dashboard modes
+    let currentDashboardMode = 'math';
+
+    function switchDashboardMode(mode) {
+      currentDashboardMode = mode;
+      
+      const btnMath = document.getElementById('db-mode-math');
+      const btnAI = document.getElementById('db-mode-ai');
+      
+      if (mode === 'math') {
+        btnMath.className = "focus-visible-ring px-3 py-1 rounded-lg text-[10px] font-bold bg-brandAmber text-white transition duration-150 cursor-pointer";
+        btnAI.className = "focus-visible-ring px-3 py-1 rounded-lg text-[10px] font-bold text-slate-500 hover:text-slate-900 transition duration-150 cursor-pointer";
+      } else {
+        btnMath.className = "focus-visible-ring px-3 py-1 rounded-lg text-[10px] font-bold text-slate-500 hover:text-slate-900 transition duration-150 cursor-pointer";
+        btnAI.className = "focus-visible-ring px-3 py-1 rounded-lg text-[10px] font-bold bg-brandAmber text-white transition duration-150 cursor-pointer";
+      }
+      
+      const data = DASHBOARD_DATA[mode];
+      
+      // Update student profile name
+      document.getElementById('db-student-name').innerText = data.student;
+      document.getElementById('db-active-days-count').innerText = data.activeDays;
+      
+      // Draw radar
+      drawRadar('dashboard-radar-svg', data.radar);
+      
+      // Render recommendations
+      const recList = document.getElementById('db-recommendations-list');
+      recList.innerHTML = '';
+      data.recommendations.forEach((rec, idx) => {
+        recList.innerHTML += `
+          <div class="flex items-center justify-between p-3 rounded-xl bg-bgSurfaceCream border border-borderAmberLight hover:border-brandAmber/35 hover:bg-brandAmberLight/10 transition group">
+            <div class="space-y-0.5 flex-1 min-w-0 pr-2">
+              <p class="text-xs font-bold text-slate-800 truncate leading-snug">${idx + 1}. ${rec.topic}</p>
+              <p class="text-[10px] text-textMuted">Điểm mục tiêu: <span class="font-bold text-slate-700">${rec.target}</span></p>
+            </div>
+            <button onclick="switchMainView('practice'); ${mode === 'ai' ? `switchDay('${rec.key.split('-')[0]}');` : ''}" class="px-3 py-1 bg-white hover:bg-brandAmber hover:text-white border border-borderAmberLight hover:border-transparent text-slate-700 rounded-lg text-[10px] font-bold transition shrink-0 cursor-pointer">
+              Luyện tập
+            </button>
+          </div>
+        `;
+      });
+      
+      // Render stats
+      const statsGrid = document.getElementById('db-stats-grid');
+      statsGrid.innerHTML = '';
+      data.stats.forEach(stat => {
+        statsGrid.innerHTML += `
+          <div class="p-3 bg-bgSurfaceCream border border-borderAmberLight rounded-xl flex items-center space-x-3">
+            <div class="h-9 w-9 rounded-lg flex items-center justify-center shrink-0 border ${stat.color}">
+              <i data-lucide="${stat.icon}" class="h-4.5 w-4.5"></i>
+            </div>
+            <div class="min-w-0 leading-tight">
+              <p class="text-[9px] text-textMuted uppercase font-bold truncate">${stat.label}</p>
+              <p class="text-xs font-extrabold text-slate-800 mt-0.5 truncate">${stat.value}</p>
+            </div>
+          </div>
+        `;
+      });
+      
+      lucide.createIcons();
+    }
+
+    // Switch main views (Practice vs Metrics)
+    function switchMainView(view) {
+      const viewPractice = document.getElementById('view-practice');
+      const viewMetrics = document.getElementById('view-metrics');
+      const navBtnPractice = document.getElementById('nav-btn-practice');
+      const navBtnMetrics = document.getElementById('nav-btn-metrics');
+      const mobileNavPractice = document.getElementById('mobile-nav-practice');
+      const mobileNavMetrics = document.getElementById('mobile-nav-metrics');
+
+      if (view === 'practice') {
+        viewPractice.classList.remove('hidden');
+        viewMetrics.classList.add('hidden');
+        
+        // Update Desktop active buttons
+        navBtnPractice.className = "focus-visible-ring px-4 py-1.5 rounded-lg text-xs font-bold bg-brandAmber text-white transition cursor-pointer flex items-center";
+        navBtnMetrics.className = "focus-visible-ring px-4 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer flex items-center";
+        
+        // Update Mobile active buttons
+        mobileNavPractice.className = "flex-1 py-2 text-center text-xs font-bold bg-brandAmber text-white rounded-lg";
+        mobileNavMetrics.className = "flex-1 py-2 text-center text-xs font-bold text-slate-600";
+      } else {
+        viewPractice.classList.add('hidden');
+        viewMetrics.classList.remove('hidden');
+        
+        // Update Desktop active buttons
+        navBtnPractice.className = "focus-visible-ring px-4 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer flex items-center";
+        navBtnMetrics.className = "focus-visible-ring px-4 py-1.5 rounded-lg text-xs font-bold bg-brandAmber text-white transition cursor-pointer flex items-center";
+
+        // Update Mobile active buttons
+        mobileNavPractice.className = "flex-1 py-2 text-center text-xs font-bold text-slate-600";
+        mobileNavMetrics.className = "flex-1 py-2 text-center text-xs font-bold bg-brandAmber text-white rounded-lg";
+        
+        // Force radar draw & calendar draw on view switch to ensure layout size calculations are fresh
+        const data = DASHBOARD_DATA[currentDashboardMode];
+        drawRadar('dashboard-radar-svg', data.radar);
+        drawContributionCalendar('contribution-calendar-container');
+      }
+    }
+
+    // Switch active day details and lists
+    function switchDay(dayId) {
+      const dayData = MOCK_DAYS[dayId];
+      if (!dayData) return;
+
+      // Update Top Nav and Header
+      document.getElementById('header-active-day').innerText = dayData.title;
+      document.getElementById('active-day-title').innerText = dayData.title;
+      document.getElementById('active-day-desc').innerText = dayData.desc;
+      document.getElementById('day-progress-text').innerText = dayData.progress;
+
+      // Update active day progress spinner
+      const progressSpinner = document.getElementById('day-progress-spinner');
+      if (dayId === 'day1' || dayId === 'day2') {
+        progressSpinner.innerHTML = '<i data-lucide="check" class="h-4.5 w-4.5 text-brandAqua"></i>';
+        progressSpinner.classList.remove('animate-spin');
+      } else if (dayId === 'day3') {
+        progressSpinner.innerHTML = '80%';
+        progressSpinner.classList.add('animate-spin');
+      } else {
+        progressSpinner.innerHTML = '0%';
+        progressSpinner.classList.remove('animate-spin');
+      }
+
+      // Update Radar points
+      document.getElementById('radar-polygon').setAttribute('points', dayData.radar);
+
+      // Render cards
+      const cardsGrid = document.getElementById('quiz-cards-grid');
+      const setSection = document.getElementById('quiz-sets-section');
+      cardsGrid.innerHTML = '';
+
+      if (dayData.cards.length === 0) {
+        document.getElementById('quiz-set-count').innerText = "0 bộ đề khả dụng";
+        cardsGrid.innerHTML = `
+          <div class="p-8 text-center bg-bgSurfaceCream border border-dashed border-slate-300 rounded-xl space-y-2">
+            <i data-lucide="help-circle" class="h-8 w-8 text-textMuted mx-auto"></i>
+            <h4 class="text-sm font-bold text-slate-700">Bộ đề đang được biên soạn</h4>
+            <p class="text-xs text-textMuted">Tài liệu ôn tập của ngày này đang được Mentors chuẩn bị và sẽ sớm phát hành.</p>
+          </div>
+        `;
+      } else {
+        document.getElementById('quiz-set-count').innerText = dayData.cards.length + " bộ đề khả dụng";
+        dayData.cards.forEach((card, index) => {
+          const cardHtml = `
+            <div class="p-4 rounded-xl bg-bgSurface border border-borderAmberLight hover:border-brandAmber/40 transition duration-150 flex flex-col md:flex-row justify-between md:items-center gap-4">
+              <div class="space-y-1.5 flex-1">
+                <div class="flex items-center space-x-2">
+                  <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${card.diffClass}">${card.difficulty}</span>
+                  <span class="text-[10px] text-textMuted">${card.qCount} câu hỏi</span>
+                </div>
+                <h4 class="text-sm font-bold text-slate-800">${card.title}</h4>
+                <p class="text-xs text-textMuted leading-normal">${card.desc}</p>
+              </div>
+              
+              <div class="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 border-borderAmberLight/50 pt-2.5 md:pt-0">
+                <div class="text-left md:text-right">
+                  <p class="text-[10px] text-textMuted uppercase font-semibold">Kết quả</p>
+                  <p class="text-xs font-bold ${dayId !== 'day3' || index === 0 ? 'text-brandSuccess' : 'text-brandAmber'}">${card.resultText}</p>
+                </div>
+                <button onclick="startQuiz('${dayId}-p${index+1}')" class="focus-visible-ring px-4 py-2 ${dayId !== 'day3' || index === 0 ? 'bg-bgSurfaceCream text-slate-700 border-borderAmberLight' : 'bg-brandAmber text-white border-transparent'} border hover:bg-brandAmberLight/30 hover:text-brandAmber rounded-xl text-xs font-bold transition duration-150 cursor-pointer">
+                  ${card.actionText}
+                </button>
+              </div>
+            </div>
+          `;
+          cardsGrid.innerHTML += cardHtml;
+        });
+      }
+
+      // Update Sidebar items style
+      const totalDays = 7;
+      for (let i = 1; i <= totalDays; i++) {
+        const item = document.getElementById(`roadmap-day${i}`);
+        if (`day${i}` === dayId) {
+          item.classList.add('bg-brandAmberLight/20', 'border-brandAmber/20');
+        } else {
+          item.classList.remove('bg-brandAmberLight/20', 'border-brandAmber/20');
+        }
+      }
+
+      // Close quiz workspace if open
+      exitQuiz();
+
+      lucide.createIcons();
+    }
+
+    // Leaderboard switcher
+    function toggleLeaderboard(type) {
+      const btnDaily = document.getElementById('lb-toggle-daily');
+      const btnGlobal = document.getElementById('lb-toggle-global');
+
+      if (type === 'daily') {
+        btnDaily.className = "focus-visible-ring flex-1 py-1 rounded-lg text-[10px] font-bold bg-brandAmber text-white transition duration-150 cursor-pointer";
+        btnGlobal.className = "focus-visible-ring flex-1 py-1 rounded-lg text-[10px] font-bold text-slate-500 hover:text-slate-900 transition duration-150 cursor-pointer";
+        renderLeaderboard('daily');
+        document.getElementById('sticky-user-score').innerText = "12 câu";
+      } else {
+        btnDaily.className = "focus-visible-ring flex-1 py-1 rounded-lg text-[10px] font-bold text-slate-500 hover:text-slate-900 transition duration-150 cursor-pointer";
+        btnGlobal.className = "focus-visible-ring flex-1 py-1 rounded-lg text-[10px] font-bold bg-brandAmber text-white transition duration-150 cursor-pointer";
+        renderLeaderboard('global');
+        document.getElementById('sticky-user-score').innerText = "324 câu";
+      }
+    }
+
+    function renderLeaderboard(type) {
+      const container = document.getElementById('leaderboard-list');
+      const data = MOCK_LEADERBOARD[type];
+      container.innerHTML = '';
+
+      data.forEach(item => {
+        let crown = '';
+        let rankColor = 'text-slate-400';
+        let bgStyle = 'bg-bgSurfaceCream/50 border border-borderAmberLight';
+        let highlightStyle = '';
+
+        if (item.rank === 1) {
+          crown = '<i data-lucide="trophy" class="h-4.5 w-4.5 text-brandAmber fill-brandAmber/10"></i>';
+          rankColor = 'text-brandAmber font-extrabold';
+          bgStyle = 'bg-brandAmber/5 border border-brandAmber/20';
+        } else if (item.rank === 2) {
+          crown = '<i data-lucide="award" class="h-4.5 w-4.5 text-slate-400"></i>';
+          rankColor = 'text-slate-500 font-bold';
+        } else if (item.rank === 3) {
+          crown = '<i data-lucide="award" class="h-4.5 w-4.5 text-amber-700"></i>';
+          rankColor = 'text-amber-800 font-bold';
+        }
+
+        if (item.active) {
+          highlightStyle = 'border-l-4 border-l-brandAmber';
+        }
+
+        const html = `
+          <div class="flex items-center justify-between p-2.5 rounded-xl ${bgStyle} ${highlightStyle} hover:border-slate-300 transition">
+            <div class="flex items-center space-x-2.5">
+              <span class="text-xs font-black ${rankColor} w-4 text-center">${item.rank}</span>
+              <div class="h-7 w-7 rounded-lg bg-bgSurface border border-borderAmberLight flex items-center justify-center">
+                ${crown || '<i data-lucide="user" class="h-3.5 w-3.5 text-slate-400"></i>'}
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-slate-800">${item.name}</p>
+                <p class="text-[9px] text-textMuted font-mono">${item.mssv}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="text-xs font-bold text-slate-800">${item.score} câu</p>
+              <p class="text-[9px] text-textMuted">Tỷ lệ: ${item.accuracy}%</p>
+            </div>
+          </div>
+        `;
+        container.innerHTML += html;
+      });
+
+      lucide.createIcons();
+    }
+
+    // Mock Quiz Workspace execution
+    function startQuiz(setId) {
+      document.getElementById('quiz-sets-section').classList.add('hidden');
+      document.getElementById('quiz-working-area').classList.remove('hidden');
+
+      // Hide sidebars and other cards on dashboard for distraction-free mode
+      document.getElementById('left-sidebar-roadmap').classList.add('hidden');
+      document.getElementById('right-sidebar-motivation').classList.add('hidden');
+      document.getElementById('day-summary-card').classList.add('hidden');
+      document.getElementById('competency-visualization-card').classList.add('hidden');
+      
+      // Center and expand workspace
+      const centerSec = document.getElementById('center-content-section');
+      centerSec.classList.remove('lg:col-span-6');
+      centerSec.classList.add('lg:col-span-12', 'max-w-3xl', 'mx-auto', 'w-full');
+
+      if (setId.includes('p2')) {
+        document.getElementById('active-quiz-subtitle').innerText = "Tool Calling & Guardrails - Câu 1";
+        document.getElementById('quiz-question-number').innerText = "Câu hỏi 1 / 7";
+        document.getElementById('quiz-question-text').innerText = "Hãy phân tích tình huống khi hai Tool trong Function Schema có tên hoặc tham số mô tả tương đồng nhau. Hệ thống AI nên xử lý như thế nào để tránh gọi nhầm tool?";
+        
+        // Render Textarea for Essay
+        document.getElementById('quiz-options-container').innerHTML = `
+          <div class="space-y-3">
+            <textarea placeholder="Nhập câu trả lời tự luận tình huống của bạn tại đây..." class="w-full h-32 p-3 border border-borderAmberLight bg-bgSurfaceCream rounded-xl text-xs focus:outline-brandAmber text-slate-700" rows="4"></textarea>
+            <div class="flex justify-end">
+              <button onclick="submitMockEssay()" class="px-4 py-2 bg-brandAmber text-white hover:bg-amber-600 rounded-xl text-xs font-bold transition cursor-pointer">Nộp bài tự luận</button>
+            </div>
+          </div>
+        `;
+        document.getElementById('quiz-explanation-panel').classList.add('hidden');
+      } else {
+        document.getElementById('active-quiz-subtitle').innerText = "Lý thuyết ReAct - Câu 1";
+        document.getElementById('quiz-question-number').innerText = "Câu hỏi 1 / 8";
+        document.getElementById('quiz-question-text').innerText = "Trong cấu trúc thiết kế ReAct (Reasoning and Acting), cơ chế \"Observation\" được sinh ra từ đâu?";
+        
+        // Reset to MCQ
+        document.getElementById('quiz-options-container').innerHTML = `
+          <button onclick="answerOption('A')" class="focus-visible-ring w-full text-left p-3.5 rounded-xl border border-borderAmberLight bg-bgSurfaceCream hover:bg-brandAmberLight/10 hover:border-brandAmber/30 transition flex items-center justify-between group cursor-pointer">
+            <span class="text-xs text-slate-700"><span class="font-bold text-brandAmber mr-2">A.</span> Suy nghĩ độc lập (Thought) của Agent.</span>
+            <span class="text-[9px] text-textMuted border border-slate-200 px-1.5 py-0.5 rounded font-mono group-hover:border-brandAmber/30">Phím 1</span>
+          </button>
+          <button onclick="answerOption('B')" class="focus-visible-ring w-full text-left p-3.5 rounded-xl border border-brandSuccess bg-green-50/50 flex items-center justify-between group cursor-default">
+            <span class="text-xs text-brandSuccess"><span class="font-bold text-brandSuccess mr-2">B.</span> Kết quả trả về sau khi gọi Tool (Action) trên môi trường.</span>
+            <div class="flex items-center space-x-1.5">
+              <i data-lucide="check-circle-2" class="h-4.5 w-4.5 text-brandSuccess fill-green-100"></i>
+              <span class="text-[9px] text-brandSuccess/80 border border-brandSuccess/20 px-1.5 py-0.5 rounded font-mono">Đúng</span>
+            </div>
+          </button>
+          <button onclick="answerOption('C')" class="focus-visible-ring w-full text-left p-3.5 rounded-xl border border-borderAmberLight bg-bgSurfaceCream hover:bg-brandAmberLight/10 hover:border-brandAmber/30 transition flex items-center justify-between group cursor-pointer">
+            <span class="text-xs text-slate-700"><span class="font-bold text-brandAmber mr-2">C.</span> Hướng dẫn Prompt cứng từ System instruction.</span>
+            <span class="text-[9px] text-textMuted border border-slate-200 px-1.5 py-0.5 rounded font-mono group-hover:border-brandAmber/30">Phím 3</span>
+          </button>
+          <button onclick="answerOption('D')" class="focus-visible-ring w-full text-left p-3.5 rounded-xl border border-borderAmberLight bg-bgSurfaceCream hover:bg-brandAmberLight/10 hover:border-brandAmber/30 transition flex items-center justify-between group cursor-pointer">
+            <span class="text-xs text-slate-700"><span class="font-bold text-brandAmber mr-2">D.</span> Phản hồi trực tiếp từ người dùng cuối (User feedback loop).</span>
+            <span class="text-[9px] text-textMuted border border-slate-200 px-1.5 py-0.5 rounded font-mono group-hover:border-brandAmber/30">Phím 4</span>
+          </button>
+        `;
+        document.getElementById('quiz-explanation-panel').classList.remove('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    function submitMockEssay() {
+      // Show reference grading criteria
+      document.getElementById('quiz-explanation-panel').innerHTML = `
+        <div class="space-y-2">
+          <p class="font-bold text-brandSuccess flex items-center"><i data-lucide="award" class="h-4 w-4 mr-1.5"></i>Đáp án mẫu và các tiêu chí chấm điểm (SFIA):</p>
+          <p class="text-slate-700"><strong>Đáp án tham khảo:</strong> Cần sử dụng phân tầng từ vựng (Namespacing) rõ ràng cho mô tả chức năng của từng tool, hoặc gộp hai tool và bổ sung thêm tham số phân loại (e.g. action_type) thay vì tách rời.</p>
+          <div class="space-y-1 pl-2">
+            <p class="text-slate-600 flex items-center"><i data-lucide="check" class="h-3.5 w-3.5 text-brandSuccess mr-1"></i> Có phân tách namespace của Tool.</p>
+            <p class="text-slate-600 flex items-center"><i data-lucide="check" class="h-3.5 w-3.5 text-brandSuccess mr-1"></i> Có đề cập tới việc tối ưu system instructions.</p>
+          </div>
+          <div class="flex items-center space-x-2 pt-2">
+            <span class="text-[10px] font-bold text-textMuted uppercase">Tự chấm điểm:</span>
+            <button onclick="exitQuiz()" class="px-3 py-1 bg-green-100 hover:bg-green-200 text-brandSuccess border border-brandSuccess/20 rounded text-[10px] font-bold cursor-pointer">Khớp đáp án mẫu</button>
+            <button onclick="exitQuiz()" class="px-3 py-1 bg-red-50 hover:bg-red-100 text-brandError border border-brandError/20 rounded text-[10px] font-bold cursor-pointer">Chưa chính xác</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('quiz-explanation-panel').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function answerOption(opt) {
+      alert(`Bạn chọn đáp án ${opt}. Đáp án B là đáp án chính xác!`);
+    }
+
+    function nextMockQuestion() {
+      alert("Đây là mockup tĩnh, câu hỏi tiếp theo sẽ được cập nhật khi lập trình React.");
+    }
+
+    // Restore sidebars and other cards on exit
+    function exitQuiz() {
+      document.getElementById('quiz-working-area').classList.add('hidden');
+      document.getElementById('quiz-sets-section').classList.remove('hidden');
+
+      // Show sidebars and other cards
+      document.getElementById('left-sidebar-roadmap').classList.remove('hidden');
+      document.getElementById('right-sidebar-motivation').classList.remove('hidden');
+      document.getElementById('day-summary-card').classList.remove('hidden');
+      document.getElementById('competency-visualization-card').classList.remove('hidden');
+      
+      // Restore layout
+      const centerSec = document.getElementById('center-content-section');
+      centerSec.classList.add('lg:col-span-6');
+      centerSec.classList.remove('lg:col-span-12', 'max-w-3xl', 'mx-auto', 'w-full');
+    }
+  </script>
+
+</body>
+</html>
