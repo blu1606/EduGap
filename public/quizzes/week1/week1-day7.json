@@ -1,0 +1,130 @@
+{
+  "id": "week1-day7",
+  "parent_id": "week1",
+  "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+  "title": "Day 7: Embedding & Vector Store",
+  "description": "10 câu trắc nghiệm lý thuyết trọng tâm về Embeddings, độ đo tương đồng, Vector Indexing (HNSW, IVF) và đánh giá chất lượng Retrieval.",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Bản chất của việc chuyển đổi văn bản thành vectơ biểu diễn (Embedding) trong Vector DB là gì?",
+      "options": {
+        "A": "Ánh xạ ngữ nghĩa của đoạn văn vào một không gian vectơ số thực nhiều chiều.",
+        "B": "Nén văn bản thành một chuỗi mã hóa nhị phân ngắn gọn.",
+        "C": "Đếm số lần xuất hiện của các từ để tạo ma trận thưa tần suất.",
+        "D": "Mã hóa các chữ cái trong văn bản theo chuẩn định dạng UTF-8."
+      },
+      "answer": "A",
+      "explanation": "Embedding chuyển đổi các đoạn văn bản có độ dài khác nhau thành các vectơ số thực có kích thước cố định, giữ lại mối liên hệ ngữ nghĩa của chúng trong không gian nhiều chiều."
+    },
+    {
+      "id": 2,
+      "question": "Sự khác biệt cơ bản giữa phép đo tương đồng Cosine (Cosine Similarity) và khoảng cách Euclidean (L2 Distance) là gì?",
+      "options": {
+        "A": "Cosine đo lường khoảng cách tuyệt đối; L2 đo lường góc lệch giữa hai vectơ.",
+        "B": "Cosine chỉ dùng cho các vectơ có số chiều nhỏ hơn 100.",
+        "C": "Cosine đo góc hướng của vectơ; L2 đo khoảng cách vật lý giữa hai đầu vectơ.",
+        "D": "L2 luôn luôn cho kết quả đo chính xác hơn Cosine trong mọi tác vụ."
+      },
+      "answer": "C",
+      "explanation": "Cosine Similarity tập trung vào hướng của vectơ (độ tương đồng ngữ nghĩa, không phụ thuộc độ dài văn bản), còn L2 đo khoảng cách vật lý tuyệt đối giữa hai điểm."
+    },
+    {
+      "id": 3,
+      "question": "Cơ chế hoạt động cốt lõi của thuật toán chỉ mục HNSW (Hierarchical Navigable Small World) trong Vector DB là gì?",
+      "options": {
+        "A": "Sắp xếp toàn bộ các vectơ trong cơ sở dữ liệu theo thứ tự bảng chữ cái.",
+        "B": "Tạo cấu trúc đồ thị nhiều lớp cho phép tìm kiếm lân cận gần đúng rất nhanh.",
+        "C": "Nén toàn bộ các giá trị số thực 32-bit về dạng nhị phân 1-bit.",
+        "D": "Chia tập dữ liệu thành các cụm nhỏ thông qua thuật toán phân cụm K-Means."
+      },
+      "answer": "B",
+      "explanation": "HNSW xây dựng một mạng lưới đồ thị phân lớp (tương tự skip list), giúp tìm kiếm các láng giềng gần nhất (ANN) với độ phức tạp thời gian logarit cực nhanh."
+    },
+    {
+      "id": 4,
+      "question": "Mục đích chính của kỹ thuật lượng tử hóa vectơ Product Quantization (PQ) trong Vector Store là gì?",
+      "options": {
+        "A": "Tăng số chiều của vectơ lên gấp đôi để biểu diễn ngữ nghĩa tốt hơn.",
+        "B": "Tự động dịch thuật nội dung tài liệu lưu trữ sang đa ngôn ngữ.",
+        "C": "Đảm bảo tính bảo mật và ẩn danh tuyệt đối cho dữ liệu lưu trữ.",
+        "D": "Nén kích thước vectơ để tiết kiệm bộ nhớ RAM và tăng tốc độ so sánh."
+      },
+      "answer": "D",
+      "explanation": "Product Quantization phân tách không gian vectơ thành các không gian con và lượng tử hóa chúng thành các centroid, giúp giảm mạnh dung lượng RAM cần để lưu trữ chỉ mục."
+    },
+    {
+      "id": 5,
+      "question": "Khi thực hiện kỹ thuật phân mảnh tài liệu (Chunking), tại sao việc thiết lập khoảng chồng lấp (Overlap) giữa các chunk lại quan trọng?",
+      "options": {
+        "A": "Để tránh mất mát thông tin ngữ cảnh nằm ở ranh giới giao cắt giữa các chunk.",
+        "B": "Để giảm thiểu dung lượng lưu trữ của cơ sở dữ liệu Vector DB.",
+        "C": "Để tự động loại bỏ các lỗi chính tả có trong văn bản gốc.",
+        "D": "Để mô hình dễ dàng nhận biết được điểm kết thúc của tài liệu."
+      },
+      "answer": "A",
+      "explanation": "Nếu không có overlap, thông tin liên kết giữa cuối chunk trước và đầu chunk sau sẽ bị cắt rời, khiến mô hình bị mất ngữ cảnh liền mạch khi truy xuất."
+    },
+    {
+      "id": 6,
+      "question": "Vai trò chính của hệ quản trị cơ sở dữ liệu vectơ (Vector Database như ChromaDB, Pinecone) trong hệ thống RAG là gì?",
+      "options": {
+        "A": "Huấn luyện lại mô hình ngôn ngữ lớn để học thêm tri thức mới.",
+        "B": "Lưu trữ chỉ mục embeddings và thực hiện tìm kiếm truy xuất ngữ nghĩa nhanh chóng.",
+        "C": "Tự động sửa lỗi cú pháp code và biên dịch mã nguồn ứng dụng.",
+        "D": "Lọc sạch các thông tin nhạy cảm của người dùng trước khi hiển thị."
+      },
+      "answer": "B",
+      "explanation": "Vector DB lưu trữ các vectơ embeddings của tài liệu và thực hiện phép so khớp độ tương đồng (như Cosine) để nhanh chóng lấy ra các chunk chứa nội dung liên quan nhất."
+    },
+    {
+      "id": 7,
+      "question": "Điểm vượt trội của tìm kiếm ngữ nghĩa (Semantic Search) so với tìm kiếm theo từ khóa (Keyword Search) truyền thống là gì?",
+      "options": {
+        "A": "Semantic Search luôn luôn có tốc độ tìm kiếm nhanh hơn Keyword Search.",
+        "B": "Semantic Search không yêu cầu sử dụng bộ nhớ RAM khi thực hiện truy vấn.",
+        "C": "Semantic Search tìm kiếm dựa trên ý nghĩa và ngữ cảnh thay vì trùng khớp ký tự.",
+        "D": "Semantic Search tự động loại bỏ hoàn toàn các tài liệu bị trùng lặp thông tin."
+      },
+      "answer": "C",
+      "explanation": "Semantic Search hiểu được quan hệ đồng nghĩa, ngữ cảnh của câu hỏi (ví dụ: 'thiết bị liên lạc' khớp với 'điện thoại') nhờ vào việc đo khoảng cách vectơ ngữ nghĩa."
+    },
+    {
+      "id": 8,
+      "question": "Chỉ số MRR (Mean Reciprocal Rank) trong đánh giá chất lượng truy xuất (Retrieval) đo lường yếu tố nào?",
+      "options": {
+        "A": "Vị trí xuất hiện của tài liệu chính xác đầu tiên trong danh sách kết quả.",
+        "B": "Tổng số lượng tài liệu chính xác được tìm thấy trong cơ sở dữ liệu.",
+        "C": "Độ trễ trung bình của mỗi lượt truy vấn tìm kiếm sang Vector DB.",
+        "D": "Tỷ lệ phần trăm tài liệu rác có trong kết quả trả về của hệ thống."
+      },
+      "answer": "A",
+      "explanation": "MRR tính trung bình cộng nghịch đảo vị trí của tài liệu liên quan đầu tiên tìm được. Ví dụ nếu tài liệu đúng nằm ở vị trí số 1 thì rank = 1, ở vị trí số 2 thì rank = 0.5."
+    },
+    {
+      "id": 9,
+      "question": "Điểm khác biệt giúp chỉ số NDCG (Normalized Discounted Cumulative Gain) ưu việt hơn MRR khi đánh giá bảng xếp hạng kết quả tìm kiếm là gì?",
+      "options": {
+        "A": "NDCG không phụ thuộc vào số chiều của vectơ embedding dùng tìm kiếm.",
+        "B": "NDCG tự động loại bỏ các tài liệu bị trùng lặp trước khi tính điểm.",
+        "C": "NDCG có thể đo lường được trên cả các cơ sở dữ liệu quan hệ truyền thống.",
+        "D": "NDCG đánh giá được mức độ liên quan nhiều cấp độ và phạt nặng nếu kết quả tốt xếp hạng thấp."
+      },
+      "answer": "D",
+      "explanation": "NDCG hỗ trợ chấm điểm độ liên quan theo nhiều mức độ (ví dụ: Rất liên quan, Hơi liên quan, Không liên quan) và áp dụng cơ chế giảm trừ (discount) theo vị trí xếp hạng."
+    },
+    {
+      "id": 10,
+      "question": "Khi thiết lập kích thước mảnh (Chunk Size) trong RAG, việc chọn Chunk Size nhỏ (ví dụ 100 tokens) mang lại trade-off (sự đánh đổi) nào?",
+      "options": {
+        "A": "Tăng tốc độ truy xuất của Vector DB nhưng làm tăng chi phí lưu trữ bộ nhớ.",
+        "B": "Truy xuất thông tin tập trung, tiết kiệm token nhưng có nguy cơ mất ngữ cảnh bao quát.",
+        "C": "Loại bỏ hoàn toàn ảo giác của LLM nhưng làm tăng độ trễ phản hồi của hệ thống.",
+        "D": "Giúp mô hình dễ dàng nhận diện và ẩn danh dữ liệu nhạy cảm PII."
+      },
+      "answer": "B",
+      "explanation": "Chunk nhỏ giúp thông tin đưa vào prompt cực kỳ cô đọng, tiết kiệm token. Tuy nhiên, nó dễ bị mất ngữ cảnh xung quanh của tài liệu (ví dụ: mất chủ ngữ hoặc bảng số liệu liên quan)."
+    }
+  ]
+}

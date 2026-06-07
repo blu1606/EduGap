@@ -1,0 +1,130 @@
+{
+  "id": "week1-day6",
+  "parent_id": "week1",
+  "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+  "title": "Day 6: Hackathon Day & Prototyping",
+  "description": "10 câu trắc nghiệm lý thuyết trọng tâm về lộ trình xây dựng sản phẩm mẫu (Prototype), tài liệu đặc tả (SPEC) và kỹ năng Demo Pitch.",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Khi tham gia Hackathon hoặc xây dựng MVP (Sản phẩm khả dụng tối thiểu), nguyên tắc Scoping (giới hạn phạm vi) quan trọng nhất là gì?",
+      "options": {
+        "A": "Tập trung giải quyết xuất sắc một bài toán cốt lõi duy nhất có giá trị cao.",
+        "B": "Cố gắng xây dựng đầy đủ tất cả các tính năng phụ trợ để wow ban giám khảo.",
+        "C": "Dành phần lớn thời gian để tối ưu hóa hiệu năng phần cứng và cơ sở dữ liệu.",
+        "D": "Sử dụng cùng một lúc nhiều mô hình ngôn ngữ lớn khác nhau chạy song song."
+      },
+      "answer": "A",
+      "explanation": "Trong thời gian ngắn của Hackathon, việc ôm đồm tính năng sẽ dẫn đến sản phẩm nửa vời, lỗi nhiều. Tập trung vào một tính năng cốt lõi (Core Value) giúp demo chạy trơn tru."
+    },
+    {
+      "id": 2,
+      "question": "Tài liệu đặc tả sản phẩm mẫu (SPEC) trong quy trình phát triển sản phẩm AI đóng vai trò gì?",
+      "options": {
+        "A": "Là mã nguồn Python chi tiết dùng để cấu hình máy chủ chạy mô hình.",
+        "B": "Đặc tả rõ bài toán kinh doanh, kiến trúc kỹ thuật dự kiến và kịch bản demo.",
+        "C": "Là bộ dữ liệu chuẩn hóa Golden Dataset dùng để huấn luyện mô hình.",
+        "D": "Hợp đồng pháp lý ký kết với nhà cung cấp dịch vụ máy chủ đám mây."
+      },
+      "answer": "B",
+      "explanation": "Tài liệu SPEC giúp toàn đội (Developer, PM, Designer) thống nhất về phạm vi MVP, sơ đồ luồng dữ liệu của Agent và kịch bản từng bước cho ngày demo."
+    },
+    {
+      "id": 3,
+      "question": "Cấu trúc một bài thuyết trình Demo Pitch sản phẩm AI thuyết phục nhất thường tập trung vào phần nào?",
+      "options": {
+        "A": "Mô tả chi tiết thuật toán huấn luyện và các tham số toán học của mô hình.",
+        "B": "Liệt kê danh sách các GPU đã thuê để phục vụ dự án trong thời gian qua.",
+        "C": "Trình bày vấn đề thực tế, giải pháp AI giải quyết thế nào và chạy thử live demo.",
+        "D": "Báo cáo chi tiết bảng lương và phân công nhân sự của từng thành viên."
+      },
+      "answer": "C",
+      "explanation": "Ban giám khảo và khách hàng quan tâm đến giá trị thực tế. Bài pitch cần nêu bật nỗi đau (Pain Point), cách AI giải quyết nó (Solution) và chứng minh bằng live demo thực tế."
+    },
+    {
+      "id": 4,
+      "question": "Tại sao việc thiết lập vòng phản hồi (Feedback Loop) nhanh với người dùng thử lại rất quan trọng trong giai đoạn đầu làm prototype?",
+      "options": {
+        "A": "Giúp tăng tốc độ sinh token của mô hình ngôn ngữ lớn lên gấp đôi.",
+        "B": "Để người dùng thử tự sửa các lỗi cú pháp code Python giúp lập trình viên.",
+        "C": "Loại bỏ hoàn toàn sự cần thiết của việc xây dựng tài liệu đặc tả SPEC.",
+        "D": "Phát hiện sớm các giả định sai về nhu cầu sử dụng và lỗi UX để chỉnh sửa kịp thời."
+      },
+      "answer": "D",
+      "explanation": "Prototype nhanh giúp kiểm nghiệm giả thuyết thực tế. Phản hồi sớm từ người dùng ngăn chặn việc đội ngũ mất công xây dựng một hệ thống AI hoàn hảo nhưng không ai cần."
+    },
+    {
+      "id": 5,
+      "question": "Lựa chọn mức độ hoàn thiện của sản phẩm mẫu (Prototype Fidelity) ở giai đoạn đầu nên tuân theo chiến lược nào?",
+      "options": {
+        "A": "Bắt đầu bằng wireframe giấy hoặc mockup tĩnh trước khi code thực tế.",
+        "B": "Xây dựng ngay giao diện đồ họa hoàn chỉnh với các hiệu ứng hoạt ảnh phức tạp.",
+        "C": "Viết code xử lý backend hoàn chỉnh trước khi thiết kế giao diện người dùng.",
+        "D": "Chỉ sử dụng các API thương mại có trả phí cao nhất để làm prototype."
+      },
+      "answer": "A",
+      "explanation": "Làm mockup tĩnh hoặc wireframe giúp kiểm chứng luồng đi (User Flow) cực kỳ nhanh mà không mất công viết code, dễ dàng thay đổi khi thiết kế chưa phù hợp."
+    },
+    {
+      "id": 6,
+      "question": "Tại sao việc thiết kế demo dựa trên một kịch bản tình huống cụ thể (Scenario-driven) lại hiệu quả hơn demo tự do?",
+      "options": {
+        "A": "Để mô hình ngôn ngữ không cần sử dụng cơ chế attention khi suy luận.",
+        "B": "Giúp dẫn dắt ban giám khảo đi qua đúng luồng hoạt động mượt mà và phô diễn tính năng tốt nhất.",
+        "C": "Giảm thiểu chi phí thuê máy chủ GPU vật lý xuống mức tối thiểu.",
+        "D": "Tự động ẩn danh toàn bộ các thông tin dữ liệu nhạy cảm PII."
+      },
+      "answer": "B",
+      "explanation": "Live demo tự do dễ gặp lỗi bất thường của LLM (ảo giác, trễ mạng). Demo theo kịch bản rõ ràng (ví dụ: duyệt một hồ sơ cụ thể) giúp chứng minh năng lực hệ thống một cách trơn tru."
+    },
+    {
+      "id": 7,
+      "question": "Làm thế nào để quản lý nợ kỹ thuật (Technical Debt) khi phát triển dự án AI thần tốc trong 24 giờ Hackathon?",
+      "options": {
+        "A": "Dành 12 giờ đầu tiên để viết tài liệu hướng dẫn sử dụng chi tiết.",
+        "B": "Viết mã nguồn thật hoàn hảo, tuân thủ mọi nguyên tắc clean code tuyệt đối.",
+        "C": "Chấp nhận hardcode các phần phụ trợ, tập trung tối đa vào luồng hoạt động chính của AI.",
+        "D": "Cấm không cho phép các thành viên trong đội sửa đổi mã nguồn của nhau."
+      },
+      "answer": "C",
+      "explanation": "Trong Hackathon, tốc độ là ưu tiên số một. Chấp nhận viết code tạm thời (hacky code) ở các phần phụ (như đăng nhập, đăng ký) để dành tài nguyên xây dựng tính năng AI cốt lõi."
+    },
+    {
+      "id": 8,
+      "question": "Quy trình làm việc nhóm (GitHub/Branching) nào phù hợp nhất cho một đợt chạy nước rút (sprint) ngắn 24-48 giờ?",
+      "options": {
+        "A": "Các thành viên thống nhất các module độc lập và commit trực tiếp lên main/dev sau khi test local.",
+        "B": "Tạo hàng chục nhánh (branches) phụ và quy trình duyệt Pull Request nhiều bước phức tạp.",
+        "C": "Không sử dụng Git, các thành viên tự sao chép code qua lại bằng USB.",
+        "D": "Chỉ duy nhất một người được phép viết code, các thành viên khác chỉ đứng xem."
+      },
+      "answer": "A",
+      "explanation": "Trong thời gian quá ngắn, quy trình PR rườm rà sẽ làm nghẽn tiến độ. Chia nhỏ công việc độc lập (như Frontend vs Backend) và hợp nhất nhanh sau khi chạy thử local giúp tối ưu tốc độ."
+    },
+    {
+      "id": 9,
+      "question": "Khi thuyết trình (pitch) một sản phẩm AI trước nhà đầu tư phi kỹ thuật, bạn nên giải thích năng lực AI thế nào?",
+      "options": {
+        "A": "Đưa ra các công thức toán học tính toán gradient của mạng Transformer.",
+        "B": "Đọc toàn bộ nội dung tệp tin JSON cấu hình tham số giải mã đầu ra.",
+        "C": "Liệt kê danh sách tất cả các thư viện Python đã import trong dự án.",
+        "D": "Dùng các phép so sánh ẩn dụ đơn giản và tập trung vào giá trị kinh doanh mang lại."
+      },
+      "answer": "D",
+      "explanation": "Nhà đầu tư quan tâm đến bài toán kinh doanh và hiệu quả đầu tư (ROI). Cần chuyển hóa thuật ngữ kỹ thuật phức tạp thành các câu chuyện giá trị và lợi ích thực tế."
+    },
+    {
+      "id": 10,
+      "question": "Bước kiểm tra (Sanity Check) kỹ thuật quan trọng nhất cần thực hiện 30 phút trước giờ Demo Pitch là gì?",
+      "options": {
+        "A": "Tiến hành nâng cấp lên phiên bản mới nhất của tất cả các thư viện bên thứ ba.",
+        "B": "Chạy thử lại toàn bộ kịch bản demo từ đầu đến cuối trên thiết bị và đường truyền mạng thực tế.",
+        "C": "Huấn luyện lại mô hình ngôn ngữ lớn từ đầu với tập dữ liệu mới cào từ web.",
+        "D": "Thay đổi hoàn toàn cấu trúc giao diện màu sắc của trang chủ ứng dụng."
+      },
+      "answer": "B",
+      "explanation": "Đường truyền mạng tại hội trường demo thường rất yếu hoặc cấu hình thiết bị chiếu khác biệt. Chạy thử kịch bản demo ngay tại chỗ giúp phát hiện và xử lý sớm các sự cố phát sinh."
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "id": "week1-set3",
+  "parent_id": "week1",
+  "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+  "title": "Bộ đề 3: Nâng cao & Thực chiến",
+  "description": "30 câu trắc nghiệm chuyên sâu, tập trung vào gỡ lỗi (debugging), bảo mật nâng cao và các bài toán thiết kế hệ thống thực tế.",
+  "difficulty": "khó",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Tính toán dung lượng bộ nhớ (Bytes) cần thiết cho KV Cache của một mô hình (32 lớp, 32 attention heads, số chiều 128, batch=8, chuỗi=4096, dùng FP16)?",
+      "options": {
+        "A": "Khoảng 536 Megabytes bộ nhớ RAM.",
+        "B": "Khoảng 1.07 Gigabytes bộ nhớ RAM.",
+        "C": "Khoảng 2.15 Gigabytes bộ nhớ RAM.",
+        "D": "Khoảng 4.29 Gigabytes bộ nhớ RAM."
+      },
+      "answer": "C",
+      "explanation": "Công thức: 2 * Lớp * Heads * Chiều * Batch * Chuỗi * 2 Bytes (FP16). Phép tính: 2 * 32 * 32 * 128 * 8 * 4096 * 2 = 2,147,483,648 Bytes = 2 GB."
+    },
+    {
+      "id": 2,
+      "question": "Hệ thống Agent nhận diện lệnh '/help' để trợ giúp, nhưng khi user nhập ' /help' (có dấu cách phía trước) thì Agent bỏ qua. Nguyên nhân do đâu?",
+      "options": {
+        "A": "Bộ mã hóa vị trí RoPE tự động xóa bỏ ký tự '/' ở đầu câu.",
+        "B": "Dấu cách làm Tokenizer mã hóa chuỗi thành các ID token khác hoàn toàn.",
+        "C": "Mô hình ngôn ngữ bị tràn KV Cache nên không nhận diện được lệnh.",
+        "D": "Bộ Parser của hệ thống chỉ hoạt động khi ký tự '/' ở cuối câu."
+      },
+      "answer": "B",
+      "explanation": "Tokenizer xử lý ký tự khoảng trắng ở đầu từ như một phần của token tiếp theo (ví dụ: ' /help' vs '/help' tạo ra các token ID khác nhau), làm sai lệch so khớp Regex của hệ thống."
+    },
+    {
+      "id": 3,
+      "question": "Mô hình ngôn ngữ bật JSON Mode đôi khi vẫn trả về chuỗi văn bản dẫn nhập như 'Dưới đây là kết quả JSON:' ở đầu. Giải quyết thế nào?",
+      "options": {
+        "A": "Thiết lập cấu hình system prompt cấm trả lời kèm văn bản và dùng parser kiểm tra đầu ra.",
+        "B": "Tăng tham số Temperature lên cao để mô hình tự động cắt bỏ văn bản thừa.",
+        "C": "Sử dụng mô hình nhỏ hơn để thực hiện tác vụ sinh dữ liệu JSON.",
+        "D": "Cấm hoàn toàn việc sử dụng ví dụ Few-shot trong prompt gửi đi."
+      },
+      "answer": "A",
+      "explanation": "JSON Mode chỉ đảm bảo nội dung bên trong cặp ngoặc là JSON hợp lệ chứ không chặn hoàn toàn text dẫn nhập. Cần kết hợp system prompt chặt chẽ và bộ cắt chuỗi ở code."
+    },
+    {
+      "id": 4,
+      "question": "Khi viết System Prompt, việc áp dụng quá nhiều quy tắc cấm đoán nghiêm ngặt (Over-constraining) dẫn đến hậu quả gì?",
+      "options": {
+        "A": "Mô hình ngôn ngữ tự động tăng tốc độ xử lý câu hỏi lên gấp đôi.",
+        "B": "Mô hình bị thiên lệch và thường xuyên từ chối trả lời cả các câu hỏi hợp lệ.",
+        "C": "Lớp Layer Normalization bị lỗi do giá trị gradient tăng quá nhanh.",
+        "D": "Mô hình tự động bỏ qua toàn bộ các tham số giải mã đầu vào."
+      },
+      "answer": "B",
+      "explanation": "Quá nhiều quy tắc cấm khiến mô hình trở nên quá nhạy cảm và lo sợ vi phạm an toàn, dẫn đến hiện tượng từ chối thực hiện nhiệm vụ (refusal) mặc dù yêu cầu an toàn."
+    },
+    {
+      "id": 5,
+      "question": "Để kéo dài Context Window vượt quá giới hạn huấn luyện gốc bằng RoPE mà ít làm suy giảm chất lượng nhất, người ta dùng kỹ thuật gì?",
+      "options": {
+        "A": "Cộng trực tiếp độ lệch vị trí vào vectơ embedding của từ.",
+        "B": "Nội suy tần số (Linear hoặc NTK-aware Scaling) của mã hóa vòng quay.",
+        "C": "Loại bỏ hoàn toàn cơ chế mã hóa vị trí của các token mới.",
+        "D": "Giảm số lượng attention heads ở các lớp mạng trên cùng."
+      },
+      "answer": "B",
+      "explanation": "Nội suy RoPE (như NTK-aware) điều chỉnh tần số của phép quay vectơ vị trí để mô hình có thể thích ứng với khoảng cách xa hơn mà không bị phân tán attention."
+    },
+    {
+      "id": 6,
+      "question": "Hệ thống RAG của bạn hoạt động với Recall rất cao nhưng Precision rất thấp. Điều này phản ánh tình trạng thực tế nào?",
+      "options": {
+        "A": "Hệ thống không tìm thấy bất kỳ tài liệu liên quan nào từ Vector DB.",
+        "B": "Hệ thống lấy ra quá nhiều tài liệu nhiễu không liên quan vào Prompt.",
+        "C": "Mô hình ngôn ngữ bị hết bộ nhớ KV Cache ngay khi nhận câu hỏi.",
+        "D": "Các tài liệu trong Vector DB đã bị kẻ tấn công đầu độc hoàn toàn."
+      },
+      "answer": "B",
+      "explanation": "Recall cao nghĩa là tìm được hầu hết tài liệu đúng, nhưng Precision thấp nghĩa là trong số tài liệu trả về có quá nhiều tài liệu rác, gây tốn token và làm nhiễu LLM."
+    },
+    {
+      "id": 7,
+      "question": "Nguy cơ lớn nhất khi sử dụng một Golden Dataset được tạo ra hoàn toàn tự động bằng LLM (Synthetic Data) là gì?",
+      "options": {
+        "A": "Tập dữ liệu bị thiếu các trường định dạng yêu cầu của hệ thống.",
+        "B": "Không phản ánh được các lỗi gõ sai, từ lóng và cách hành văn thực tế của người dùng.",
+        "C": "Chi phí để lưu trữ tập dữ liệu tổng hợp này quá đắt đỏ.",
+        "D": "Mô hình giám khảo từ chối chấm điểm trên các câu hỏi tự động."
+      },
+      "answer": "B",
+      "explanation": "Dữ liệu do LLM sinh ra thường quá sạch và chuẩn ngữ pháp, khiến hệ thống đạt điểm kiểm thử rất cao nhưng dễ thất bại khi gặp người dùng thực tế nhập liệu lộn xộn."
+    },
+    {
+      "id": 8,
+      "question": "Để tối ưu chi phí token cho một hệ thống AI lớn, kỹ thuật định tuyến (Model Routing) hoạt động theo nguyên lý nào?",
+      "options": {
+        "A": "Gửi tất cả các truy vấn sang mô hình lớn nhất để đạt kết quả tốt nhất.",
+        "B": "Dùng mô hình nhỏ để phân loại và xử lý câu hỏi dễ, chỉ gửi câu hỏi khó lên mô hình lớn.",
+        "C": "Tự động dịch chuyển vị trí địa lý của máy chủ API theo thời gian thực.",
+        "D": "Nén toàn bộ văn bản đầu vào thành các đoạn mã băm trước khi gửi đi."
+      },
+      "answer": "B",
+      "explanation": "Model Router hoạt động như bộ lọc: các tác vụ đơn giản (phân loại, trích xuất) được xử lý bằng mô hình rẻ tiền, tối ưu hóa tài nguyên cho mô hình đắt tiền xử lý các ca khó."
+    },
+    {
+      "id": 9,
+      "question": "Hiện tượng thoái hóa thời gian (Temporal Degradation) của dữ liệu Grounding xảy ra trong trường hợp nào?",
+      "options": {
+        "A": "Khi mô hình ngôn ngữ lớn bị lỗi bộ nhớ đệm sau một thời gian chạy.",
+        "B": "Khi dữ liệu nguồn làm căn cứ bị lỗi thời so với câu hỏi thời gian thực của user.",
+        "C": "Khi tốc độ sinh token của mô hình bị chậm dần theo thời gian.",
+        "D": "Khi hệ thống chuyển từ sử dụng mô hình mã nguồn mở sang API."
+      },
+      "answer": "B",
+      "explanation": "Nếu dữ liệu grounding là tĩnh (ví dụ báo cáo kho cũ), khi người dùng hỏi thông tin thực tế mới nhất, LLM sẽ trả về thông tin cũ đã lỗi thời."
+    },
+    {
+      "id": 10,
+      "question": "Tại sao việc ưu tiên Recall hơn Precision là bắt buộc khi thiết kế Agent kiểm tra lỗi tuân thủ pháp luật (Compliance Auditing)?",
+      "options": {
+        "A": "Để giảm thiểu tối đa số lượng token tiêu thụ khi gọi API ngoài.",
+        "B": "Vì việc bỏ sót một lỗi vi phạm pháp luật gây hậu quả nghiêm trọng hơn việc báo nhầm.",
+        "C": "Vì Recall cao giúp Agent chạy nhanh hơn trên các thiết bị phần cứng yếu.",
+        "D": "Vì Precision không thể đo lường được trên các tài liệu pháp lý phức tạp."
+      },
+      "answer": "B",
+      "explanation": "Trong kiểm toán, việc bỏ sót vi phạm (False Negative) có thể dẫn tới phạt nặng. Do đó cần quét rộng (Recall cao) và chấp nhận lọc tay các ca báo nhầm (False Positive)."
+    },
+    {
+      "id": 11,
+      "question": "Khi chạy mô hình đánh giá LLM-as-a-judge, tại sao cần bắt buộc thiết lập Temperature = 0?",
+      "options": {
+        "A": "Để mô hình sinh ra các đánh giá dài và chi tiết nhất có thể.",
+        "B": "Để đảm bảo tính nhất quán của điểm số chấm qua các lần chạy khác nhau.",
+        "C": "Để tránh việc mô hình giám khảo bị rò rỉ mã khóa API ra bên ngoài.",
+        "D": "Để mô hình tự động nhận diện được ngôn ngữ của bài chấm điểm."
+      },
+      "answer": "B",
+      "explanation": "Đánh giá chất lượng cần tính khách quan và lặp lại được. Nếu đặt Temperature > 0, cùng một bài làm có thể nhận các mức điểm khác nhau ở mỗi lần chấm."
+    },
+    {
+      "id": 12,
+      "question": "Làm thế nào để xử lý triệt để hiện tượng vòng lặp vô hạn (Infinite Loop) trong code vận hành Agent ReAct?",
+      "options": {
+        "A": "Giới hạn số bước lặp (Max Iterations) và tự động dừng trả về thông báo lỗi hoặc fallback.",
+        "B": "Tăng kích thước Context Window lên vô hạn để Agent tiếp tục suy nghĩ.",
+        "C": "Xóa toàn bộ lịch sử cuộc trò chuyện của người dùng khi phát hiện vòng lặp.",
+        "D": "Tự động chuyển toàn bộ yêu cầu sang một công cụ tìm kiếm khác."
+      },
+      "answer": "A",
+      "explanation": "Cần cài đặt bộ đếm vòng lặp ở code nền (orchestrator). Khi vượt quá số bước cho phép (ví dụ 5-10 bước), hệ thống tự ngắt và trả về cảnh báo hoặc kết quả tạm thời."
+    },
+    {
+      "id": 13,
+      "question": "Agent của bạn gọi Tool lấy tọa độ 'get_location' với tham số truyền vào là địa chỉ text thay vì vĩ độ/kinh độ số thực như Tool yêu cầu. Khắc phục thế nào?",
+      "options": {
+        "A": "Tự động đổi tên Tool thành 'get_address' để LLM tự thay đổi mã thực thi.",
+        "B": "Cập nhật định nghĩa schema của Tool quy định rõ kiểu dữ liệu số thực và thêm mô tả.",
+        "C": "Huấn luyện lại mô hình ngôn ngữ từ đầu với tập dữ liệu tọa độ địa lý.",
+        "D": "Chặn không cho phép Agent gọi công cụ này trên môi trường di động."
+      },
+      "answer": "B",
+      "explanation": "LLM sinh tham số dựa trên schema mô tả. Cần định nghĩa chặt chẽ tham số là dạng number và ghi rõ mô tả ví dụ (ví dụ: Latitude: 21.02) để mô hình trích xuất đúng."
+    },
+    {
+      "id": 14,
+      "question": "Một cuộc tấn công Prompt Injection gián tiếp (Indirect Prompt Injection) xảy ra trong kịch bản nào sau đây?",
+      "options": {
+        "A": "Kẻ tấn công nhập trực tiếp câu lệnh phá vỡ hệ thống vào khung chat.",
+        "B": "Agent cào tài liệu từ web chứa chỉ thị độc hại ẩn, khiến LLM bị chiếm quyền điều khiển.",
+        "C": "Lập trình viên vô tình viết sai cú pháp trong tệp cấu hình System Prompt.",
+        "D": "Kẻ tấn công truy cập vật lý vào máy chủ chứa card đồ họa chạy mô hình."
+      },
+      "answer": "B",
+      "explanation": "Indirect Prompt Injection xảy ra khi LLM xử lý nguồn dữ liệu bên ngoài (email, bài viết web) chứa các câu lệnh tấn công được lồng sẵn để lừa mô hình."
+    },
+    {
+      "id": 15,
+      "question": "Nút thắt cổ chai (Bottleneck) lớn nhất về mặt hiệu năng của hệ thống gồm nhiều Agent cộng tác (Multi-Agent System) là gì?",
+      "options": {
+        "A": "Không thể chia sẻ bộ nhớ KV Cache giữa các mô hình ngôn ngữ khác nhau.",
+        "B": "Độ trễ (Latency) tích lũy và chi phí token tăng vọt do giao tiếp tuần tự giữa các agent.",
+        "C": "Tất cả các Agent bắt buộc phải chạy chung trên một máy chủ vật lý duy nhất.",
+        "D": "Không thể sử dụng các công cụ quan sát trace logs cho hệ thống này."
+      },
+      "answer": "B",
+      "explanation": "Trong Multi-Agent, đầu ra của Agent này là đầu vào của Agent kia. Việc gọi LLM nối tiếp nhau nhiều lần làm tăng độ trễ phản hồi lên gấp nhiều lần và ngốn token cực nhanh."
+    },
+    {
+      "id": 16,
+      "question": "Khi chạy code, Tool nhận diện tham số truyền vào từ Agent bị sai định dạng JSON Schema. Cách xử lý lập trình nào là tối ưu?",
+      "options": {
+        "A": "Báo lỗi crash chương trình ngay lập tức để lập trình viên sửa code.",
+        "B": "Bắt lỗi (catch error) và trả về thông báo lỗi schema chi tiết dưới dạng Observation để LLM sửa.",
+        "C": "Tự động gán các giá trị ngẫu nhiên vào các trường tham số bị lỗi.",
+        "D": "Bỏ qua lỗi và tiếp tục chạy công cụ với các tham số rỗng."
+      },
+      "answer": "B",
+      "explanation": "Bằng cách bắt lỗi và gửi lỗi định dạng về làm Observation, LLM sẽ nhận diện được lỗi tham số của mình và tự sinh lại cuộc gọi Tool với định dạng đúng."
+    },
+    {
+      "id": 17,
+      "question": "Để thực hiện cơ chế Human-in-the-loop trên một ứng dụng web không trạng thái (Stateless API), bạn nên quản lý trạng thái Agent như thế nào?",
+      "options": {
+        "A": "Giữ kết nối HTTP socket mở liên tục trong nhiều ngày chờ người dùng duyệt.",
+        "B": "Lưu lại toàn bộ lịch sử trace logs vào DB và tái tạo lại prompt khi user nhấn nút duyệt.",
+        "C": "Chạy một vòng lặp sleep liên tục trên máy chủ để giữ tiến trình Agent hoạt động.",
+        "D": "Yêu cầu người dùng tự sao chép lịch sử chat và gửi lại khi muốn tiếp tục."
+      },
+      "answer": "B",
+      "explanation": "Do API stateless không giữ trạng thái chạy, ta cần lưu trạng thái cuộc gọi và lịch sử trace vào cơ sở dữ liệu. Khi nhận được action duyệt của user, ta tải lại trace cũ để LLM tiếp tục suy luận."
+    },
+    {
+      "id": 18,
+      "question": "Khi Agent của bạn có quyền truy cập vào hơn 50 công cụ khác nhau, làm thế nào để tránh việc LLM bị loạn hoặc vượt quá giới hạn token của prompt?",
+      "options": {
+        "A": "Chia nhỏ và huấn luyện lại mô hình để ghi nhớ sẵn chức năng của 50 công cụ.",
+        "B": "Sử dụng Vector DB để tìm kiếm ngữ nghĩa và chỉ nạp 3-5 công cụ liên quan nhất vào prompt.",
+        "C": "Tăng kích thước Context Window lên mức tối đa để nạp toàn bộ 50 công cụ.",
+        "D": "Yêu cầu người dùng tự chọn công cụ trước khi gửi câu hỏi đến cho Agent."
+      },
+      "answer": "B",
+      "explanation": "Kỹ thuật này gọi là Dynamic Tool Retrieval. Thay vì nạp toàn bộ schema của 50 công cụ gây nhiễu, ta dùng Vector DB truy xuất các công cụ phù hợp nhất dựa trên câu hỏi của user."
+    },
+    {
+      "id": 19,
+      "question": "Trace logs hiển thị: Action: weather_search('Hà Nội') -> Observation: Tool 'weather_search' not found. Lỗi này phản ánh điều gì?",
+      "options": {
+        "A": "Mô hình ngôn ngữ bị ảo giác hoàn toàn và tự nghĩ ra một công cụ không tồn tại.",
+        "B": "Tên công cụ đăng ký trong code thực thi không khớp với tên công cụ khai báo trong schema gửi cho LLM.",
+        "C": "Đường truyền Internet từ máy chủ đến API thời tiết bị ngắt kết nối đột ngột.",
+        "D": "Hệ thống bị tấn công Prompt Injection thay đổi mã nguồn công cụ."
+      },
+      "answer": "B",
+      "explanation": "LLM đã gọi đúng tên công cụ nó được cung cấp trong schema, nhưng bộ điều phối code nền không tìm thấy hàm thực thi nào được đăng ký dưới tên đó."
+    },
+    {
+      "id": 20,
+      "question": "Sự khác biệt cốt lõi giữa tấn công Vượt rào (Jailbreak) và Tiêm prompt (Prompt Injection) là gì?",
+      "options": {
+        "A": "Jailbreak nhắm vào việc bẻ gãy bộ lọc an toàn của mô hình; Injection nhắm vào việc hijack luồng xử lý nhiệm vụ.",
+        "B": "Jailbreak chỉ thực hiện được trên các mô hình open-source; Injection chỉ chạy trên API.",
+        "C": "Jailbreak là lỗi của lập trình viên viết code; Injection là lỗi của nhà sản xuất mô hình.",
+        "D": "Hai khái niệm này hoàn toàn trùng khớp và không có sự khác biệt nào."
+      },
+      "answer": "A",
+      "explanation": "Jailbreak tìm cách phá vỡ lớp bảo mật hệ thống (khiến LLM trả lời các chủ đề cấm như vũ khí, mã độc). Prompt Injection chèn chỉ thị để chiếm quyền điều khiển hành vi ứng dụng."
+    },
+    {
+      "id": 21,
+      "question": "Tại sao việc chuyển KV Cache từ bộ nhớ GPU sang bộ nhớ RAM của hệ thống (Offloading) lại làm giảm tốc độ sinh token đáng kể?",
+      "options": {
+        "A": "Do bộ nhớ RAM của hệ thống tự động mã hóa dữ liệu KV Cache về dạng nhị phân.",
+        "B": "Do băng thông truyền tải qua cổng PCIe giữa GPU và RAM chậm hơn nhiều so với băng thông GPU.",
+        "C": "Do RAM hệ thống không hỗ trợ các phép toán nhân ma trận của mạng attention.",
+        "D": "Do mô hình ngôn ngữ lớn từ chối đọc dữ liệu được lưu trên RAM hệ thống."
+      },
+      "answer": "B",
+      "explanation": "Băng thông kết nối PCIe là nút thắt cổ chai. Việc liên tục di chuyển dữ liệu KV Cache khổng lồ giữa RAM hệ thống và GPU làm tăng thời gian chờ xử lý."
+    },
+    {
+      "id": 22,
+      "question": "Điều gì sẽ xảy ra nếu mô hình Embedding của bạn sử dụng một bộ Tokenizer khác với bộ Tokenizer của mô hình LLM chính?",
+      "options": {
+        "A": "Tốc độ tính toán khoảng cách vectơ của mô hình bị giảm đi đáng kể.",
+        "B": "Hệ thống không thể hoạt động bình thường vì các biểu diễn vector bị lệch hoàn toàn ngữ nghĩa.",
+        "C": "Mô hình LLM chính sẽ tự động điều chỉnh tokenizer của mình theo mô hình embedding.",
+        "D": "Chỉ số F1-Score của quá trình phân loại tự động tăng lên mức tối đa."
+      },
+      "answer": "B",
+      "explanation": "Embedding model và LLM hoạt động độc lập qua API. Miễn là ta lưu trữ vector của embedding model vào DB và search, sau đó truyền text kết quả vào LLM thì hệ thống vẫn chạy bình thường."
+    },
+    {
+      "id": 23,
+      "question": "Tại sao thuật toán MinHash LSH (Locality-Sensitive Hashing) được ưu tiên hơn so khớp chuỗi tuyệt đối khi lọc trùng dữ liệu quy mô lớn?",
+      "options": {
+        "A": "MinHash LSH giúp phát hiện các tài liệu gần trùng lặp (có sửa đổi nhẹ) một cách nhanh chóng.",
+        "B": "MinHash LSH đảm bảo loại bỏ 100% các lỗi chính tả có trong văn bản thô.",
+        "C": "MinHash LSH không yêu cầu sử dụng bộ nhớ RAM khi chạy thuật toán.",
+        "D": "MinHash LSH tự động ẩn danh toàn bộ các thông tin PII nhạy cảm."
+      },
+      "answer": "A",
+      "explanation": "So khớp tuyệt đối sẽ bỏ qua các tài liệu bị sửa đổi nhỏ (như thêm khoảng trắng, đổi dấu câu). MinHash LSH ước lượng độ tương đồng Jaccard rất nhanh để tìm ra các bản sao mờ."
+    },
+    {
+      "id": 24,
+      "question": "Trong hệ thống RAG, hiện tượng đầu độc ngữ cảnh (Context Poisoning) có thể dẫn đến nguy cơ nào?",
+      "options": {
+        "A": "Vector DB bị xóa bỏ hoàn toàn dữ liệu do bị chập điện phần cứng.",
+        "B": "Tài liệu chứa chỉ dẫn độc hại được truy xuất vào Prompt và lừa LLM thực hiện hành động sai trái.",
+        "C": "Băng thông kết nối mạng giữa mô hình và Vector DB bị nghẽn.",
+        "D": "Mô hình ngôn ngữ tự động chuyển sang chế độ giải mã Greedy Search."
+      },
+      "answer": "B",
+      "explanation": "Nếu Vector DB chứa tài liệu từ nguồn không đáng tin cậy có chèn mã độc, khi tài liệu đó được load vào prompt làm ngữ cảnh, LLM sẽ thực thi chỉ thị độc hại đó."
+    },
+    {
+      "id": 25,
+      "question": "Làm thế nào để phát hiện hiện tượng rò rỉ dữ liệu (Data Leakage) từ Golden Dataset vào tập dữ liệu tinh chỉnh (Fine-tuning Dataset)?",
+      "options": {
+        "A": "Kiểm tra độ tương đồng ngữ nghĩa giữa các câu hỏi trong tập test và tập train.",
+        "B": "Tăng kích thước của tập dữ liệu huấn luyện lên gấp nhiều lần.",
+        "C": "Theo dõi nhiệt độ hoạt động của card đồ họa khi chạy fine-tune.",
+        "D": "So sánh dung lượng byte của hai tệp tin dữ liệu thô."
+      },
+      "answer": "A",
+      "explanation": "Cần chạy các giải pháp kiểm tra trùng lặp hoặc đo độ tương đồng cosine giữa tập train và tập test để đảm bảo mô hình không được học trước các câu hỏi kiểm tra."
+    },
+    {
+      "id": 26,
+      "question": "Nếu LLM hoàn toàn không sinh ra đúng cú pháp ReAct mặc dù đã cấu hình vài bước, code nền nên có cơ chế xử lý gì để đảm bảo độ bền vững?",
+      "options": {
+        "A": "Gửi lại request với prompt cảnh báo định dạng lỗi để LLM tự điều chỉnh ở lượt sau.",
+        "B": "Tiếp tục chạy vòng lặp vô hạn và chờ đợi mô hình tự động sửa lỗi.",
+        "C": "Tự động đổi tên các công cụ trong schema để đánh lừa mô hình.",
+        "D": "Xóa toàn bộ các tệp tin lưu trữ dữ liệu grounding của hệ thống."
+      },
+      "answer": "A",
+      "explanation": "Cơ chế tự sửa lỗi (Self-correction prompt) bằng cách chèn Observation: 'Lỗi định dạng: Thiếu từ khóa Action' giúp LLM có cơ hội nhận ra lỗi và định dạng lại đầu ra."
+    },
+    {
+      "id": 27,
+      "question": "Tại sao cần thực hiện lọc sạch và rút gọn kết quả trả về từ công cụ (Tool Output Sanitization) trước khi đưa vào Observation?",
+      "options": {
+        "A": "Để giảm thiểu dung lượng lưu trữ của cơ sở dữ liệu trace logs.",
+        "B": "Để loại bỏ các thẻ HTML thừa, dữ liệu rác giúp tiết kiệm token và tránh làm loãng attention.",
+        "C": "Để đảm bảo các công cụ ngoại vi không bị crash khi chạy mã nguồn.",
+        "D": "Để mô hình tự động chuyển đổi kết quả thành cấu hình JSON hợp lệ."
+      },
+      "answer": "B",
+      "explanation": "Kết quả thô (như cào web) chứa rất nhiều mã HTML, CSS rác không mang thông tin hữu ích nhưng ngốn rất nhiều token và làm nhiễu khả năng trích xuất thông tin của LLM."
+    },
+    {
+      "id": 28,
+      "question": "Khi cho phép Agent sử dụng công cụ thực thi mã Python (Python Interpreter Tool), lỗ hổng bảo mật nghiêm trọng nhất là gì?",
+      "options": {
+        "A": "Agent tiêu tốn quá nhiều dung lượng bộ nhớ đệm KV Cache khi chạy.",
+        "B": "Kẻ tấn công chạy mã độc phá hoại, đọc file hệ thống hoặc chiếm quyền điều khiển máy chủ.",
+        "C": "Mô hình ngôn ngữ tự động chuyển đổi mã nguồn Python sang mã Java.",
+        "D": "Không thể ghi nhận được trace logs của công cụ này khi chạy."
+      },
+      "answer": "B",
+      "explanation": "Python Interpreter cho phép chạy code tùy ý. Nếu không được cách ly trong môi trường an toàn (sandbox/Docker), kẻ tấn công có thể tiêm code để chiếm đoạt máy chủ."
+    },
+    {
+      "id": 29,
+      "question": "Tại sao việc quản lý trạng thái đồng bộ (State Synchronization) lại phức tạp trong các kiến trúc gồm nhiều Agent cộng tác song song?",
+      "options": {
+        "A": "Do các Agent sử dụng chung một mã khóa API key để truy cập.",
+        "B": "Do xung đột ghi dữ liệu và tranh chấp tài nguyên dùng chung khi nhiều Agent chạy đồng thời.",
+        "C": "Do các Agent không thể ghi nhận lịch sử trace logs vào cùng một database.",
+        "D": "Do các mô hình bắt buộc phải chạy trên cùng một luồng phần cứng GPU."
+      },
+      "answer": "B",
+      "explanation": "Khi các agent chạy song song cùng truy cập và sửa đổi một tài nguyên chung (ví dụ một file hoặc DB), dễ xảy ra hiện tượng tranh chấp (race conditions) gây mất đồng bộ dữ liệu."
+    },
+    {
+      "id": 30,
+      "question": "Lý do an toàn thông tin quan trọng nhất để ẩn danh các trace logs trước khi đẩy lên các nền tảng giám sát SaaS (như LangSmith bản Cloud) là gì?",
+      "options": {
+        "A": "Tránh việc các nền tảng này tự động tăng giá dịch vụ giám sát.",
+        "B": "Ngăn chặn rò rỉ thông tin nhạy cảm PII hoặc bí mật kinh doanh có trong dữ liệu prompt.",
+        "C": "Để tăng tốc độ truyền tải gói tin qua đường truyền mạng internet.",
+        "D": "Đảm bảo trace logs không bị trùng lặp dữ liệu với Golden Dataset."
+      },
+      "answer": "B",
+      "explanation": "Trace logs chứa toàn bộ nội dung cuộc trò chuyện và dữ liệu truy xuất thực tế của khách hàng. Việc ẩn danh giúp ngăn ngừa rò rỉ dữ liệu nhạy cảm của doanh nghiệp."
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "id": "week1-set1",
+  "parent_id": "week1",
+  "topic_title": "Week 1: Ôn Tập Tổng Hợp",
+  "title": "Bộ đề 1: Kiến thức lý thuyết & Nền tảng",
+  "description": "30 câu trắc nghiệm thuần lý thuyết, đơn giản, kiểm tra các khái niệm cốt lõi của Week 1 (Day 1 - Day 3).",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Cơ chế cốt lõi nào trong kiến trúc Transformer giúp xử lý toàn bộ văn bản song song thay thế mạng RNN tuần tự?",
+      "options": {
+        "A": "Cơ chế Layer Normalization giúp chuẩn hóa gradient.",
+        "B": "Cơ chế Feed Forward Network tính toán phi tuyến.",
+        "C": "Cơ chế Self-Attention tính toán liên kết từ.",
+        "D": "Cơ chế Residual Connection truyền tín hiệu tắt."
+      },
+      "answer": "C",
+      "explanation": "Cơ chế Self-Attention cho phép mô hình tính toán mối quan hệ giữa tất cả các từ trong chuỗi đồng thời, loại bỏ tính tuần tự của RNN."
+    },
+    {
+      "id": 2,
+      "question": "Trong cơ chế Scaled Dot-Product Attention, ba ma trận vectơ nào được tính toán trực tiếp từ các token đầu vào?",
+      "options": {
+        "A": "Query, Key và Value vectors.",
+        "B": "Input, Hidden và Output vectors.",
+        "C": "Encoder, Decoder và Latent vectors.",
+        "D": "Weights, Biases và Activation vectors."
+      },
+      "answer": "A",
+      "explanation": "Query (Q), Key (K) và Value (V) là ba vectơ được tạo ra từ phép nhân ma trận trọng số với vector đại diện của mỗi token."
+    },
+    {
+      "id": 3,
+      "question": "Mục đích chính của việc chia tích vô hướng Q.K^T cho căn bậc hai số chiều d_k trong Self-Attention là gì?",
+      "options": {
+        "A": "Để giảm thiểu số lượng tham số huấn luyện.",
+        "B": "Để tránh bão hòa hàm softmax gây triệt tiêu gradient.",
+        "C": "Để tăng tốc độ nhân ma trận trên thiết bị GPU.",
+        "D": "Để chuẩn hóa giá trị đầu ra về phân phối chuẩn."
+      },
+      "answer": "B",
+      "explanation": "Khi số chiều d_k lớn, tích vô hướng Q.K^T có thể rất lớn làm hàm softmax bão hòa (gradient gần bằng 0). Phép chia giúp làm giảm biên độ."
+    },
+    {
+      "id": 4,
+      "question": "Thuật toán tokenization phổ biến nào dựa trên nguyên lý ghép các cặp ký tự xuất hiện nhiều nhất để tạo từ vựng?",
+      "options": {
+        "A": "Thuật toán WordPiece Tokenizer.",
+        "B": "Thuật toán Byte Pair Encoding (BPE).",
+        "C": "Thuật toán SentencePiece Tokenizer.",
+        "D": "Thuật toán Regex-based Tokenizer."
+      },
+      "answer": "B",
+      "explanation": "BPE bắt đầu bằng cách tách các ký tự đơn lẻ, sau đó lặp đi lặp lại việc ghép cặp ký tự hoặc chuỗi ký tự xuất hiện thường xuyên nhất."
+    },
+    {
+      "id": 5,
+      "question": "Trong kỹ thuật Embeddings, giá trị của một từ ngữ được biểu diễn dưới dạng cấu trúc dữ liệu nào?",
+      "options": {
+        "A": "Một chuỗi văn bản (String) đã được chuẩn hóa hóa.",
+        "B": "Một vectơ số thực nhiều chiều (Dense Vector).",
+        "C": "Một ma trận thưa chứa các giá trị nhị phân 0 và 1.",
+        "D": "Một cây quyết định lưu trữ thứ tự từ ngữ."
+      },
+      "answer": "B",
+      "explanation": "Embedding ánh xạ các token vào một không gian vectơ số thực liên tục nhiều chiều, phản ánh mối quan hệ ngữ nghĩa giữa các từ."
+    },
+    {
+      "id": 6,
+      "question": "Kỹ thuật KV Cache được sử dụng trong quá trình Inference (suy luận) nhằm mục đích chính nào?",
+      "options": {
+        "A": "Tránh tính toán lại Key và Value của các token cũ.",
+        "B": "Tăng kích thước cửa sổ ngữ cảnh lên nhiều lần.",
+        "C": "Giảm dung lượng bộ nhớ RAM cần thiết khi chạy.",
+        "D": "Tự động tinh chỉnh trọng số của mô hình ngôn ngữ."
+      },
+      "answer": "A",
+      "explanation": "KV Cache lưu trữ các vectơ Key và Value của các token đã xử lý để không phải tính toán lại chúng tại mỗi bước sinh token mới."
+    },
+    {
+      "id": 7,
+      "question": "Khi muốn mô hình ngôn ngữ sinh ra câu trả lời có tính sáng tạo cao, ta nên điều chỉnh tham số Temperature như thế nào?",
+      "options": {
+        "A": "Giảm Temperature về gần giá trị 0.",
+        "B": "Tăng Temperature lên mức cao hơn (ví dụ 0.8-1.0).",
+        "C": "Giữ nguyên Temperature cố định ở mức 0.5.",
+        "D": "Thiết lập Temperature về giá trị âm."
+      },
+      "answer": "B",
+      "explanation": "Temperature cao làm mượt phân phối xác suất logits, giúp các token có xác suất thấp hơn có nhiều cơ hội được chọn, tăng tính sáng tạo."
+    },
+    {
+      "id": 8,
+      "question": "Phương pháp lấy mẫu Top-p (Nucleus Sampling) hoạt động dựa trên nguyên lý cốt lõi nào?",
+      "options": {
+        "A": "Chỉ chọn ngẫu nhiên trong số p token đứng đầu.",
+        "B": "Chỉ lấy mẫu từ nhóm token có tổng xác suất đạt p.",
+        "C": "Loại bỏ hoàn toàn các token có xác suất dưới p.",
+        "D": "Giới hạn độ dài tối đa của chuỗi sinh ra là p."
+      },
+      "answer": "B",
+      "explanation": "Top-p chọn tập hợp nhỏ nhất các token có tổng xác suất tích lũy vượt quá ngưỡng p, từ đó phân phối lấy mẫu thay đổi động theo ngữ cảnh."
+    },
+    {
+      "id": 9,
+      "question": "Sự khác biệt quan trọng nhất giữa System Prompt và User Prompt là gì?",
+      "options": {
+        "A": "System Prompt quy định cấu trúc và hành vi cốt lõi.",
+        "B": "User Prompt chỉ được gửi ở đầu phiên hội thoại.",
+        "C": "System Prompt có thể bị bỏ qua bởi mô hình ngôn ngữ.",
+        "D": "User Prompt quy định quyền truy cập vào cơ sở dữ liệu."
+      },
+      "answer": "A",
+      "explanation": "System Prompt thiết lập quy tắc, vai trò và ranh giới hoạt động cốt lõi cho mô hình, áp dụng xuyên suốt toàn bộ cuộc hội thoại."
+    },
+    {
+      "id": 10,
+      "question": "Cơ chế mã hóa vị trí tương đối RoPE (Rotary Position Embedding) có ưu điểm nổi bật nào so với mã hóa tuyệt đối?",
+      "options": {
+        "A": "Giảm một nửa kích thước của vectơ từ embedding.",
+        "B": "Giúp mô hình suy luận tốt hơn trên ngữ cảnh dài hơn.",
+        "C": "Loại bỏ hoàn toàn sự cần thiết của cơ chế attention.",
+        "D": "Tự động phát hiện ngôn ngữ của tài liệu đầu vào."
+      },
+      "answer": "B",
+      "explanation": "RoPE tích hợp thông tin vị trí thông qua phép quay vectơ, giúp mô hình duy trì tốt mối liên hệ khoảng cách tương đối trong các ngữ cảnh dài."
+    },
+    {
+      "id": 11,
+      "question": "Trong chiến lược phát triển ứng dụng AI, ưu điểm chính của phương án sử dụng Commercial API (như OpenAI) so với tự host open-source model là gì?",
+      "options": {
+        "A": "Khả năng bảo mật và kiểm soát dữ liệu tuyệt đối.",
+        "B": "Thời gian triển khai nhanh và không tốn chi phí hạ tầng.",
+        "C": "Tự do chỉnh sửa mã nguồn của mô hình ngôn ngữ.",
+        "D": "Chi phí vận hành cố định không phụ thuộc lưu lượng."
+      },
+      "answer": "B",
+      "explanation": "Sử dụng Commercial API giúp doanh nghiệp tích hợp ngay lập tức các mô hình mạnh mẽ mà không cần đầu tư mua hoặc thuê phần cứng GPU đắt đỏ."
+    },
+    {
+      "id": 12,
+      "question": "Khi so sánh mô hình Open-source (mã nguồn mở) và Commercial API, nhận định nào sau đây là chính xác?",
+      "options": {
+        "A": "Mô hình Open-source không thể được fine-tune bởi doanh nghiệp.",
+        "B": "Mô hình Commercial API luôn rẻ hơn trong mọi kịch bản sử dụng.",
+        "C": "Mô hình Open-source cho phép kiểm soát dữ liệu lưu trữ nội bộ.",
+        "D": "Mô hình Commercial API không giới hạn số lượng request gọi."
+      },
+      "answer": "C",
+      "explanation": "Doanh nghiệp có thể cài đặt mô hình Open-source trực tiếp trên hạ tầng riêng của mình, đảm bảo dữ liệu không bao giờ bị gửi ra bên ngoài."
+    },
+    {
+      "id": 13,
+      "question": "Trong bước xử lý dữ liệu (Data Cleaning), hoạt động Deduplication nhằm giải quyết vấn đề gì?",
+      "options": {
+        "A": "Sửa các lỗi chính tả và định dạng văn bản bị lỗi.",
+        "B": "Loại bỏ các văn bản trùng lặp hoặc gần trùng lặp.",
+        "C": "Mã hóa các thông tin nhạy cảm của người dùng cuối.",
+        "D": "Dịch toàn bộ văn bản nguồn sang ngôn ngữ tiếng Anh."
+      },
+      "answer": "B",
+      "explanation": "Deduplication (loại bỏ trùng lặp) giúp làm sạch tập huấn luyện/ngữ cảnh, ngăn mô hình bị thiên lệch hoặc lãng phí tài nguyên xử lý dữ liệu thừa."
+    },
+    {
+      "id": 14,
+      "question": "Mục đích quan trọng nhất của việc loại bỏ hoặc ẩn danh dữ liệu PII (Personally Identifiable Information) trước khi đưa vào LLM là gì?",
+      "options": {
+        "A": "Tăng tốc độ xử lý mã hóa của mô hình ngôn ngữ.",
+        "B": "Bảo vệ thông tin cá nhân và tuân thủ pháp luật.",
+        "C": "Giảm số lượng token tiêu thụ của mỗi câu truy vấn.",
+        "D": "Đảm bảo mô hình không sinh ra câu trả lời sai lệch."
+      },
+      "answer": "B",
+      "explanation": "Ẩn danh PII (như email, số điện thoại, số định danh) ngăn chặn rò rỉ dữ liệu nhạy cảm ra ngoài biên hệ thống hoặc vào dữ liệu huấn luyện."
+    },
+    {
+      "id": 15,
+      "question": "Khái niệm Grounding trong xây dựng hệ thống LLM được hiểu là gì?",
+      "options": {
+        "A": "Việc giới hạn thời gian chạy tối đa của mô hình ngôn ngữ.",
+        "B": "Việc liên kết câu trả lời của mô hình với tri thức thực tế đáng tin cậy.",
+        "C": "Việc huấn luyện mô hình từ đầu bằng các siêu máy tính.",
+        "D": "Việc ép kiểu dữ liệu đầu ra của mô hình thành dạng JSON."
+      },
+      "answer": "B",
+      "explanation": "Grounding là kỹ thuật cung cấp thông tin thực tế xác thực (thông qua tài liệu, cơ sở dữ liệu) làm cơ sở để LLM sinh câu trả lời chính xác, giảm ảo giác."
+    },
+    {
+      "id": 16,
+      "question": "Golden Dataset trong quy trình đánh giá hệ thống AI được định nghĩa là gì?",
+      "options": {
+        "A": "Tập dữ liệu thô lớn nhất được thu thập tự động từ Internet.",
+        "B": "Tập dữ liệu chuẩn hóa chất lượng cao đã được con người kiểm định.",
+        "C": "Tập dữ liệu chứa các câu trả lời sai của mô hình ngôn ngữ.",
+        "D": "Tập dữ liệu được sinh ra hoàn toàn bởi các API trả phí."
+      },
+      "answer": "B",
+      "explanation": "Golden Dataset là bộ dữ liệu mẫu gồm các đầu vào tiêu chuẩn và các đáp án đúng chuẩn xác do chuyên gia biên soạn để làm thước đo đánh giá mô hình."
+    },
+    {
+      "id": 17,
+      "question": "Chỉ số Precision (Độ chính xác) trong đánh giá phân loại của mô hình AI đo lường điều gì?",
+      "options": {
+        "A": "Tỷ lệ dự đoán đúng trong số tất cả các dự đoán dương tính.",
+        "B": "Tỷ lệ dự đoán đúng trong số các trường hợp thực tế dương tính.",
+        "C": "Thời gian trung bình để mô hình đưa ra một câu trả lời.",
+        "D": "Số lượng token trung bình được tạo ra trong mỗi giây."
+      },
+      "answer": "A",
+      "explanation": "Precision đo lường mức độ tin cậy của các kết quả được phân loại là dương tính (True Positives / (True Positives + False Positives))."
+    },
+    {
+      "id": 18,
+      "question": "Chỉ số F1-Score là đại diện cho phép tính toán nào giữa hai chỉ số Precision và Recall?",
+      "options": {
+        "A": "Trung bình cộng đơn giản của Precision và Recall.",
+        "B": "Trung bình điều hòa (Harmonic Mean) của Precision và Recall.",
+        "C": "Phép nhân tích lũy giữa hai giá trị Precision và Recall.",
+        "D": "Hiệu số tuyệt đối giữa hai giá trị Precision và Recall."
+      },
+      "answer": "B",
+      "explanation": "F1-Score là trung bình điều hòa của Precision và Recall, giúp đánh giá cân bằng khi tập dữ liệu bị mất cân đối lớp."
+    },
+    {
+      "id": 19,
+      "question": "Mục tiêu đánh giá chính của bộ tiêu chuẩn kiểm định MMLU (Massive Multitask Language Understanding) là gì?",
+      "options": {
+        "A": "Đo lường khả năng lập luận toán học nhiều bước phức tạp.",
+        "B": "Đo lường tri thức đa ngành và khả năng hiểu ngôn ngữ chung.",
+        "C": "Đo lường tốc độ tạo token trên mỗi giây của card đồ họa.",
+        "D": "Đo lường độ an toàn của mô hình trước tấn công tiêm nhiễm."
+      },
+      "answer": "B",
+      "explanation": "MMLU đánh giá khả năng hiểu ngôn ngữ của mô hình qua hàng loạt câu hỏi trắc nghiệm thuộc nhiều lĩnh vực khoa học, nhân văn và xã hội."
+    },
+    {
+      "id": 20,
+      "question": "Kỹ thuật đánh giá 'LLM-as-a-judge' hoạt động theo phương thức nào?",
+      "options": {
+        "A": "Dùng con người chấm điểm thủ công từng câu trả lời của mô hình.",
+        "B": "Dùng một mô hình LLM mạnh để đánh giá câu trả lời của mô hình khác.",
+        "C": "Dùng các biểu thức chính quy để so khớp từ khóa chính xác.",
+        "D": "Dùng thuật toán tính khoảng cách Euclidean giữa hai câu văn."
+      },
+      "answer": "B",
+      "explanation": "LLM-as-a-judge sử dụng một mô hình ngôn ngữ lớn mạnh (như GPT-4) đóng vai trò làm giám khảo, chấm điểm câu trả lời dựa trên bộ tiêu chí hướng dẫn."
+    },
+    {
+      "id": 21,
+      "question": "Mẫu thiết kế ReAct (Reasoning and Acting) kết hợp hai khả năng nào của mô hình ngôn ngữ lớn?",
+      "options": {
+        "A": "Khả năng tóm tắt văn bản và khả năng dịch thuật tự động.",
+        "B": "Khả năng sinh lập luận suy nghĩ và khả năng gọi công cụ ngoại vi.",
+        "C": "Khả năng viết mã nguồn và khả năng kiểm thử phần mềm.",
+        "D": "Khả năng ghi nhớ thông tin cũ và khả năng dự đoán từ tiếp theo."
+      },
+      "answer": "B",
+      "explanation": "ReAct kết hợp khả năng tư duy lập luận (Reasoning) và hành động (Acting) bằng cách sinh ra các chuỗi suy nghĩ đan xen với việc gọi các API ngoại vi."
+    },
+    {
+      "id": 22,
+      "question": "Thứ tự các bước lặp lại trong một chu kỳ của mẫu thiết kế đại lý ReAct là gì?",
+      "options": {
+        "A": "Action -> Thought -> Observation.",
+        "B": "Thought -> Action -> Observation.",
+        "C": "Observation -> Action -> Thought.",
+        "D": "Thought -> Observation -> Action."
+      },
+      "answer": "B",
+      "explanation": "Quy trình chuẩn của ReAct là: Agent suy nghĩ (Thought) -> quyết định hành động gọi công cụ (Action) -> nhận phản hồi từ môi trường (Observation) rồi tiếp tục vòng lặp."
+    },
+    {
+      "id": 23,
+      "question": "Điểm khác biệt cốt lõi giữa một Agent (Đại lý AI) và một Chatbot thông thường là gì?",
+      "options": {
+        "A": "Agent có thể tự lên kế hoạch và tương tác chủ động với môi trường ngoại vi.",
+        "B": "Chatbot có dung lượng bộ nhớ cửa sổ ngữ cảnh lớn hơn Agent nhiều lần.",
+        "C": "Agent chỉ hoạt động trên dòng lệnh chứ không có giao diện người dùng đồ họa.",
+        "D": "Chatbot bắt buộc phải dùng các mô hình ngôn ngữ thương mại có trả phí."
+      },
+      "answer": "A",
+      "explanation": "Agent sở hữu khả năng tự động phân rã nhiệm vụ, lên kế hoạch từng bước và kích hoạt công cụ để tự hoàn thành mục tiêu mà không cần con người chỉ dẫn từng câu."
+    },
+    {
+      "id": 24,
+      "question": "Trong Function Schema mô tả công cụ cho Agent, phần mô tả (Description) của tham số đóng vai trò gì?",
+      "options": {
+        "A": "Chỉ dùng để hiển thị chú thích cho người dùng đọc hiểu.",
+        "B": "Giúp LLM hiểu ý nghĩa và định dạng dữ liệu cần truyền vào tham số.",
+        "C": "Là mã thực thi của công cụ khi Agent gọi hàm này.",
+        "D": "Để cấu hình giới hạn số lượng token mà công cụ được phép dùng."
+      },
+      "answer": "B",
+      "explanation": "LLM đọc phần Description trong schema để nhận diện công cụ nào phù hợp với yêu cầu hiện tại và biết cách trích xuất tham số đúng định dạng."
+    },
+    {
+      "id": 25,
+      "question": "Trong vòng lặp ReAct, bước Observation (Quan sát) được thu thập từ nguồn nào?",
+      "options": {
+        "A": "Do mô hình tự suy luận và tự tạo ra từ bộ nhớ của mình.",
+        "B": "Kết quả trả về từ việc thực thi hệ thống hoặc gọi API của Tool.",
+        "C": "Các chỉ dẫn cố định nằm trong tệp cấu hình hệ thống.",
+        "D": "Từ các câu hỏi tiếp theo được nhập vào bởi người dùng."
+      },
+      "answer": "B",
+      "explanation": "Observation là kết quả thực tế thu được sau khi chạy hành động (Action), ví dụ kết quả truy vấn cơ sở dữ liệu, nội dung trang web được cào."
+    },
+    {
+      "id": 26,
+      "question": "Tấn công Prompt Injection vào hệ thống Agent được định nghĩa là gì?",
+      "options": {
+        "A": "Việc gửi quá nhiều request cùng lúc làm sập máy chủ chứa mô hình.",
+        "B": "Việc chèn mã độc vào tệp tin thực thi của công cụ ngoại vi.",
+        "C": "Việc chèn các câu lệnh hoặc chỉ dẫn độc hại vào dữ liệu đầu vào.",
+        "D": "Việc đánh cắp mã khóa API key thông qua việc nghe lén đường truyền mạng."
+      },
+      "answer": "C",
+      "explanation": "Prompt Injection xảy ra khi dữ liệu nhập chứa các câu lệnh đánh lừa LLM bỏ qua System Prompt ban đầu để làm theo chỉ dẫn mới."
+    },
+    {
+      "id": 27,
+      "question": "Khái niệm Guardrails trong hệ thống ứng dụng AI dùng để chỉ điều gì?",
+      "options": {
+        "A": "Các bộ lọc và quy tắc kiểm soát an toàn cho cả đầu vào và đầu ra.",
+        "B": "Các máy chủ vật lý được thiết lập làm tường lửa bảo vệ GPU.",
+        "C": "Các thuật toán nén kích thước mô hình để chạy trên thiết bị di động.",
+        "D": "Bộ tài liệu hướng dẫn sử dụng phần mềm dành cho khách hàng."
+      },
+      "answer": "A",
+      "explanation": "Guardrails là các lớp kiểm duyệt độc lập để phát hiện và ngăn chặn nội dung không an toàn trước khi gửi đến LLM hoặc trả về cho user."
+    },
+    {
+      "id": 28,
+      "question": "Cơ chế 'Human-in-the-loop' được tích hợp vào hệ thống Agent nhằm mục đích an ninh nào?",
+      "options": {
+        "A": "Tự động gửi email báo cáo tiến độ cho lập trình viên hàng ngày.",
+        "B": "Yêu cầu sự phê duyệt từ con người trước khi thực hiện hành động nhạy cảm.",
+        "C": "Dùng con người làm máy chủ tính toán các token khó của mô hình.",
+        "D": "Để con người giám sát nhiệt độ hoạt động của các thiết bị phần cứng."
+      },
+      "answer": "B",
+      "explanation": "Human-in-the-loop đảm bảo các hành động có rủi ro cao (như chuyển tiền, xóa cơ sở dữ liệu) bắt buộc phải có xác nhận thủ công từ người dùng."
+    },
+    {
+      "id": 29,
+      "question": "Trong giám sát Agent, Agent Trace Logs (Nhật ký Trace) cung cấp thông tin gì cho nhà phát triển?",
+      "options": {
+        "A": "Lịch sử nạp tiền và hạn mức chi tiêu API của tài khoản.",
+        "B": "Mã nguồn Python chi tiết của các thư viện bên thứ ba.",
+        "C": "Chuỗi các bước lập luận, gọi công cụ và kết quả chi tiết trong vòng lặp.",
+        "D": "Thông số phần cứng chi tiết của máy chủ chạy mô hình ngôn ngữ."
+      },
+      "answer": "C",
+      "explanation": "Trace logs ghi lại chi tiết từng bước Thought, Action, và Observation giúp nhà phát triển theo dõi và gỡ lỗi hành vi của Agent khi xử lý một nhiệm vụ."
+    },
+    {
+      "id": 30,
+      "question": "Nguyên nhân phổ biến nhất dẫn đến hiện tượng vòng lặp vô hạn (Infinite Loop) của Agent trong ReAct là gì?",
+      "options": {
+        "A": "Do tốc độ mạng Internet quá chậm không thể tải được kết quả công cụ.",
+        "B": "Do Agent liên tục nhận được kết quả lỗi giống nhau từ một Tool mà không có hướng xử lý.",
+        "C": "Do mô hình bị hết dung lượng bộ nhớ đệm KV Cache trong quá trình suy luận.",
+        "D": "Do người dùng tắt cửa sổ trình duyệt khi Agent đang thực hiện nhiệm vụ."
+      },
+      "answer": "B",
+      "explanation": "Nếu gọi Tool bị lỗi mà Agent không biết cách tự sửa prompt hay chuyển hướng hành động, nó sẽ tiếp tục gọi lại Tool đó với tham số tương tự."
+    }
+  ]
+}
