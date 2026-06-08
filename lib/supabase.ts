@@ -32,7 +32,7 @@ class MockSupabaseClient {
   }
 }
 
-export const supabase = isDev
+export const supabase = (isDev || !supabaseUrl || !supabaseAnonKey)
   ? (new MockSupabaseClient() as any)
   : createClient(supabaseUrl, supabaseAnonKey);
 
