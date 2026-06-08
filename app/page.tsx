@@ -98,7 +98,8 @@ const TOPICS = [
   { id: 'day5', title: 'Day 5: Thiết kế sản phẩm AI cho sự không chắc chắn' },
   { id: 'day6', title: 'Day 6: Hackathon Day' },
   { id: 'day7', title: 'Day 7: Data Foundations - Embedding & Vector Store' },
-  { id: 'week1', title: 'Week 1: Ôn Tập Tổng Hợp' }
+  { id: 'week1', title: 'Week 1: Ôn Tập Tổng Hợp' },
+  { id: 'day8', title: 'Day 8: RAG Pipeline - Retrieval — Augmentation — Generation' }
 ];
 
 export default function QuizApp() {
