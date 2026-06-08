@@ -1,0 +1,130 @@
+{
+  "id": "day8-advanced",
+  "parent_id": "day8",
+  "topic_title": "Day 8: RAG Pipeline - Retrieval — Augmentation — Generation",
+  "title": "Phần 3: Kỹ thuật Nâng cao & Đánh giá RAG",
+  "description": "Đánh giá chuyên sâu về các kỹ thuật Context Management nâng cao, Agentic RAG, tự sửa lỗi, hệ thống chỉ số RAGAS và tích hợp CI/CD.",
+  "difficulty": "khó",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Hiện tượng 'Lost in the Middle' trong các mô hình ngôn ngữ lớn (LLM) được định nghĩa như thế nào trong thực tế?",
+      "options": {
+        "A": "LLM có xu hướng nhớ tốt thông tin ở đầu và cuối prompt, nhưng dễ bỏ qua thông tin nằm ở giữa.",
+        "B": "LLM hoàn toàn không thể xử lý được các tài liệu có độ dài vượt quá dung lượng giới hạn của bộ nhớ.",
+        "C": "LLM tự động xóa bỏ các đoạn văn bản có độ liên quan thấp trước khi tiến hành trả lời câu hỏi.",
+        "D": "LLM ưu tiên các thông tin mang tính lý thuyết hơn là các thông tin thực hành trong tài liệu được cung cấp."
+      },
+      "answer": "A",
+      "explanation": "Nghiên cứu chỉ ra rằng các LLM sử dụng ngữ cảnh dài có xu hướng nhớ tốt các thông tin xuất hiện ở phần đầu và phần cuối của prompt, trong khi các thông tin nằm ở giữa rất dễ bị bỏ sót."
+    },
+    {
+      "id": 2,
+      "question": "Kỹ thuật sắp xếp lại tài liệu (Document Reordering) giải quyết lỗi 'Lost in the Middle' bằng cách nào?",
+      "options": {
+        "A": "Chia nhỏ toàn bộ tài liệu thành các đoạn văn ngắn có độ dài bằng nhau trước khi lưu trữ vector.",
+        "B": "Sắp xếp lại các tài liệu bằng cách đặt các đoạn thông tin quan trọng nhất ở đầu và cuối prompt.",
+        "C": "Loại bỏ hoàn toàn các đoạn văn bản trùng lặp từ khóa để giảm thiểu số lượng token đầu vào prompt.",
+        "D": "Tự động dịch các tài liệu sang ngôn ngữ chung để tăng tốc độ so khớp ngữ nghĩa của mô hình."
+      },
+      "answer": "B",
+      "explanation": "Bằng cách sắp xếp lại các chunk tài liệu sao cho những đoạn quan trọng nhất nằm ở đầu prompt và các đoạn quan trọng tiếp theo nằm ở cuối prompt, ta có thể tối đa hóa khả năng trích xuất thông tin của LLM."
+    },
+    {
+      "id": 3,
+      "question": "Trong bộ ba chỉ số đánh giá RAGAS (RAGAS Triad), chỉ số 'Context Recall' dùng để đánh giá khía cạnh nào?",
+      "options": {
+        "A": "Đo lường xem câu trả lời của mô hình ngôn ngữ lớn có tuân thủ đúng định dạng yêu cầu hay không.",
+        "B": "Đo lường mức độ tương đồng ngữ nghĩa giữa câu hỏi của người dùng và câu hỏi mẫu trong hệ thống.",
+        "C": "Đo lường xem hệ thống tìm kiếm có truy xuất đầy đủ các thông tin cần thiết từ ground truth hay không.",
+        "D": "Đo lường tốc độ xử lý trung bình của cơ sở dữ liệu vector khi nhận được nhiều yêu cầu cùng lúc."
+      },
+      "answer": "C",
+      "explanation": "Context Recall đo lường mức độ bao phủ của thông tin được truy xuất so với bộ dữ liệu chuẩn (ground truth), nhằm đánh giá xem tầng Retrieval đã tìm đủ thông tin cần thiết chưa."
+    },
+    {
+      "id": 4,
+      "question": "Trong bộ ba chỉ số đánh giá RAGAS (RAGAS Triad), chỉ số 'Faithfulness' dùng để đánh giá khía cạnh nào?",
+      "options": {
+        "A": "Đo lường sự hài lòng của người dùng cuối khi nhận được câu trả lời từ hệ thống chăm sóc khách hàng.",
+        "B": "Đo lường độ dài trung bình của câu trả lời được sinh ra bởi mô hình ngôn ngữ lớn trong thực tế.",
+        "C": "Đo lường tỷ lệ các câu trả lời chứa các thuật ngữ chuyên ngành chính xác theo yêu cầu của doanh nghiệp.",
+        "D": "Đo lường mức độ bám sát của câu trả lời so với ngữ cảnh để tránh hiện tượng bịa đặt thông tin."
+      },
+      "answer": "D",
+      "explanation": "Faithfulness đo lường tính trung thực hay độ bám sát thực tế của câu trả lời dựa trên ngữ cảnh được cung cấp (tỷ lệ các khẳng định trong câu trả lời có bằng chứng chứng minh từ ngữ cảnh)."
+    },
+    {
+      "id": 5,
+      "question": "Trong bộ ba chỉ số đánh giá RAGAS (RAGAS Triad), chỉ số 'Answer Relevance' dùng để đánh giá khía cạnh nào?",
+      "options": {
+        "A": "Đo lường mức độ phù hợp và trực diện của câu trả lời đối với câu hỏi của người dùng.",
+        "B": "Đo lường số lượng token trung bình được sử dụng để hiển thị câu trả lời trên giao diện người dùng.",
+        "C": "Đo lường khả năng tự động học hỏi của mô hình thông qua các phản hồi trực tiếp từ khách hàng.",
+        "D": "Đo lường tỷ lệ câu hỏi của người dùng được phân loại chính xác vào các nhóm chủ đề định trước."
+      },
+      "answer": "A",
+      "explanation": "Answer Relevance đánh giá xem câu trả lời của AI có trả lời trực tiếp và đúng trọng tâm câu hỏi của người dùng hay không, tránh hiện tượng trả lời vòng vo hoặc lạc đề."
+    },
+    {
+      "id": 6,
+      "question": "Cơ chế hoạt động cốt lõi của kỹ thuật Corrective RAG (C-RAG) được mô tả như thế nào?",
+      "options": {
+        "A": "Agent tự động tinh chỉnh các tham số của mô hình ngôn ngữ lớn mỗi khi phát hiện câu trả lời sai.",
+        "B": "Agent tự đánh giá tài liệu tìm được, nếu không đủ chất lượng sẽ tự động kích hoạt tìm kiếm ngoài.",
+        "C": "Agent tự động phân chia lại các đoạn văn bản thành các kích thước khác nhau để tối ưu hóa tìm kiếm.",
+        "D": "Agent tự động mã hóa thông tin nhạy cảm của người dùng trước khi gửi dữ liệu đến mô hình chính."
+      },
+      "answer": "B",
+      "explanation": "C-RAG bổ sung bước đánh giá chất lượng tài liệu được truy xuất. Nếu tài liệu không đủ liên quan, Agent sẽ kích hoạt hành động bổ sung như tìm kiếm web hoặc sử dụng nguồn dự phòng để sửa đổi ngữ cảnh."
+    },
+    {
+      "id": 7,
+      "question": "Ý tưởng cốt lõi của kỹ thuật Adaptive RAG trong thiết kế hệ thống tác tử AI là gì?",
+      "options": {
+        "A": "Agent tự động cập nhật cấu trúc cơ sở dữ liệu vector theo tần suất sử dụng của người dùng cuối.",
+        "B": "Agent tự động thay đổi ngôn ngữ giao tiếp phù hợp với quốc gia của người dùng đang truy cập hệ thống.",
+        "C": "Agent tự đánh giá độ khó câu hỏi để lựa chọn phương án trả lời trực tiếp hoặc tìm kiếm sâu.",
+        "D": "Agent tự động chuyển đổi các câu hỏi dài của người dùng thành định dạng ngắn gọn hơn để xử lý."
+      },
+      "answer": "C",
+      "explanation": "Adaptive RAG cho phép Agent phân loại độ phức tạp của câu hỏi. Câu hỏi đơn giản sẽ được xử lý trực tiếp để tiết kiệm chi phí/tốc độ, còn câu hỏi phức tạp mới kích hoạt pipeline tìm kiếm đa tầng."
+    },
+    {
+      "id": 8,
+      "question": "Cơ chế Tự sửa lỗi (Self-Correction) trong một RAG pipeline hoạt động như thế nào?",
+      "options": {
+        "A": "Mô hình tự động lưu trữ các câu trả lời chính xác vào bộ nhớ đệm để sử dụng cho lần sau.",
+        "B": "Mô hình tự động điều chỉnh tốc độ phản hồi của hệ thống dựa trên lưu lượng truy cập hiện tại.",
+        "C": "Mô hình tự động gửi báo cáo lỗi về cho quản trị viên khi không tìm thấy tài liệu phù hợp.",
+        "D": "Mô hình tự kiểm tra câu trả lời của mình với ngữ cảnh để sửa lỗi trước khi xuất kết quả."
+      },
+      "answer": "D",
+      "explanation": "Self-Correction yêu cầu mô hình (hoặc một mô hình đánh giá độc lập) đối chiếu câu trả lời được sinh ra với ngữ cảnh gốc để phát hiện lỗi ảo giác trước khi hiển thị cho người dùng và yêu cầu sinh lại nếu cần."
+    },
+    {
+      "id": 9,
+      "question": "Nếu kết quả đánh giá RAGAS cho thấy hệ thống có Context Recall cao nhưng Faithfulness thấp, ta cần hành động gì?",
+      "options": {
+        "A": "Cải tiến tầng Generation bằng cách thêm các ràng buộc grounding chặt chẽ hơn trong prompt của mô hình chính.",
+        "B": "Cấu hình lại hệ thống tìm kiếm bằng cách tích hợp thêm công cụ tìm kiếm từ khóa thưa BM25.",
+        "C": "Tiến hành dán nhãn lại toàn bộ tài liệu đầu vào để sửa đổi các thông tin không chính xác.",
+        "D": "Thay đổi mô hình nhúng hiện tại sang một mô hình khác có kích thước vector biểu diễn lớn hơn."
+      },
+      "answer": "A",
+      "explanation": "Context Recall cao nghĩa là tài liệu tìm thấy chứa đủ thông tin, nhưng Faithfulness thấp chứng tỏ mô hình sinh bị ảo giác hoặc bịa đặt thêm thông tin không có trong tài liệu. Do đó, cần sửa prompt sinh (Generation)."
+    },
+    {
+      "id": 10,
+      "question": "Tại sao việc tích hợp đánh giá RAG tự động (như RAGAS) vào pipeline CI/CD lại cực kỳ quan trọng?",
+      "options": {
+        "A": "Giúp giảm bớt chi phí vận hành máy chủ lưu trữ vector bằng cách tự động nén dữ liệu định kỳ.",
+        "B": "Giúp tự động hóa việc kiểm thử hành vi của tác tử và ngăn ngừa sự suy giảm chất lượng câu trả lời.",
+        "C": "Cho phép hệ thống tự động cập nhật các tài liệu mới từ internet mà không cần người dùng phê duyệt.",
+        "D": "Giúp mô hình ngôn ngữ lớn tự động tăng tốc độ xử lý các câu hỏi phức tạp từ người dùng."
+      },
+      "answer": "B",
+      "explanation": "Bất kỳ thay đổi nào về prompt, mô hình hay dữ liệu đều có thể dẫn đến suy giảm hiệu năng (regression). CI/CD giúp kiểm thử tự động hành vi AI để đảm bảo chất lượng phản hồi trước khi deploy."
+    }
+  ]
+}
