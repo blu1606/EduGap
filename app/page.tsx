@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import dayjs from 'dayjs';
 import { trackQuizEvent } from '@/lib/analytics';
 import { supabase } from '@/lib/supabase';
 import posthog from 'posthog-js';
@@ -108,6 +109,23 @@ const TOPICS = [
   { id: 'week1', title: 'Week 1: Ôn Tập Tổng Hợp' }
 ];
 
+const getStreak = (activeDays: string[]): number => {
+  let count = 0;
+  let day = dayjs();
+  const todayStr = day.format('YYYY-MM-DD');
+  const yesterdayStr = day.add(-1, 'day').format('YYYY-MM-DD');
+
+  if (!activeDays.includes(todayStr) && activeDays.includes(yesterdayStr)) {
+    day = day.add(-1, 'day');
+  }
+
+  while (activeDays.includes(day.format('YYYY-MM-DD'))) {
+    count++;
+    day = day.add(-1, 'day');
+  }
+  return count;
+};
+
 export default function QuizApp() {
   // Navigation tabs state
   const [activeTab, setActiveTab] = useState<TabType>('learn');
@@ -121,6 +139,7 @@ export default function QuizApp() {
   // Gamified progression state (persisted in LocalStorage)
   const [xp, setXp] = useState<number>(0);
   const [streak, setStreak] = useState<number>(1);
+  const [activeDays, setActiveDays] = useState<string[]>([]);
   const [completedSets, setCompletedSets] = useState<string[]>([]);
   const [devMode, setDevMode] = useState<boolean>(false);
 
@@ -229,30 +248,43 @@ export default function QuizApp() {
         }
       }
 
-      // Streak tracking & calculation
-      const savedStreak = localStorage.getItem('edugap_streak');
-      const lastActive = localStorage.getItem('edugap_last_active');
-      let currentStreak = savedStreak ? parseInt(savedStreak, 10) : 1;
-
-      if (lastActive) {
-        const lastActiveDate = new Date(lastActive);
-        const today = new Date();
-
-        lastActiveDate.setHours(0, 0, 0, 0);
-        today.setHours(0, 0, 0, 0);
-
-        const diffTime = Math.abs(today.getTime() - lastActiveDate.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        if (diffDays > 1) {
-          currentStreak = 1; // streak reset
+      // Restore activeDays history
+      const savedActiveDays = localStorage.getItem('edugap_active_days');
+      let currentActiveDays: string[] = [];
+      if (savedActiveDays) {
+        try {
+          currentActiveDays = JSON.parse(savedActiveDays);
+        } catch (e) {
+          console.error(e);
         }
       }
 
+      const lastActive = localStorage.getItem('edugap_last_active');
+      if (lastActive) {
+        // Backfill active days with the last active date if not present
+        const lastActiveDateStr = dayjs(lastActive).format('YYYY-MM-DD');
+        if (!currentActiveDays.includes(lastActiveDateStr)) {
+          currentActiveDays.push(lastActiveDateStr);
+        }
+      }
+
+      const savedStreak = localStorage.getItem('edugap_streak');
+      let currentStreak = savedStreak ? parseInt(savedStreak, 10) : 0;
+
+      // If user has a streak but history is empty, add today
+      if (currentStreak > 0 && currentActiveDays.length === 0) {
+        currentActiveDays.push(dayjs().format('YYYY-MM-DD'));
+      }
+
+      const computedStreak = getStreak(currentActiveDays);
+
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setStreak(currentStreak);
-      localStorage.setItem('edugap_streak', currentStreak.toString());
-      localStorage.setItem('edugap_last_active', new Date().toISOString());
+      setStreak(computedStreak);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveDays(currentActiveDays);
+      localStorage.setItem('edugap_streak', computedStreak.toString());
+      localStorage.setItem('edugap_active_days', JSON.stringify(currentActiveDays));
+      localStorage.setItem('edugap_last_active', dayjs().toISOString());
     }
   }, []);
 
@@ -698,33 +730,25 @@ export default function QuizApp() {
       setXp(nextXp);
       localStorage.setItem('edugap_xp', nextXp.toString());
 
-      // Update Streak
-      const lastActive = localStorage.getItem('edugap_last_active');
-      let currentStreak = streak;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      if (lastActive) {
-        const lastActiveDate = new Date(lastActive);
-        lastActiveDate.setHours(0, 0, 0, 0);
-        
-        const diffTime = today.getTime() - lastActiveDate.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        if (diffDays === 1) {
-          // Increment streak on consecutive day study completion
-          currentStreak += 1;
-          setStreak(currentStreak);
-          localStorage.setItem('edugap_streak', currentStreak.toString());
-        }
+      // Update Streak and Active Days
+      const todayStr = dayjs().format('YYYY-MM-DD');
+      const nextActiveDays = [...activeDays];
+      if (!nextActiveDays.includes(todayStr)) {
+        nextActiveDays.push(todayStr);
+        setActiveDays(nextActiveDays);
+        localStorage.setItem('edugap_active_days', JSON.stringify(nextActiveDays));
       }
-      localStorage.setItem('edugap_last_active', new Date().toISOString());
+
+      const computedStreak = getStreak(nextActiveDays);
+      setStreak(computedStreak);
+      localStorage.setItem('edugap_streak', computedStreak.toString());
+      localStorage.setItem('edugap_last_active', dayjs().toISOString());
 
       setShowFinishScreen(true);
     } else {
       setCurrentQuestionIdx(prev => prev + 1);
     }
-  }, [activeSet, activeSetId, answersHistory, currentQuestionIdx, getCompactQuizAnalyticsProperties, totalQuestions, completedSets, xp, streak]);
+  }, [activeSet, activeSetId, answersHistory, currentQuestionIdx, getCompactQuizAnalyticsProperties, totalQuestions, completedSets, xp, activeDays]);
 
   // Reset the current active set
   const handleRestart = () => {
@@ -1804,10 +1828,11 @@ export default function QuizApp() {
             </AnimatePresence>
           </main>
 
-          {/* Desktop Right Sidebar stats display */}
+           {/* Desktop Right Sidebar stats display */}
           <RightBar
             xp={xp}
             streak={streak}
+            activeDays={activeDays}
             completedSetsCount={completedSets.length}
             totalSetsCount={data.sets.length}
             waitlistEmail={waitlistEmail}

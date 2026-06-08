@@ -1,8 +1,11 @@
 'use client';
 
-import React from 'react';
-import { Flame, Sparkles, Award, Mail, CheckCircle2, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Sparkles, Award, Mail, CheckCircle2, ArrowRight, Lock } from 'lucide-react';
 import { motion } from 'motion/react';
+import dayjs from 'dayjs';
+import { Calendar } from './Calendar';
+import { FireSvg, EmptyFireSvg } from './Svgs';
 
 interface RightBarProps {
   xp: number;
@@ -13,6 +16,7 @@ interface RightBarProps {
   setWaitlistEmail: (email: string) => void;
   waitlistSubmitted: boolean;
   handleWaitlistSubmit: (e: React.FormEvent) => Promise<void>;
+  activeDays?: string[];
 }
 
 export const RightBar: React.FC<RightBarProps> = ({
@@ -24,18 +28,154 @@ export const RightBar: React.FC<RightBarProps> = ({
   setWaitlistEmail,
   waitlistSubmitted,
   handleWaitlistSubmit,
+  activeDays = [],
 }) => {
+  const [streakShown, setStreakShown] = useState(false);
+  const [now, setNow] = useState(dayjs());
   const progressPercent = totalSetsCount > 0 ? Math.round((completedSetsCount / totalSetsCount) * 100) : 0;
+
+  const todayStr = dayjs().format('YYYY-MM-DD');
+  const hasStudiedToday = activeDays.includes(todayStr);
+
+  const getWeekDaysStatus = (days: string[]) => {
+    const today = dayjs();
+    const currentDayOfWeek = today.day(); // 0 is Sunday, 1 is Monday, ..., 6 is Saturday
+    const daysToMonday = currentDayOfWeek === 0 ? -6 : 1 - currentDayOfWeek;
+    const monday = today.add(daysToMonday, 'day');
+    
+    const weekDays = [];
+    const labels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+    
+    let activeCount = 0;
+    for (let i = 0; i < 7; i++) {
+      const dateStr = monday.add(i, 'day').format('YYYY-MM-DD');
+      const isActive = days.includes(dateStr);
+      if (isActive) activeCount++;
+      weekDays.push({
+        label: labels[i],
+        isActive,
+        isToday: dateStr === today.format('YYYY-MM-DD')
+      });
+    }
+    
+    return { weekDays, activeCount };
+  };
+
+  const { weekDays, activeCount } = getWeekDaysStatus(activeDays);
 
   return (
     <aside className="hidden lg:flex w-80 flex-col gap-6 p-5 border-l border-amber-100 bg-[#FDFBF7]/50 z-20">
       {/* Top Header Row for Stats */}
       <div className="flex items-center justify-between gap-4 p-1">
         {/* Streak Flame */}
-        <div className="flex items-center gap-2 rounded-2xl border border-orange-100 bg-orange-500/5 px-4 py-2 hover:bg-orange-500/10 transition-colors cursor-default" title="Chuỗi ngày học liên tục">
-          <Flame className="h-5 w-5 text-orange-500 fill-orange-400 animate-bounce" />
-          <span className="text-sm font-extrabold text-orange-850 font-mono">{streak} Ngày</span>
-        </div>
+        <span
+          className="relative flex items-center gap-2 rounded-xl p-3 font-bold text-orange-500 hover:bg-gray-100 cursor-pointer select-none"
+          onMouseEnter={() => setStreakShown(true)}
+          onMouseLeave={() => {
+            setStreakShown(false);
+            setNow(dayjs());
+          }}
+          onClick={(event) => {
+            if (event.target !== event.currentTarget) return;
+            setStreakShown((x) => !x);
+            setNow(dayjs());
+          }}
+          role="button"
+          tabIndex={0}
+        >
+          <div className="pointer-events-none">
+            {streak > 0 ? <FireSvg /> : <EmptyFireSvg />}
+          </div>
+          <span className={streak > 0 ? "text-orange-500 font-mono text-sm" : "text-stone-300 font-mono text-sm"}>
+            {streak}
+          </span>
+
+          {/* Popover Streak Info (Light Theme - Project Match) */}
+          <div
+            className="absolute top-[80%] right-0 z-30 pt-3 transition-all duration-200"
+            style={{
+              width: 320,
+              display: streakShown ? "block" : "none",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Inner styled popover container */}
+            <div className="flex flex-col gap-4 rounded-2xl border border-amber-100 bg-white p-5 text-stone-850 shadow-xl">
+              {/* Header section with large flame */}
+              <div className="flex justify-between items-start w-full">
+                <div className="flex flex-col gap-1.5 text-left max-w-[210px]">
+                  <h2 className="text-lg font-black text-amber-955">{streak} ngày streak</h2>
+                  <p className="text-[10px] text-stone-650 font-semibold leading-relaxed">
+                    {hasStudiedToday 
+                      ? "Bạn đã học ngày hôm nay! Hãy tiếp tục duy trì nhé." 
+                      : "Học một bài học ngay hôm nay để bắt đầu chuỗi streak mới nào!"}
+                  </p>
+                </div>
+                <div className="scale-[1.8] origin-top-right shrink-0 opacity-[0.08] mr-1 mt-1">
+                  <FireSvg />
+                </div>
+              </div>
+
+              {/* Weekly progress tracker box */}
+              <div className="bg-amber-500/5 border border-amber-100/70 rounded-2xl p-4 flex flex-col gap-3">
+                <div className="flex justify-between text-[10px] font-black tracking-wide">
+                  {weekDays.map((day, i) => (
+                    <span 
+                      key={i} 
+                      className={day.isActive 
+                        ? "text-amber-650" 
+                        : day.isToday 
+                          ? "text-amber-955 underline decoration-amber-500 decoration-2 underline-offset-4" 
+                          : "text-stone-400"
+                      }
+                    >
+                      {day.label}
+                    </span>
+                  ))}
+                </div>
+                
+                <div className="relative w-full h-4 bg-stone-100 rounded-full flex items-center pr-1 border border-stone-200/40 overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.max(4, (activeCount / 7) * 100)}%` }}
+                  />
+                  <div className="absolute right-1 w-5 h-5 flex items-center justify-center scale-75">
+                    <div className="scale-[0.6] origin-center">
+                      {activeCount > 0 ? <FireSvg /> : <EmptyFireSvg />}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Streak Society Lock Section */}
+              <div className="border border-amber-100/70 rounded-2xl p-4 flex gap-4 items-center bg-amber-500/5">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-stone-100 text-stone-400">
+                  {streak >= 7 ? (
+                    <Sparkles className="h-6 w-6 text-amber-600 fill-amber-400" />
+                  ) : (
+                    <Lock className="h-6 w-6 stroke-[2]" />
+                  )}
+                </div>
+                <div className="flex flex-col gap-0.5 text-left">
+                  <h3 className="text-xs font-extrabold text-amber-955">Hội Streak</h3>
+                  <p className="text-[9px] text-stone-600 font-semibold leading-normal">
+                    {streak >= 7 
+                      ? "Tuyệt vời! Bạn đã gia nhập Hội Streak thành công và nhận được đặc quyền."
+                      : "Đạt 7 ngày streak để gia nhập Hội Streak và nhận những phần thưởng độc quyền."}
+                  </p>
+                </div>
+              </div>
+
+              {/* Action button */}
+              <button
+                type="button"
+                className="w-full py-3 bg-amber-500 hover:bg-amber-600 active:translate-y-[2px] active:border-b-[2px] border-b-4 border-amber-700 rounded-2xl text-white font-black text-xs tracking-wider transition-all text-center uppercase cursor-pointer"
+              >
+                Xem thêm
+              </button>
+            </div>
+          </div>
+        </span>
 
         {/* XP Points */}
         <div className="flex items-center gap-2 rounded-2xl border border-yellow-100 bg-yellow-500/5 px-4 py-2 hover:bg-yellow-500/10 transition-colors cursor-default" title="Điểm tích lũy kinh nghiệm">
