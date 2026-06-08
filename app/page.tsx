@@ -34,6 +34,7 @@ import {
 import { LeftBar, TabType } from '@/components/LeftBar';
 import { RightBar } from '@/components/RightBar';
 import { LearningPath } from '@/components/LearningPath';
+import { RadarChart } from '@/components/RadarChart';
 
 // Define the core types
 type QuizDifficulty = 'dễ' | 'bình thường' | 'khó';
@@ -215,7 +216,6 @@ export default function QuizApp() {
       const savedCompleted = localStorage.getItem('edugap_completed_sets');
       if (savedCompleted) {
         try {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCompletedSets(JSON.parse(savedCompleted));
         } catch (e) {
           console.error('Failed to parse completed sets:', e);
@@ -223,14 +223,12 @@ export default function QuizApp() {
       }
 
       const savedDevMode = localStorage.getItem('edugap_dev_mode');
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (savedDevMode) setDevMode(savedDevMode === 'true');
 
       // Load answers history to restore user session progress if any
       const savedHistory = localStorage.getItem('edugap_answers_history');
       if (savedHistory) {
         try {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setAnswersHistory(JSON.parse(savedHistory));
         } catch (e) {
           console.error('Failed to parse answers history:', e);
@@ -241,7 +239,6 @@ export default function QuizApp() {
       const savedPreSubmitted = localStorage.getItem('edugap_pre_submitted');
       if (savedPreSubmitted) {
         try {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setPreQuizSubmitted(JSON.parse(savedPreSubmitted));
         } catch (e) {
           console.error(e);
@@ -278,9 +275,7 @@ export default function QuizApp() {
 
       const computedStreak = getStreak(currentActiveDays);
 
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStreak(computedStreak);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveDays(currentActiveDays);
       localStorage.setItem('edugap_streak', computedStreak.toString());
       localStorage.setItem('edugap_active_days', JSON.stringify(currentActiveDays));
@@ -292,7 +287,6 @@ export default function QuizApp() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setActiveGuidebookDayId(null);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setGuidebookHtml('');
   }, [activeTab]);
 
@@ -1768,6 +1762,15 @@ export default function QuizApp() {
                         );
                       })}
                     </div>
+                  </div>
+
+                  {/* Radar capability chart analysis */}
+                  <div className="bg-white border border-amber-100 rounded-2xl p-5 shadow-sm space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Award className="h-4.5 w-4.5 text-amber-650" />
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-amber-900/80">Phân tích ma trận năng lực</h3>
+                    </div>
+                    <RadarChart />
                   </div>
 
                   {/* Skill level details based on manifestation */}

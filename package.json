@@ -19,6 +19,7 @@
     "@traceloop/instrumentation-google-generativeai": "^0.27.0",
     "@vercel/analytics": "^2.0.1",
     "autoprefixer": "^10.4.21",
+    "chart.js": "^4.5.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.21",
@@ -28,6 +29,7 @@
     "postcss": "^8.5.6",
     "posthog-js": "^1.378.1",
     "react": "^19.2.1",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.1",
     "tailwind-merge": "^3.3.1"
   },
