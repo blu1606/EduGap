@@ -1,0 +1,130 @@
+{
+  "id": "day8-pipeline",
+  "parent_id": "day8",
+  "topic_title": "Day 8: RAG Pipeline - Retrieval — Augmentation — Generation",
+  "title": "Phần 2: Thiết lập Pipeline & Thực hành RAG",
+  "description": "Đánh giá khả năng hiểu và thiết lập các thành phần Retrieval trong RAG bao gồm Hybrid Search, RRF, Reranking, Pre-filtering và Query Transformations.",
+  "difficulty": "trung bình",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Ưu điểm vượt trội nhất của kỹ thuật tìm kiếm kết hợp (Hybrid Search) so với việc chỉ dùng Dense Search là gì?",
+      "options": {
+        "A": "Kết hợp khả năng hiểu ngữ nghĩa của Dense Search với khả năng khớp từ khóa chính xác của Sparse Search.",
+        "B": "Thay đổi cấu trúc cơ sở dữ liệu từ phi quan hệ sang quan hệ để đẩy nhanh tốc độ tìm kiếm.",
+        "C": "Loại bỏ hoàn toàn sự phụ thuộc vào các mô hình nhúng đắt tiền trong quá trình chuyển đổi vector.",
+        "D": "Tự động phân chia lại các đoạn văn bản thành các kích thước cố định bằng thuật toán phân cụm."
+      },
+      "answer": "A",
+      "explanation": "Hybrid Search kết hợp thế mạnh của cả hai thế giới: Dense Search tìm theo ngữ nghĩa/ý tưởng, còn Sparse Search (như BM25) tìm khớp chính xác các từ khóa, mã lỗi hay danh từ riêng."
+    },
+    {
+      "id": 2,
+      "question": "Thuật toán Reciprocal Rank Fusion (RRF) hoạt động theo cơ chế nào để kết hợp hai bảng kết quả tìm kiếm?",
+      "options": {
+        "A": "Nhân điểm số tương đồng cosine của Dense Search với tần suất xuất hiện từ khóa của Sparse Search.",
+        "B": "Tính điểm tổng hợp cho mỗi tài liệu dựa trên nghịch đảo của thứ hạng của nó trong mỗi bảng.",
+        "C": "Lựa chọn ngẫu nhiên một nửa số lượng tài liệu từ mỗi bảng xếp hạng để trả về kết quả.",
+        "D": "Ưu tiên tuyệt đối các tài liệu thuộc bảng xếp hạng của Dense Search và bỏ qua Sparse Search."
+      },
+      "answer": "B",
+      "explanation": "RRF không cần chuẩn hóa điểm số khác biệt giữa các hệ thống tìm kiếm. Nó chỉ xếp hạng tài liệu dựa trên vị trí của tài liệu đó trong từng bảng xếp hạng theo công thức nghịch đảo thứ hạng."
+    },
+    {
+      "id": 3,
+      "question": "Tại sao trong thực tế, mô hình Cross-Encoder Reranker thường chỉ được áp dụng cho một tập hợp nhỏ tài liệu (ví dụ top 20)?",
+      "options": {
+        "A": "Vì mô hình này chỉ hỗ trợ xử lý các tài liệu có độ dài không vượt quá một trăm ký tự.",
+        "B": "Vì mô hình này không có khả năng nhận diện các từ đồng nghĩa trong câu hỏi của người dùng.",
+        "C": "Vì mô hình này tính toán tương tác đồng thời giữa query và doc nên có độ trễ rất cao.",
+        "D": "Vì mô hình này yêu cầu phải kết nối internet liên tục để gửi dữ liệu về máy chủ đám mây."
+      },
+      "answer": "C",
+      "explanation": "Cross-Encoder tính toán sự chú ý (attention) đồng thời giữa câu hỏi và đoạn văn, đem lại độ chính xác cao nhưng tốn nhiều tài nguyên tính toán và có độ trễ lớn, không thể chạy trực tiếp trên toàn bộ kho dữ liệu."
+    },
+    {
+      "id": 4,
+      "question": "Kỹ thuật lọc trước siêu dữ liệu (Pre-filtering metadata) mang lại lợi ích gì cho quá trình tìm kiếm ngữ nghĩa?",
+      "options": {
+        "A": "Tăng số lượng chiều của vector nhúng để mô tả chi tiết hơn các đặc trưng ngữ nghĩa của văn bản.",
+        "B": "Tự động phát hiện và sửa các lỗi cú pháp hoặc lỗi chính tả có trong tài liệu nguồn ban đầu.",
+        "C": "Cho phép mô hình ngôn ngữ tự động thay đổi phong cách trả lời phù hợp với đối tượng người dùng.",
+        "D": "Giúp thu hẹp không gian tìm kiếm trước, tăng độ chính xác và giảm thiểu đáng kể thời gian tính toán."
+      },
+      "answer": "D",
+      "explanation": "Pre-filtering lọc bỏ các tài liệu không phù hợp (như sai quyền truy cập, sai ngày hiệu lực) trước khi chạy tìm kiếm vector, giúp giảm nhiễu ngữ nghĩa và tăng tốc độ xử lý do tập dữ liệu cần tính toán đã nhỏ đi."
+    },
+    {
+      "id": 5,
+      "question": "Trong các kỹ thuật tiền xử lý câu hỏi (Pre-RAG), 'Query Expansion' được định nghĩa như thế nào?",
+      "options": {
+        "A": "Kỹ thuật tạo ra các từ đồng nghĩa hoặc cụm từ bổ sung để cải thiện độ bao phủ của kết quả.",
+        "B": "Kỹ thuật tăng giới hạn ký tự tối đa của câu hỏi mà người dùng được phép nhập vào hệ thống.",
+        "C": "Kỹ thuật huấn luyện lại mô hình nhúng để nó có thể xử lý các câu hỏi phức tạp hơn ban đầu.",
+        "D": "Kỹ thuật nén các câu hỏi dài của người dùng thành các từ khóa ngắn gọn trước khi chạy tìm kiếm."
+      },
+      "answer": "A",
+      "explanation": "Query Expansion mở rộng câu hỏi gốc bằng từ đồng nghĩa, từ viết tắt hoặc cụm từ kỹ thuật liên quan để giúp hệ thống không bỏ sót các tài liệu có ý nghĩa tương đương nhưng viết bằng từ khác."
+    },
+    {
+      "id": 6,
+      "question": "Trong các kỹ thuật tiền xử lý câu hỏi (Pre-RAG), 'Query Decomposition' được định nghĩa như thế nào?",
+      "options": {
+        "A": "Ghép nhiều câu hỏi ngắn của người dùng thành một đoạn văn dài để tăng lượng thông tin tìm kiếm.",
+        "B": "Chia một câu hỏi phức tạp thành các câu hỏi đơn giản để tìm kiếm thông tin hiệu quả hơn.",
+        "C": "Loại bỏ hoàn toàn các từ nối và dấu câu trong câu hỏi để giảm dung lượng dữ liệu truyền.",
+        "D": "Tự động dịch câu hỏi của người dùng sang các ngôn ngữ khác để đối chiếu kết quả tìm kiếm."
+      },
+      "answer": "B",
+      "explanation": "Query Decomposition tách một câu hỏi phức tạp (chứa nhiều thực thể hoặc nhiều câu hỏi phụ) thành nhiều câu hỏi đơn để tìm kiếm song song hoặc tuần tự, tránh làm loãng không gian vector tìm kiếm."
+    },
+    {
+      "id": 7,
+      "question": "Hạn chế lớn nhất của thuật toán tìm kiếm thưa (Sparse Search) sử dụng BM25 trong thực tế là gì?",
+      "options": {
+        "A": "Nó đòi hỏi máy chủ phải có hệ thống GPU hiệu năng cao để tính toán và lưu trữ dữ liệu.",
+        "B": "Tốc độ tìm kiếm của nó chậm hơn nhiều so với việc tìm kiếm dựa trên cơ sở dữ liệu vector.",
+        "C": "Nó không thể hiểu được mối liên hệ ngữ nghĩa nếu người dùng sử dụng các từ đồng nghĩa khác.",
+        "D": "Nó chỉ hoạt động hiệu quả khi số lượng tài liệu trong hệ thống vượt quá mười triệu bản ghi."
+      },
+      "answer": "C",
+      "explanation": "BM25 dựa trên tần suất từ khóa chính xác. Nếu người dùng dùng từ đồng nghĩa hoặc paraphrase câu hỏi mà không khớp chính xác ký tự với tài liệu gốc, BM25 sẽ không thể tìm thấy."
+    },
+    {
+      "id": 8,
+      "question": "Kỹ thuật HyDE (Hypothetical Document Embeddings) hoạt động theo nguyên lý nào để cải thiện việc truy xuất?",
+      "options": {
+        "A": "Tự động mã hóa câu hỏi thành các mã nhị phân để tăng tốc độ so khớp trong bộ nhớ đệm.",
+        "B": "Tạo ra một phiên bản dịch thuật của câu hỏi sang tiếng Anh trước khi thực hiện tìm kiếm vector.",
+        "C": "Sử dụng cơ sở dữ liệu quan hệ để truy vấn trực tiếp các tài liệu được gán nhãn trùng khớp.",
+        "D": "LLM tạo ra một tài liệu giả định từ câu hỏi, rồi dùng vector đó để tìm tài liệu thật."
+      },
+      "answer": "D",
+      "explanation": "HyDE sử dụng LLM để viết câu trả lời giả định trước. Vector nhúng của câu trả lời giả định này có xu hướng gần với các tài liệu thực tế chứa câu trả lời hơn là vector nhúng của câu hỏi ngắn ban đầu."
+    },
+    {
+      "id": 9,
+      "question": "Tại sao kỹ sư thiết kế RAG nên áp dụng thuật toán MMR (Maximal Marginal Relevance) trong bước Retrieval?",
+      "options": {
+        "A": "Giúp cân bằng giữa độ liên quan ngữ nghĩa và tính đa dạng của tài liệu được chọn.",
+        "B": "Tự động loại bỏ toàn bộ tài liệu trùng lặp từ khóa trong hệ cơ sở dữ liệu.",
+        "C": "Giúp nén các đoạn văn bản dài thành các câu tóm tắt trước khi gửi đến mô hình.",
+        "D": "Tối ưu hóa tốc độ kết nối mạng giữa ứng dụng người dùng và máy chủ vector."
+      },
+      "answer": "A",
+      "explanation": "MMR tìm các tài liệu liên quan đến câu hỏi nhưng đồng thời phạt những tài liệu quá giống với tài liệu đã được chọn trước đó, giúp tránh trùng lặp thông tin và đa dạng hóa nguồn tài liệu phục vụ sinh câu trả lời."
+    },
+    {
+      "id": 10,
+      "question": "Trong cơ sở dữ liệu hỗ trợ kỹ thuật, chiến lược tìm kiếm nào tốt nhất khi người dùng tìm kiếm theo mã lỗi cụ thể như 'ERR_503'?",
+      "options": {
+        "A": "Sử dụng Dense Search thuần túy để tìm kiếm ngữ nghĩa tương đương với các mô tả lỗi khác.",
+        "B": "Sử dụng Sparse Search hoặc Hybrid Search để khớp chính xác các ký tự đặc biệt của mã lỗi.",
+        "C": "Sử dụng mô hình sinh câu trả lời để dự đoán mã lỗi tiếp theo từ câu hỏi.",
+        "D": "Sử dụng công cụ nén ngữ cảnh để giảm bớt số lượng token của các câu hỏi dài."
+      },
+      "answer": "B",
+      "explanation": "Mã lỗi chính xác là chuỗi ký tự đặc biệt khó được mô hình nhúng hiểu ngữ nghĩa đúng đắn. Do đó, Sparse Search (khớp từ khóa chính xác) hoặc Hybrid Search là giải pháp tối ưu."
+    }
+  ]
+}

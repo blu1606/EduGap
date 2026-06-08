@@ -1,0 +1,130 @@
+{
+  "id": "day8-basics",
+  "parent_id": "day8",
+  "topic_title": "Day 8: RAG Pipeline - Retrieval — Augmentation — Generation",
+  "title": "Phần 1: Nền tảng RAG Pipeline",
+  "description": "Nắm vững các khái niệm cơ bản về RAG, sự khác biệt giữa Retrieval và RAG, In-Context vs RAG vs Fine-Tuning, và các điểm mù cố hữu của LLM.",
+  "difficulty": "dễ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Vấn đề cốt lõi nào dưới đây mà kỹ thuật RAG (Retrieval-Augmented Generation) được thiết kế để giải quyết cho mô hình ngôn ngữ lớn?",
+      "options": {
+        "A": "Cung cấp chứng cứ thực tế từ kho dữ liệu ngoài để hạn chế ảo giác và cập nhật kiến thức mới.",
+        "B": "Huấn luyện lại toàn bộ tham số của mô hình ngôn ngữ lớn để ghi nhớ thêm các tri thức mới.",
+        "C": "Mở rộng kích thước cửa sổ ngữ cảnh của mô hình ngôn ngữ lớn để nạp toàn bộ tài liệu thô.",
+        "D": "Điều chỉnh các tham số giải mã của mô hình ngôn ngữ lớn để tăng tính sáng tạo khi sinh."
+      },
+      "answer": "A",
+      "explanation": "RAG cung cấp thông tin thực tế từ bên ngoài để giúp LLM trả lời chính xác, tránh ảo giác và vượt qua giới hạn ngày đóng băng kiến thức (knowledge cutoff)."
+    },
+    {
+      "id": 2,
+      "question": "Sự khác biệt cơ bản nhất giữa một Retrieval Pipeline (Day 7) và một RAG Pipeline hoàn chỉnh (Day 8) là gì?",
+      "options": {
+        "A": "Day 7 chỉ lưu trữ dữ liệu dạng vector, còn Day 8 chuyển toàn bộ dữ liệu sang dạng bảng quan hệ thông thường.",
+        "B": "Day 7 chỉ tìm kiếm và lấy dữ liệu thô, còn Day 8 tích hợp thêm xử lý ngữ cảnh và sinh câu trả lời.",
+        "C": "Day 7 chỉ dùng mô hình ngôn ngữ nhỏ, còn Day 8 sử dụng các mô hình ngôn ngữ lớn hơn để tìm kiếm.",
+        "D": "Day 7 chỉ làm sạch dữ liệu đầu vào, còn Day 8 tập trung hoàn toàn vào việc đánh giá hiệu năng hệ thống."
+      },
+      "answer": "B",
+      "explanation": "Retrieval Pipeline chỉ dừng lại ở bước tìm kiếm văn bản liên quan. RAG Pipeline kết hợp cả tìm kiếm (R), cấu trúc hóa prompt (A) và sinh câu trả lời thông qua LLM (G)."
+    },
+    {
+      "id": 3,
+      "question": "Hiện tượng 'Knowledge Cutoff' của mô hình ngôn ngữ lớn (LLM) được hiểu chính xác nhất qua phát biểu nào sau đây?",
+      "options": {
+        "A": "Trạng thái mô hình tự động xóa bỏ các thông tin cũ để tiết kiệm bộ nhớ lưu trữ trên máy chủ vận hành.",
+        "B": "Trạng thái mô hình bị giới hạn số lượng ký tự đầu vào tối đa khi tiếp nhận câu hỏi của người dùng.",
+        "C": "Trạng thái mô hình không có thông tin về các sự kiện diễn ra sau thời điểm hoàn tất quá trình huấn luyện.",
+        "D": "Trạng thái mô hình từ chối trả lời các câu hỏi liên quan đến kiến thức chuyên môn sâu của doanh nghiệp."
+      },
+      "answer": "C",
+      "explanation": "Knowledge Cutoff là thời điểm mô hình dừng nhận dữ liệu huấn luyện, khiến nó hoàn toàn không biết gì về các thông tin hay sự kiện phát sinh sau mốc thời gian đó."
+    },
+    {
+      "id": 4,
+      "question": "Bản chất xác suất (Probabilistic Nature) của mô hình ngôn ngữ lớn ảnh hưởng thế nào đến độ tin cậy của câu trả lời?",
+      "options": {
+        "A": "Mô hình luôn đưa ra câu trả lời giống nhau cho cùng một câu hỏi trong mọi điều kiện thử nghiệm khác nhau.",
+        "B": "Mô hình tự động phân tích và sửa lỗi chính tả trong câu hỏi của người dùng trước khi tiến hành xử lý.",
+        "C": "Mô hình có khả năng tự động cập nhật kiến thức mới từ internet mà không cần huấn luyện lại từ đầu.",
+        "D": "Mô hình hoạt động dựa trên việc dự đoán từ tiếp theo có xác suất cao nhất thay vì hiểu thực tế khách quan."
+      },
+      "answer": "D",
+      "explanation": "LLM thực chất là công cụ dự đoán phân phối xác suất của các từ tiếp theo. Nó ưu tiên sự trôi chảy của câu chữ hơn là tính xác thực của thông tin."
+    },
+    {
+      "id": 5,
+      "question": "Trong kiến trúc RAG, nhiệm vụ chính của bước sinh câu trả lời (Generation - G) được định nghĩa như thế nào?",
+      "options": {
+        "A": "Sử dụng mô hình ngôn ngữ lớn để tổng hợp thông tin từ ngữ cảnh đã tìm thành câu trả lời hoàn chỉnh.",
+        "B": "Thực hiện chuyển đổi câu hỏi của người dùng thành các định dạng vector để tìm kiếm trong cơ sở dữ liệu.",
+        "C": "Tiến hành phân loại câu hỏi đầu vào của người dùng thành các nhóm chủ đề khác nhau để xử lý sau.",
+        "D": "Lọc bỏ các thông tin nhạy cảm của người dùng trước khi gửi câu hỏi đến mô hình ngôn ngữ lớn."
+      },
+      "answer": "A",
+      "explanation": "Bước Generation (G) nhận prompt đã được bổ sung ngữ cảnh (augmented prompt) và sử dụng LLM để viết ra câu trả lời dựa trên ngữ cảnh đó."
+    },
+    {
+      "id": 6,
+      "question": "Trong kiến trúc RAG, nhiệm vụ chính của bước làm giàu ngữ cảnh (Augmentation - A) là gì?",
+      "options": {
+        "A": "Thực hiện nhúng câu hỏi của người dùng thành vector để chuẩn bị tìm kiếm trong cơ sở dữ liệu vector.",
+        "B": "Đóng gói thông tin tìm được vào prompt theo cấu trúc rõ ràng cùng các chỉ dẫn cụ thể cho mô hình.",
+        "C": "Tiến hành tinh chỉnh các tham số của mô hình ngôn ngữ lớn để nó hiểu sâu hơn dữ liệu doanh nghiệp.",
+        "D": "Chạy thử nghiệm và đánh giá chất lượng của câu trả lời được sinh ra bởi mô hình ngôn ngữ lớn."
+      },
+      "answer": "B",
+      "explanation": "Augmentation (A) có vai trò liên kết và định dạng các văn bản đã truy xuất (retrieved chunks) kết hợp với câu hỏi của người dùng và các chỉ dẫn hệ thống vào prompt."
+    },
+    {
+      "id": 7,
+      "question": "Trong kiến trúc RAG, nhiệm vụ chính của bước truy xuất thông tin (Retrieval - R) là gì?",
+      "options": {
+        "A": "Huấn luyện lại mô hình nhúng để nó tạo ra các vector biểu diễn ngữ nghĩa chính xác hơn ban đầu.",
+        "B": "Xây dựng các bài kiểm thử tự động để đánh giá mức độ chính xác của câu trả lời từ mô hình.",
+        "C": "Truy xuất các đoạn tài liệu có độ liên quan ngữ nghĩa cao nhất từ kho tri thức dựa trên câu hỏi.",
+        "D": "Làm sạch và chuẩn hóa toàn bộ dữ liệu thô đầu vào trước khi tiến hành chia nhỏ và lưu trữ."
+      },
+      "answer": "C",
+      "explanation": "Retrieval (R) tập trung tìm kiếm các chunk tài liệu liên quan từ nguồn dữ liệu (như Vector DB) phù hợp với nội dung câu hỏi của người dùng."
+    },
+    {
+      "id": 8,
+      "question": "Khi nào doanh nghiệp nên ưu tiên sử dụng phương pháp RAG thay vì tiến hành tinh chỉnh (Fine-tuning) mô hình?",
+      "options": {
+        "A": "Khi cần thay đổi phong cách diễn đạt hoặc định dạng đầu ra của mô hình ngôn ngữ lớn theo chuẩn riêng.",
+        "B": "Khi doanh nghiệp có nguồn kinh phí lớn và sở hữu hạ tầng phần cứng mạnh mẽ để huấn luyện mô hình.",
+        "C": "Khi số lượng tài liệu nội bộ rất ít và không có nhu cầu cập nhật thêm thông tin theo thời gian.",
+        "D": "Khi dữ liệu nội bộ thay đổi liên tục và cần câu trả lời có nguồn trích dẫn rõ ràng để kiểm chứng."
+      },
+      "answer": "D",
+      "explanation": "RAG thích hợp với các kho tri thức động, cần cập nhật liên tục mà không tốn chi phí huấn luyện lại và yêu cầu khả năng kiểm chứng nguồn thông tin."
+    },
+    {
+      "id": 9,
+      "question": "Thuật ngữ 'In-Context Learning' dùng để mô tả hiện tượng hay kỹ thuật nào sau đây trong RAG?",
+      "options": {
+        "A": "Phương pháp cung cấp trực tiếp các thông tin cần thiết vào prompt đầu vào để mô hình trả lời câu hỏi.",
+        "B": "Phương pháp điều chỉnh trọng số của mô hình thông qua việc học từ các ví dụ thực tế được cung cấp.",
+        "C": "Phương pháp xây dựng một mạng lưới các tác tử độc lập để cùng xử lý một yêu cầu từ người dùng.",
+        "D": "Phương pháp tối ưu hóa tốc độ phản hồi của hệ thống bằng cách lưu trữ kết quả truy cập trước đó."
+      },
+      "answer": "A",
+      "explanation": "In-Context Learning là khả năng của LLM học và suy luận trực tiếp dựa trên thông tin ngữ cảnh được truyền vào trong prompt hiện tại mà không thay đổi trọng số mô hình."
+    },
+    {
+      "id": 10,
+      "question": "Tại sao việc xây dựng hệ thống hỗ trợ khách hàng trả lời chính sách công ty bắt buộc phải sử dụng RAG?",
+      "options": {
+        "A": "Các chính sách công ty thường rất ngắn và có cấu trúc vô cùng đơn giản nên dễ gây lỗi cho LLM.",
+        "B": "Chính sách công ty là thông tin nội bộ bảo mật và không có sẵn trong dữ liệu huấn luyện của LLM.",
+        "C": "LLM không thể tự động nhận diện được ngôn ngữ tiếng Việt khi đọc các tài liệu chính sách của công ty.",
+        "D": "Hệ thống chăm sóc khách hàng luôn đòi hỏi tốc độ phản hồi tức thời dưới vài mili giây trong mọi trường hợp."
+      },
+      "answer": "B",
+      "explanation": "Chính sách nội bộ của từng công ty là dữ liệu độc quyền, bảo mật nên không tồn tại trong dữ liệu pre-train công khai của LLM. RAG giúp đưa các tài liệu này vào ngữ cảnh đúng lúc."
+    }
+  ]
+}

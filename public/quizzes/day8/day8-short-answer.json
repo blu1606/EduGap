@@ -1,0 +1,81 @@
+{
+  "id": "day8-short-answer",
+  "parent_id": "day8",
+  "topic_title": "Day 8: RAG Pipeline - Retrieval — Augmentation — Generation",
+  "title": "Tự Luận: Chiến lược và Tối ưu hóa RAG Pipeline",
+  "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào thiết kế hybrid search, chống Lost-in-the-Middle, đánh giá RAGAS Triad, Adaptive RAG và bảo mật hệ thống.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Một đội ngũ phát triển đang xây dựng một Trợ lý QA kỹ thuật để hỗ trợ lập trình viên tra cứu tài liệu API nội bộ. Khi thử nghiệm, họ phát hiện ra rằng khi nhập các mã lỗi cụ thể như 'ERR_401' hoặc 'ERR_503', hệ thống dựa trên Vector Search (Dense Search) lại trả về các tài liệu hướng dẫn khái niệm chung chung thay vì định nghĩa chính xác của mã lỗi đó. Hãy chẩn đoán nguyên nhân kỹ thuật của vấn đề này và đề xuất giải pháp cải tiến cho pipeline tìm kiếm.",
+      "expected_answer": "Nguyên nhân do mô hình nhúng (Embedding) trong Dense Search tối ưu cho việc hiểu ngữ nghĩa của các câu văn tự nhiên hơn là việc khớp chính xác các ký tự đặc biệt hoặc mã định danh như 'ERR_401'. Giải pháp: Tích hợp Hybrid Search kết hợp Dense Search ngữ nghĩa với Sparse Search (như BM25) để khớp chính xác từ khóa mã lỗi, sau đó gộp kết quả xếp hạng bằng thuật toán Reciprocal Rank Fusion (RRF).",
+      "evaluation_points": [
+        "Chẩn đoán đúng điểm yếu của Dense Search / Embedding đối với các mã lỗi kỹ thuật hoặc từ khóa viết tắt chính xác.",
+        "Đề xuất giải pháp Hybrid Search kết hợp Dense Search và Sparse Search (BM25).",
+        "Đề xuất sử dụng thuật toán Reciprocal Rank Fusion (RRF) hoặc weighted alpha để gộp hai bảng kết quả xếp hạng."
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Diagnose semantic gaps and design hybrid search pipelines for technical domains"
+    },
+    {
+      "id": 2,
+      "question": "Hệ thống RAG của một doanh nghiệp sử dụng một LLM có cửa sổ ngữ cảnh (context window) rất lớn. Đội phát triển quyết định truy xuất top-20 kết quả (mỗi đoạn dài khoảng 1000 ký tự) từ cơ sở dữ liệu vector và xếp nối tiếp nhau để truyền thẳng vào prompt. Khi vận hành, họ nhận thấy AI thường bỏ qua hoặc trả lời thiếu các thông tin quan trọng nằm ở các đoạn văn bản xếp ở giữa danh sách. Hãy giải thích hiện tượng này và đề xuất giải pháp xử lý cụ thể trong tầng Augmentation.",
+      "expected_answer": "Hiện tượng 'Lost in the Middle' khiến LLM dễ bỏ sót thông tin nằm giữa prompt. Giải pháp: Áp dụng Document Reordering để sắp xếp lại các chunk (đặt chunk quan trọng nhất ở đầu prompt, chunk quan trọng thứ hai ở cuối prompt, phần còn lại ở giữa). Tối ưu hóa token budget của context dưới 60% tổng số token.",
+      "evaluation_points": [
+        "Nhận diện đúng hiện tượng 'Lost in the Middle' và nguyên lý hoạt động của nó (position-bias).",
+        "Đề xuất giải pháp Document Reordering (đặt thông tin quan trọng nhất ở đầu, thông tin quan trọng thứ hai ở cuối prompt).",
+        "Đề xuất quản lý token budget cho ngữ cảnh để tránh gây nhiễu và quá tải thông tin (context pollution)."
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Implement context engineering and mitigate position-bias in large language models"
+    },
+    {
+      "id": 3,
+      "question": "Một ứng dụng thương mại điện tử cần cập nhật thông tin về chính sách vận chuyển và khuyến mãi vốn thay đổi hàng ngày. Giám đốc sản phẩm đề xuất tinh chỉnh (Fine-tuning) mô hình định kỳ hàng tuần để cập nhật thông tin này. Với vai trò Kỹ sư trưởng AI, hãy so sánh phương án Fine-tuning của Giám đốc sản phẩm với giải pháp sử dụng RAG, phân tích về mặt chi phí, tính cập nhật và rủi ro sai lệch thông tin.",
+      "expected_answer": "Không nên chọn Fine-tuning vì chi phí huấn luyện lại hàng tuần rất lớn, thông tin có độ trễ cập nhật (theo tuần) và mô hình dễ gặp rủi ro ảo giác (hallucination) mà không có nguồn đối chiếu. RAG là giải pháp tối ưu vì chỉ cần cập nhật cơ sở dữ liệu vector (re-indexing) tức thời khi có chính sách mới với chi phí rất thấp, đồng thời bắt buộc mô hình trích dẫn nguồn cụ thể để kiểm chứng thông tin và giảm thiểu ảo giác.",
+      "evaluation_points": [
+        "Phân tích được chi phí vận hành và tần suất cập nhật dữ liệu của RAG (tức thời, rẻ) so với Fine-tuning (trễ, đắt).",
+        "Chỉ ra được rủi ro ảo giác (hallucination) và thiếu cơ chế trích dẫn nguồn (citation) của phương án Fine-tuning.",
+        "Khuyên dùng RAG làm kiến trúc chủ đạo cho bài toán thông tin động/thay đổi liên tục."
+      ],
+      "sfia_level": "SFIA L5",
+      "competency": "Advise on architectural choices between retrieval-augmented generation and parametric fine-tuning"
+    },
+    {
+      "id": 4,
+      "question": "Sau khi triển khai hệ thống RAG phục vụ nội bộ, đội kỹ thuật thực hiện kiểm thử thủ công bằng cách hỏi thử một vài câu hỏi ngẫu nhiên và đánh giá thấy 'ổn'. Tuy nhiên, khi đưa vào sản xuất, người dùng phàn nàn rằng AI thỉnh thoảng tự bịa ra thông tin không có trong tài liệu, hoặc đôi khi từ chối trả lời dù tài liệu có chứa câu trả lời. Hãy thiết lập một bộ khung đánh giá (Evaluation Framework) sử dụng RAGAS Triad để chẩn đoán và khắc phục hai lỗi trên.",
+      "expected_answer": "Áp dụng RAGAS Triad gồm ba trục: Context Recall, Faithfulness và Answer Relevance. Đối với lỗi AI bịa thông tin: đây là vấn đề Faithfulness thấp, cần sửa ở tầng Generation (thêm ràng buộc strict grounding trong system prompt, giảm temperature). Đối với lỗi AI từ chối trả lời dù tài liệu có chứa đáp án: đây là vấn đề Context Recall thấp, chứng tỏ Retriever tìm sai tài liệu, cần sửa ở tầng Retrieval (cải tiến chunking, thêm hybrid search/reranker).",
+      "evaluation_points": [
+        "Nêu rõ định nghĩa và vai trò của ba chỉ số RAGAS Triad: Context Recall, Faithfulness và Answer Relevance.",
+        "Liên kết lỗi 'AI bịa thông tin' với chỉ số Faithfulness thấp và đề xuất hành động khắc phục ở tầng Generation.",
+        "Liên kết lỗi 'AI từ chối trả lời' với chỉ số Context Recall thấp và đề xuất hành động khắc phục ở tầng Retrieval."
+      ],
+      "sfia_level": "SFIA L5",
+      "competency": "Ensure systematic evaluation methodologies and diagnostic actions for production RAG systems"
+    },
+    {
+      "id": 5,
+      "question": "Hệ thống y tế thông minh cần hỗ trợ người dùng tra cứu thông tin y khoa. Hệ thống nhận hai loại câu hỏi: (1) Câu hỏi tra cứu đơn giản (ví dụ: 'Các triệu chứng của bệnh cúm mùa là gì?') và (2) Câu hỏi tổng hợp phức tạp (ví dụ: 'Hãy so sánh phác đồ điều trị của bệnh tiểu đường tuýp 1 và tuýp 2, phân tích kỹ tác dụng phụ của các thuốc phổ biến'). Hãy thiết kế một quy trình kết hợp Adaptive RAG và Query Decomposition để xử lý hiệu quả cả hai loại câu hỏi trên.",
+      "expected_answer": "Bước 1: Adaptive RAG Routing phân loại câu hỏi bằng LLM. Nếu là câu hỏi dễ -> truy cập thẳng Vector DB và trả lời ngay. Bước 2: Nếu câu hỏi phức tạp -> dùng Query Decomposition tách câu hỏi so sánh thành các truy vấn đơn lẻ (phác đồ tuýp 1, tuýp 2, tác dụng phụ), truy xuất song song, rồi gộp các ngữ cảnh để LLM tổng hợp câu trả lời.",
+      "evaluation_points": [
+        "Thiết kế được cơ chế định tuyến câu hỏi (Routing/Classification) trong Adaptive RAG dựa trên độ phức tạp.",
+        "Áp dụng chính xác Query Decomposition để phân rã câu hỏi multi-hop/so sánh thành các truy vấn đơn lẻ.",
+        "Mô tả quy trình tổng hợp ngữ cảnh từ các truy vấn phụ trước khi sinh câu trả lời y khoa hoàn chỉnh."
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Design adaptive retrieval agents and query transformation workflows"
+    },
+    {
+      "id": 6,
+      "question": "Một ngân hàng muốn triển khai RAG Agent để nhân viên tra cứu sổ tay quy trình tín dụng. Chuyên gia bảo mật lo ngại rủi ro về Prompt Injection khi người dùng cố tình hỏi để Agent truy xuất tài liệu của bộ phận khác, hoặc khi tài liệu được truy xuất chứa mã độc ẩn nhằm ghi đè System Prompt (Indirect Prompt Injection). Hãy đề xuất giải pháp phòng ngừa cụ thể ở các tầng: Pre-filtering, System Prompt và Corrective RAG (C-RAG).",
+      "expected_answer": "1. Pre-filtering: Lọc dữ liệu trước khi search dựa trên quyền truy cập (Access Control List metadata). 2. System Prompt: Sử dụng nhãn XML phân vùng rõ ràng và chỉ dẫn LLM ưu tiên system instruction hơn context document. 3. C-RAG: Sử dụng Guardrail hoặc mô hình kiểm duyệt để quét nội dung chunk được tìm thấy, phát hiện và loại bỏ chỉ dẫn độc hại trước khi đưa vào prompt.",
+      "evaluation_points": [
+        "Đề xuất giải pháp Pre-filtering dựa trên quyền truy cập (metadata Access Control) để ngăn chặn rò rỉ thông tin chéo.",
+        "Thiết kế System Prompt phân biệt rõ ranh giới Context và System instructions (ví dụ dùng thẻ XML/delimiters).",
+        "Áp dụng C-RAG hoặc mô hình Guardrail để kiểm duyệt chất lượng và tính an toàn của các tài liệu được truy xuất trước khi nạp vào LLM."
+      ],
+      "sfia_level": "SFIA L4",
+      "competency": "Design secure retrieval-augmented generation pipelines and prompt injection mitigations"
+    }
+  ]
+}

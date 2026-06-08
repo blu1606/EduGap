@@ -263,6 +263,38 @@
       "title": "Tự Luận: Chiến lược Dữ liệu & Tối ưu hóa Vector Store",
       "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào chiến lược dữ liệu, ẩn danh PII, thiết kế chunking và đánh giá chất lượng truy xuất RAG.",
       "difficulty": "khó"
+    },
+    {
+      "id": "day8-basics",
+      "parent_id": "day8",
+      "topic_title": "Day 8: RAG Pipeline - Retrieval — Augmentation — Generation",
+      "title": "Phần 1: Nền tảng RAG Pipeline",
+      "description": "Nắm vững các khái niệm cơ bản về RAG, sự khác biệt giữa Retrieval và RAG, In-Context vs RAG vs Fine-Tuning, và các điểm mù cố hữu của LLM.",
+      "difficulty": "dễ"
+    },
+    {
+      "id": "day8-pipeline",
+      "parent_id": "day8",
+      "topic_title": "Day 8: RAG Pipeline - Retrieval — Augmentation — Generation",
+      "title": "Phần 2: Thiết lập Pipeline & Thực hành RAG",
+      "description": "Đánh giá khả năng hiểu và thiết lập các thành phần Retrieval trong RAG bao gồm Hybrid Search, RRF, Reranking, Pre-filtering và Query Transformations.",
+      "difficulty": "trung bình"
+    },
+    {
+      "id": "day8-advanced",
+      "parent_id": "day8",
+      "topic_title": "Day 8: RAG Pipeline - Retrieval — Augmentation — Generation",
+      "title": "Phần 3: Kỹ thuật Nâng cao & Đánh giá RAG",
+      "description": "Đánh giá chuyên sâu về các kỹ thuật Context Management nâng cao, Agentic RAG, tự sửa lỗi, hệ thống chỉ số RAGAS và tích hợp CI/CD.",
+      "difficulty": "khó"
+    },
+    {
+      "id": "day8-short-answer",
+      "parent_id": "day8",
+      "topic_title": "Day 8: RAG Pipeline - Retrieval — Augmentation — Generation",
+      "title": "Tự Luận: Chiến lược và Tối ưu hóa RAG Pipeline",
+      "description": "Câu hỏi tự luận ngắn theo SFIA-lite, tập trung vào thiết kế hybrid search, chống Lost-in-the-Middle, đánh giá RAGAS Triad, Adaptive RAG và bảo mật hệ thống.",
+      "difficulty": "khó"
     }
   ]
 }
